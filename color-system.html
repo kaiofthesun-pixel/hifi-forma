@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #ffffff;
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red-line-offset: 50px;
+            --ruler-extend: 500px;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            overflow-x: hidden;
+        }
+
+        #red-line {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 31.3px;
+            left: calc(var(--ruler-left) + 2px);
+            transform: translateX(-100%);
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: none;
+            transition: color 0.2s ease;
+        }
+        .back-btn:hover {
+            color: #000;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text);
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #page {
+            position: relative;
+            padding-bottom: calc(35vh + 50px);
+        }
+
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 90px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-right: 20px;
+            transition: font-size 0.2s ease;
+        }
+        .intro-name.is-sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 50;
+            padding: 42px 0 28px var(--content-left);
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            font-size: 15px !important;
+        }
+        .intro-name .sticky-logo {
+            display: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-40%);
+            left: calc(var(--content-left) + min(780px, calc(100vw - var(--content-left) - 40px)) - 19px);
+            height: 19px;
+        }
+        .intro-name.is-sticky .sticky-logo {
+            display: block;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .role-text {
+            margin-top: 38px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.44;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+        .role-label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        #ruler {
+            position: fixed;
+            top: 0;
+            left: var(--ruler-left);
+            width: 9px;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #ruler::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: #d8d8d8;
+            opacity: 0;
+            animation: lineReveal 0.4s ease 0.8s forwards;
+        }
+        @keyframes lineReveal {
+            to { opacity: 1; }
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 1px;
+            background: #aaa;
+            transform-origin: center center;
+            animation: tickToLine 1s ease-in-out forwards;
+        }
+
+        @keyframes tickToLine {
+            0%   { transform: scaleX(1) scaleY(1); background: #aaa; }
+            50%  { transform: scaleX(0.111) scaleY(1); background: #aaa; }
+            100% { transform: scaleX(0.111) scaleY(6.5); opacity: 0; }
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: relative;
+            top: 40px;
+        }
+
+        .entry {
+            padding: 70px 0 28px;
+        }
+
+        .row + .row:not(.company-row) .entry {
+            padding-top: 44px;
+        }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        .details-thumb {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            margin-bottom: 24px;
+            background: transparent;
+            overflow: hidden;
+        }
+        .details-thumb.hero {
+            view-transition-name: project-hero;
+        }
+        .details-thumb img {
+            width: 100%;
+            display: block;
+        }
+        .details-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.6;
+            max-width: min(780px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 6px;
+        }
+        .details-desc p {
+            margin-bottom: 14px;
+        }
+
+        .company-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 40;
+            display: none;
+            transition: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="red-line"></div>
+
+<a href="timeline.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
+
+<div id="page">
+    <div id="ruler"></div>
+
+    <div style="display: flex; align-items: center; gap: 6px; position: absolute; top: 43px; left: var(--content-left);">
+        <img src="Assets/Messages/messages.png" alt="Google Messages" style="height: 15px;">
+        <span style="font-size: 15px; color: var(--text); font-weight: 500;">Google Messages</span>
+    </div>
+
+    <div class="intro">
+        <div class="intro-name">Token Color System<img src="Assets/Messages/messages.png" alt="" class="sticky-logo"></div>
+        <div class="intro-tagline">A systematic approach to color in messaging</div>
+        <div class="role-text">
+            <div class="role-label">Role</div>
+            <div>Color theory</div>
+            <div>Design systems</div>
+            <div>Documentation</div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Overview" style="margin-top:99px;">
+        <div class="row-left">
+            <div class="company-name">Overview</div>
+        </div>
+        <div class="row-right">
+            <div class="entry" style="padding-top: 40px;">
+                <div class="details-thumb hero">
+                    <img src="Assets/Color System/Color_Hero.png" alt="Overview">
+                </div>
+                <div class="details-desc">
+                    <p>Developed a comprehensive color system for Google Messages that ensures consistency, accessibility, and expressiveness.</p>
+                    <p>The system adapts seamlessly between light and dark modes while maintaining visual hierarchy and brand identity.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Color palette">
+        <div class="row-left">
+            <div class="company-name">Color palette</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb"><img src="Assets/Color System/colorsystem1.png" alt="Color palette 1" style="box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);"></div>
+                <div class="details-thumb"><img src="Assets/Color System/colorsystem2.png" alt="Color palette 2" style="box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);"></div>
+                <div class="details-thumb"><img src="Assets/Color System/colorsystem3.png" alt="Color palette 3" style="box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);"></div>
+                <div class="details-thumb"><img src="Assets/Color System/colorsystem4.png" alt="Color palette 4" style="box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);"></div>
+                <div class="details-desc">
+                    <p>The Messages color system leverages Material Design "You," which assigns values to tokens algorithmically and guarantees passing of a11y.</p>
+                    <p>Previously, the color system was designed for white backgrounds. We decided to apply color to the background, which meant every color token had to be redefined to pass a11y and look aesthetically cohesive.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Dark mode">
+        <div class="row-left">
+            <div class="company-name">Dark mode</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div style="display: flex; gap: 16px; width: min(780px, calc(100vw - var(--content-left) - 40px)); margin-bottom: 24px;">
+                    <div class="details-thumb" style="flex: 1; margin-bottom: 0;"><img src="Assets/Color System/darkmode_1.webp" alt="Dark mode 1"></div>
+                    <div class="details-thumb" style="flex: 1; margin-bottom: 0;"><img src="Assets/Color System/darkmode_2.webp" alt="Dark mode 2"></div>
+                    <div class="details-thumb" style="flex: 1; margin-bottom: 0;"><img src="Assets/Color System/darkmode_3.webp" alt="Dark mode 3"></div>
+                </div>
+                <div class="details-desc">
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Branding the Send button">
+        <div class="row-left">
+            <div class="company-name">Branding the Send button</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: min(780px, calc(100vw - var(--content-left) - 40px)); margin-bottom: 24px;">
+                    <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Compose1.webp" alt="Compose 1" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); border-radius: 12px;"></div>
+                    <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Compose2.webp" alt="Compose 2" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); border-radius: 12px;"></div>
+                    <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Compose3.webp" alt="Compose 3" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); border-radius: 12px;"></div>
+                    <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Compose4.webp" alt="Compose 4" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); border-radius: 12px;"></div>
+                    <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Compose5.webp" alt="Compose 5" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); border-radius: 12px;"></div>
+                    <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Compose6.webp" alt="Compose 6" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); border-radius: 12px;"></div>
+                </div>
+                <div class="details-desc">
+                    <p>The application of an accent color to the Voice / Send button piques visual interest and encourages engagement with the most critical action.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Outcome">
+        <div class="row-left">
+            <div class="company-name">Outcome</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div style="display: flex; gap: 32px; width: calc(min(780px, calc(100vw - var(--content-left) - 40px)) * 0.8); margin-bottom: 24px;">
+                    <div style="flex: 1; text-align: center;">
+                        <div style="color: var(--text); font-size: 13px; margin-bottom: 8px;">SMS</div>
+                        <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Outcome_color_1.webp" alt="Outcome 1"></div>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <div style="color: var(--text); font-size: 13px; margin-bottom: 8px;">RCS</div>
+                        <div class="details-thumb" style="width: 100%; margin-bottom: 0;"><img src="Assets/Color System/Outcome_color_2.webp" alt="Outcome 2"></div>
+                    </div>
+                </div>
+                <div class="details-desc" style="max-width: calc(min(780px, calc(100vw - var(--content-left) - 40px)) * 0.8);">
+                    <p>Research highlighted that users perceived the updated color system as "modern," "cool," and sufficiently differentiated from SMS chats. Further, the new system mapped to Google's goal for a more expressive phone experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const TICK_PX   = 6;
+    const RED_RATIO = 0.35;
+    const RED_OFFSET_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const RULER_EXTEND_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ruler-extend')) || 500;
+    const PIN_OFFSET = 10;
+
+    const rulerEl = document.getElementById('ruler');
+    const pageEl  = document.getElementById('page');
+    const redLine = document.getElementById('red-line');
+
+    let tickEls = [];
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = pageEl.scrollHeight + RULER_EXTEND_PX;
+        rulerEl.style.height = h + 'px';
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+        tickEls = Array.from(rulerEl.querySelectorAll('.tick'));
+    }
+
+    const companyRows = Array.from(document.querySelectorAll('.company-row[data-company]'));
+    const ghosts = [];
+
+    companyRows.forEach((row, i) => {
+        const name = row.dataset.company;
+        const label = row.querySelector('.company-name');
+        const hidden = label && label.style.visibility === 'hidden';
+        const ghost = document.createElement('div');
+        ghost.className = 'company-ghost';
+        ghost.textContent = name;
+        if (hidden) ghost.style.display = 'none';
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label, hidden });
+    });
+
+    const TRANSITION_ZONE = 60;
+
+    let scrollTimeout = null;
+    let rafPending = false;
+    let lastStyledTickStart = 0;
+    let lastStyledTickEnd = -1;
+    let resizeTimeout = null;
+
+    function collapseTicks() {
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            tickEls[i].style.transform = '';
+            tickEls[i].style.background = '';
+        }
+        lastStyledTickStart = 0;
+        lastStyledTickEnd = -1;
+    }
+
+    const BULGE_RADIUS = 45;
+    const MAX_SCALE = 5;
+    const accentRGB = [192, 57, 43];
+
+    function update() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(collapseTicks, 150);
+        const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
+
+        const rulerTop = rulerEl.getBoundingClientRect().top;
+        const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
+        const radiusInTicks = Math.ceil(BULGE_RADIUS / TICK_PX);
+        const start = Math.max(0, centerIdx - radiusInTicks);
+        const end = Math.min(tickEls.length - 1, centerIdx + radiusInTicks);
+
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            if (i < start || i > end) {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            const dist = Math.abs(tickEls[i].getBoundingClientRect().top - redY);
+            if (dist < BULGE_RADIUS) {
+                const t = 1 - dist / BULGE_RADIUS;
+                const ease = t * t * t;
+                tickEls[i].style.transform = `scaleX(${1 + (MAX_SCALE - 1) * ease})`;
+                const r = Math.round(170 + (accentRGB[0] - 170) * ease);
+                const g = Math.round(170 + (accentRGB[1] - 170) * ease);
+                const b = Math.round(170 + (accentRGB[2] - 170) * ease);
+                tickEls[i].style.background = `rgb(${r},${g},${b})`;
+            } else {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        lastStyledTickStart = start;
+        lastStyledTickEnd = end;
+
+        ghosts.forEach(({ row, ghost, name, label, hidden }, i) => {
+            if (hidden) return;
+            const labelTop = label.getBoundingClientRect().top;
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                if (!ghosts[j].hidden) {
+                    nextTop = ghosts[j].row.getBoundingClientRect().top;
+                    break;
+                }
+            }
+
+            const pinnedY = redY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - redY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    const ghostY = pinnedY - pixelsMoved;
+                    ghost.style.top = ghostY + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+    }
+
+    // ── Sticky header ──
+    const introName = document.querySelector('.intro-name');
+    let stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+    let isCurrentlySticky = false;
+
+    function updateStickyHeader() {
+        const shouldBeSticky = window.scrollY >= stickyThreshold;
+        if (shouldBeSticky !== isCurrentlySticky) {
+            isCurrentlySticky = shouldBeSticky;
+            introName.classList.toggle('is-sticky', shouldBeSticky);
+        }
+    }
+
+    function recalcStickyThreshold() {
+        // Temporarily remove sticky to get true position
+        const wasSticky = introName.classList.contains('is-sticky');
+        if (wasSticky) introName.classList.remove('is-sticky');
+        stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+        if (wasSticky) introName.classList.add('is-sticky');
+    }
+
+    buildRuler();
+    update();
+    updateStickyHeader();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); updateStickyHeader(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => { buildRuler(); recalcStickyThreshold(); update(); updateStickyHeader(); }, 100);
+    });
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

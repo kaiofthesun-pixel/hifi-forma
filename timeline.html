@@ -1,0 +1,2560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>🍜 always noodling</title>
+    <script>window._weatherP = fetch('https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&current=temperature_2m,weather_code&temperature_unit=fahrenheit').then(r=>r.json()).catch(()=>null);</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Newsreader:ital,wght@0,400;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #ffffff;
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red-line-offset: 50px;
+            --ruler-extend: 500px;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            overflow-x: hidden;
+        }
+
+        /* ─── Fixed red line ─── */
+        #red-line {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* ─── Fixed nav ─── */
+        nav {
+            position: fixed;
+            top: 28px;
+            right: 44px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+        nav a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+        nav a.active { color: var(--red); }
+        nav a:hover  { color: var(--text); }
+        nav .play-link:hover { color: var(--red); }
+        nav .play-link:hover svg text { fill: var(--red); }
+        nav .play-link {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+        }
+
+        /* ─── PLAY letter animations ─── */
+        .play-p {
+            animation: playP 11s ease-in-out infinite;
+        }
+        .play-l {
+            animation: playL 11s ease-in-out infinite;
+        }
+        .play-a {
+            animation: playA 11s ease-in-out infinite;
+        }
+        .play-y {
+            animation: playY 11s ease-in-out infinite;
+        }
+        @keyframes playP {
+            0%, 5% { transform: rotate(-8deg) translateY(0); }
+            8% { transform: rotate(-14deg) translateY(-2px); }
+            15% { transform: rotate(-12deg) translateY(-1px); }
+            23%, 35% { transform: rotate(-8deg) translateY(0); }
+            38% { transform: rotate(-10deg) translateY(-1px); }
+            42%, 55% { transform: rotate(-8deg) translateY(0); }
+            59% { transform: rotate(-12deg) translateY(-1px); }
+            63% { transform: rotate(-9deg) translateY(0); }
+            70% { transform: rotate(-8deg) translateY(0); }
+            100% { transform: rotate(-8deg) translateY(0); }
+        }
+        @keyframes playL {
+            0%, 5% { transform: translateY(0); }
+            8% { transform: translateY(-3px); }
+            15% { transform: translateY(-2px); }
+            23%, 35% { transform: translateY(0); }
+            38% { transform: translateY(-1px); }
+            42%, 55% { transform: translateY(0); }
+            59% { transform: translateY(-2px); }
+            63% { transform: translateY(-1px); }
+            70% { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes playA {
+            0%, 5% { transform: translateY(0); }
+            8% { transform: translateY(2px); }
+            15% { transform: translateY(1px); }
+            23%, 35% { transform: translateY(0); }
+            38% { transform: translateY(1px); }
+            42%, 55% { transform: translateY(0); }
+            59% { transform: translateY(2px); }
+            63% { transform: translateY(1px); }
+            70% { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes playY {
+            0%, 5% { transform: rotate(8deg) translateX(0); }
+            8% { transform: rotate(14deg) translateX(-1px); }
+            15% { transform: rotate(12deg) translateX(-1px); }
+            23%, 35% { transform: rotate(8deg) translateX(0); }
+            38% { transform: rotate(10deg) translateX(0); }
+            42%, 55% { transform: rotate(8deg) translateX(0); }
+            59% { transform: rotate(12deg) translateX(-1px); }
+            63% { transform: rotate(9deg) translateX(0); }
+            70% { transform: rotate(8deg) translateX(0); }
+            100% { transform: rotate(8deg) translateX(0); }
+        }
+
+        /* ─── Scroll container ─── */
+        #page {
+            position: relative;
+            padding-bottom: 65vh;
+        }
+
+        /* ─── Intro block (top-left of content column) ─── */
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 70px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-right: 20px;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* ─── Title symbol animations ─── */
+        .sym { display: inline-block; }
+        .sym-degree {
+            animation: symFloat 3s ease-in-out infinite;
+        }
+        .sym-bullet {
+            animation: symPulse 2.5s ease-in-out infinite;
+        }
+        .sym-star {
+            animation: symSpin 4s linear infinite;
+        }
+        .sym-arc {
+            animation: symStretch 3.5s ease-in-out infinite;
+        }
+        .sym-arrow {
+            animation: symBounce 2.8s ease-in-out infinite;
+            margin-right: 6px;
+        }
+        @keyframes symFloat {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-3px); }
+            50% { transform: translateY(1px); }
+            75% { transform: translateY(-2px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes symPulse {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.5); }
+            50% { transform: scale(0.8); }
+            75% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        @keyframes symSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes symStretch {
+            0% { transform: scaleX(1) translateY(0); }
+            25% { transform: scaleX(1.4) translateY(-2px); }
+            50% { transform: scaleX(0.9) translateY(1px); }
+            75% { transform: scaleX(1.3) translateY(-1px); }
+            100% { transform: scaleX(1) translateY(0); }
+        }
+        @keyframes symBounce {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-2px) translateY(-2px); }
+            50% { transform: translateX(0) translateY(1px); }
+            75% { transform: translateX(-1px) translateY(-1px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+
+        /* ─── Section label ─── */
+        .section-label {
+            padding: 60px 0 0 var(--content-left);
+        }
+        .section-label-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--red);
+            letter-spacing: 0.07em;
+        }
+        .section-label-sub {
+            font-size: 12px;
+            color: var(--red);
+            letter-spacing: 0.04em;
+            margin-top: 2px;
+        }
+
+        /* ─── Ruler ─── */
+        #ruler {
+            position: absolute;
+            top: calc(-1 * var(--ruler-extend));
+            left: var(--ruler-left);
+            width: 1px;
+            bottom: 0;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 1px;
+            background: #aaa;
+            transform-origin: left center;
+            transition: transform 0.2s ease-out;
+        }
+
+        /* ─── Timeline rows ─── */
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+
+        /* Company name label */
+        .company-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: relative;
+            top: 40px;
+        }
+
+        /* Year / date marker (appears to the left of ruler) */
+        .date-marker {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            text-align: right;
+            padding-top: 6px;
+            margin-right: -28px;
+            margin-top: -30px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ─── Project entry ─── */
+        .entry {
+            padding: 140px 0 56px;
+        }
+
+        .row + .row:not(.company-row) .entry {
+            padding-top: 88px;
+        }
+
+        .project-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        /* ─── Thumbnail ─── */
+        .thumb {
+            width: min(378px, calc(100vw - var(--content-left) - 20px));
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 14px;
+            transform: translateY(10px);
+            opacity: 0;
+            filter: grayscale(1);
+            transition: transform 1s cubic-bezier(0.45, 0.05, 0.33, 1),
+                        opacity 0.4s cubic-bezier(0.45, 0.05, 0.33, 1),
+                        filter 0.4s ease,
+                        box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .thumb:hover, #expr-wrap:hover {
+            cursor: url('data:image/png;base64,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') 24 24, pointer;
+        }
+        .thumb.settled, #expr-wrap.settled {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .thumb.saturated, #expr-wrap.saturated {
+            filter: grayscale(0);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+        }
+        .thumb:hover, #expr-wrap:hover {
+            filter: grayscale(0) !important;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+        }
+
+        #expr-wrap {
+            transform: translateY(10px);
+            opacity: 0;
+            filter: grayscale(1);
+        }
+        .thumb-link {
+            text-decoration: none;
+            display: block;
+            width: fit-content;
+        }
+        /* ─── Thumbnail Overlays ─── */
+        .thumb .thumb-overlay,
+        .thumb .thumb-overlay-wip {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        .thumb .thumb-overlay-wip {
+            flex-direction: column;
+        }
+        .thumb:hover .thumb-overlay,
+        .thumb:hover .thumb-overlay-wip {
+            opacity: 1;
+        }
+        .thumb-overlay-text,
+        .thumb-overlay-wip .wip-text {
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+        .thumb-date {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .thumb-overlay svg,
+        .thumb-overlay-wip svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2;
+            fill: none;
+        }
+        .thumb-overlay svg {
+            stroke: #fff;
+        }
+        .thumb-overlay-wip svg {
+            stroke: rgba(255,255,255,0.45);
+        }
+        .thumb-overlay .wip-link svg {
+            stroke: rgba(255,255,255,0.45);
+        }
+        .thumb-overlay .wip-text {
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+        .thumb-overlay-wip .wip-link,
+        .thumb-overlay-wip .wip-link-left,
+        .thumb-overlay .wip-link {
+            position: absolute;
+            bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            pointer-events: auto;
+        }
+        .thumb-overlay-wip .wip-link { right: 12px; }
+        .thumb-overlay-wip .wip-link-left { left: 12px; }
+        .thumb-overlay .wip-link { right: 12px; }
+        .thumb-overlay-wip .wip-link a,
+        .thumb-overlay-wip .wip-link-left a,
+        .thumb-overlay .wip-link a {
+            color: rgba(255,255,255,0.45);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .thumb-wide {
+            width: min(504px, calc(100vw - var(--content-left) - 20px));
+            aspect-ratio: 438 / 323;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        /* Thumb colour palettes */
+        .t-mai    { background: url('Assets/MAI/MAI_Thumbnail.gif') center/cover; }
+        .t-ext    { background: linear-gradient(135deg,#3a6a9a,#5a8aaa); }
+        .t-gemini { background: linear-gradient(135deg,#3a4a8a,#6a5aaa); }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        .entry-arrow {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .entry-status {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 13px;
+            font-style: italic;
+            color: var(--muted);
+        }
+        .entry-desc {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.55;
+            max-width: 340px;
+            margin-top: 6px;
+        }
+
+        /* Gap row between companies */
+
+        /* Expression thumbnail hover badges */
+        .expr-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.45);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.2;
+            opacity: 0;
+            transform: scale(0.8) translate(-50%, -50%);
+            transform-origin: top left;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+        }
+        #expr-wrap:hover .expr-badge {
+            opacity: 1;
+            transform: scale(1) translate(-50%, -50%);
+            pointer-events: auto;
+        }
+        .expr-badge:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Bear speed slider */
+        #bear-speed {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 40px;
+            height: 1px;
+            background: #bbb;
+            outline: none;
+            border-radius: 8px;
+            margin: 0 -4px 0 0;
+            padding: 0;
+        }
+        #bear-speed::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #999;
+            cursor: pointer;
+        }
+        #bear-speed::-moz-range-thumb {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #999;
+            border: none;
+            cursor: pointer;
+        }
+        #bear-speed::-moz-range-track {
+            height: 1px;
+            background: #bbb;
+            border: none;
+        }
+
+        /* Ghost label (pinned company name at red line) */
+        .company-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 90;
+            display: none;
+            transition: none;
+        }
+
+        /* ─── About panel ─── */
+        #about-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #A29BD4;
+            z-index: 250;
+            padding: 60px 164px 80px 164px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            max-width: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+        #about-panel::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #EE7CA2 0%, #EE7CA2 20%, #ED6689 50%, transparent 100%);
+            opacity: 0;
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+        #about-panel.about-open::before {
+            animation: pinkBloom 7s cubic-bezier(0.25, 0.8, 0.5, 1) forwards;
+        }
+        @keyframes pinkBloom {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        #about-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 350 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 300;
+        }
+        #about-panel .about-close {
+            position: absolute;
+            top: 28px;
+            right: 164px;
+            background: none;
+            border: none;
+            padding: 0;
+            color: #000;
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        #about-panel .about-close:hover {
+            color: #000;
+            transform: rotate(90deg);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+        }
+        #about-panel .about-body {
+            position: relative;
+            z-index: 10;
+            max-width: 340px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        #about-panel.about-open .about-body {
+            opacity: 1;
+        }
+        #about-panel .about-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: left;
+            max-width: 500px;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        #about-panel.about-open .about-center {
+            opacity: 1;
+        }
+        #about-panel .about-center a {
+            color: #333;
+            text-decoration: underline;
+        }
+        #about-panel .about-center a:hover {
+            color: #1a1a1a;
+        }
+        #about-panel .about-body p {
+            margin-bottom: 16px;
+        }
+        #about-panel .about-body a {
+            color: #333;
+            text-decoration: underline;
+        }
+        #about-panel .about-body a:hover {
+            color: #1a1a1a;
+        }
+        #about-panel .about-body .about-location {
+            color: var(--muted);
+            font-size: 11px;
+        }
+        #about-panel .about-location-corner {
+            position: absolute;
+            bottom: 60px;
+            right: 164px;
+            color: #333;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        #about-panel.about-open .about-location-corner {
+            opacity: 1;
+        }
+        #about-panel .about-links-bottom {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        #about-panel.about-open .about-links-bottom {
+            opacity: 1;
+        }
+        #about-panel .about-links-bottom a {
+            color: #333;
+            text-decoration: underline;
+        }
+        #about-panel .about-links-bottom a:hover {
+            color: #1a1a1a;
+        }
+        .about-hover-link {
+            position: static;
+        }
+        .about-hover-img {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            margin-bottom: 30px;
+            width: 100%;
+            max-height: calc(50vh - 130px);
+            object-fit: cover;
+            border-radius: 18px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease, box-shadow 0.8s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            z-index: 400;
+        }
+        .about-hover-link:hover .about-hover-img {
+            opacity: 1;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        }
+
+        /* ─── Play page ─── */
+        #play-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 150;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .play-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+        .play-big-wrap {
+            position: absolute;
+            top: 260px;
+            left: 60px;
+            transform-origin: top left;
+        }
+        .play-big-inner {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            transform: scale(21) rotate(-30deg);
+            transform-origin: top left;
+        }
+
+        /* ─── Weather note ─── */
+        #weather-note {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #333;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 1s ease;
+            text-align: center;
+        }
+        #about-panel.about-open #weather-note {
+            opacity: 1;
+        }
+
+        /* ─── Small screen / mobile adjustments ─── */
+        @media (max-width: 900px) {
+            nav {
+                position: relative;
+                top: auto;
+                right: auto;
+                justify-content: flex-start;
+                padding: 20px 0 20px var(--content-left);
+                width: 100%;
+                z-index: 200;
+            }
+
+            .intro {
+                padding-top: 20px;
+                padding-right: 40px;
+            }
+
+            .intro-tagline {
+                max-width: min(633px, calc(100vw - var(--content-left) - 40px));
+            }
+
+            .thumb, .thumb-wide, #expr-wrap {
+                width: min(378px, calc(100vw - var(--content-left) - 40px)) !important;
+            }
+        }
+
+        /* ─── Scroll-down arrow hint ─── */
+        .scroll-hint {
+            position: fixed;
+            bottom: 32px;
+            left: calc(var(--ruler-left) - 10px);
+            transform: translateX(-100%);
+            z-index: 150;
+            opacity: 1;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+        .scroll-hint.hidden { opacity: 0; }
+        .scroll-hint svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--muted);
+            stroke-width: 1.5;
+            fill: none;
+            animation: scrollBob 2s ease-in-out infinite;
+        }
+        @keyframes scrollBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* ─── Bottom bloom gradient ─── */
+        #bottom-bloom {
+            display: none;
+        }
+
+        /* ─── Fuzzy pink circle ─── */
+        #fuzzy-wrap {
+            position: absolute;
+            bottom: 15%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            z-index: 1000;
+            cursor: grab;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #fuzzy-wrap:active {
+            cursor: grabbing;
+        }
+        #fuzzy-circle {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at center, rgba(255, 80, 140, 1) 0%, rgba(255, 100, 160, 0.8) 10%, rgba(245, 115, 165, 0.6) 25%, rgba(235, 130, 175, 0.4) 40%, rgba(220, 145, 185, 0.25) 55%, rgba(210, 155, 190, 0.12) 70%, rgba(200, 165, 195, 0.05) 85%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(20px);
+            pointer-events: none;
+            transform: scale(1);
+            transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #fuzzy-circle.growing {
+            transform: scale(100);
+            transition: transform 150s ease-out;
+        }
+        #fuzzy-circle.dragging {
+            transition: none;
+        }
+
+        /* ─── Bottom flower garden ─── */
+        #flower-garden {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            pointer-events: none;
+            z-index: 50;
+            overflow: visible;
+            --fade-duration: 0.5s;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--fade-duration) ease-out, visibility 0s var(--fade-duration);
+        }
+        #flower-garden.visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity var(--fade-duration) ease-in, visibility 0s;
+        }
+        #flower-garden svg {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            overflow: visible;
+        }
+        #flower-garden .flower-stem {
+            transform-origin: bottom center;
+            transform-box: fill-box;
+            transform: translateY(50px) scale(0);
+        }
+        #flower-garden .flower-stem path,
+        #flower-garden .flower-stem circle,
+        #flower-garden .flower-stem line {
+            vector-effect: non-scaling-stroke;
+        }
+        #flower-garden.visible .flower-stem {
+            transform: translateY(0) scale(3.5);
+            transition: transform 120s cubic-bezier(0.1, 1.0, 0.4, 1.0);
+            animation: gentleSway 5s ease-in-out infinite alternate;
+        }
+        #flower-garden.visible .flower-stem:nth-child(even) {
+            animation-duration: 6s;
+            animation-direction: alternate-reverse;
+        }
+        #flower-garden.visible .flower-stem:nth-child(3n) {
+            animation-duration: 7s;
+            animation-delay: -2s;
+        }
+        @keyframes gentleSway {
+            0% { rotate: -6deg; }
+            100% { rotate: 6deg; }
+        }
+        #flower-garden:not(.visible) .flower-stem {
+            transition: transform 0s var(--fade-duration);
+        }
+        #flower-garden .flower-stem:nth-child(1) { transition-delay: 0s; }
+        #flower-garden .flower-stem:nth-child(2) { transition-delay: 0.05s; }
+        #flower-garden .flower-stem:nth-child(3) { transition-delay: 0.1s; }
+        #flower-garden .flower-stem:nth-child(4) { transition-delay: 0.15s; }
+        #flower-garden .flower-stem:nth-child(5) { transition-delay: 0.2s; }
+        #flower-garden .flower-stem:nth-child(6) { transition-delay: 0.08s; }
+        #flower-garden .flower-stem:nth-child(7) { transition-delay: 0.18s; }
+        #flower-garden .flower-stem:nth-child(8) { transition-delay: 0.12s; }
+        #flower-garden .flower-stem:nth-child(9) { transition-delay: 0.22s; }
+        #flower-garden .flower-stem:nth-child(10) { transition-delay: 0.03s; }
+        #flower-garden .flower-stem:nth-child(11) { transition-delay: 0.16s; }
+        #flower-garden .flower-stem:nth-child(12) { transition-delay: 0.25s; }
+        #flower-garden .flower-stem:nth-child(13) { transition-delay: 0.07s; }
+        #flower-garden .flower-stem:nth-child(14) { transition-delay: 0.13s; }
+        #flower-garden .flower-stem:nth-child(15) { transition-delay: 0.19s; }
+    </style>
+</head>
+<body>
+
+<div id="red-line"></div>
+
+<nav>
+    <a href="#" class="active" id="work-link">Work</a>
+    <a href="#" id="about-toggle">About</a>
+    <a href="play.html" id="play-toggle" class="play-link" style="display:inline-flex; align-items:center; text-decoration:none; letter-spacing:-0.02em; font-weight:600; line-height:1; gap:6px;">
+        <span style="display:inline-flex; align-items:center;">
+            <span class="play-p" style="position:relative; top:2px; display:inline-block;">P</span><span class="play-l" style="position:relative; top:-2px; margin-left:1px; display:inline-block;">L</span><span class="play-a" style="position:relative; top:2px; margin-left:1px; display:inline-block;">A</span><span class="play-y" style="position:relative; top:-2px; display:inline-block;">Y</span>
+        </span>
+        <svg id="bear-svg" width="54" height="34" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;"><style>
+        .bear-ear-left {
+            transform-origin: right bottom;
+            transform-box: fill-box;
+            animation: bearLeftTwitch 11s ease-in-out infinite;
+        }
+        .bear-ear-right {
+            transform-origin: left bottom;
+            transform-box: fill-box;
+            animation: bearRightTwitch 11s ease-in-out infinite;
+        }
+        @keyframes bearLeftTwitch {
+            0%, 5% { transform: rotate(0deg); }
+            8% { transform: rotate(-20deg); }
+            15% { transform: rotate(-18deg); }
+            23%, 35% { transform: rotate(0deg); }
+            38% { transform: rotate(-6deg); }
+            42%, 55% { transform: rotate(0deg); }
+            59% { transform: rotate(-10deg); }
+            63% { transform: rotate(-4deg); }
+            70% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes bearRightTwitch {
+            0%, 5% { transform: rotate(0deg); }
+            8% { transform: rotate(20deg); }
+            15% { transform: rotate(18deg); }
+            23%, 35% { transform: rotate(0deg); }
+            38% { transform: rotate(6deg); }
+            42%, 55% { transform: rotate(0deg); }
+            59% { transform: rotate(10deg); }
+            63% { transform: rotate(4deg); }
+            70% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .bear-nose {
+            animation: bearNoseWiggle 3s ease-in-out infinite;
+        }
+        @keyframes bearNoseWiggle {
+            0%, 60% { transform: translateY(0); }
+            65% { transform: translateY(-1px); }
+            70% { transform: translateY(0.5px); }
+            75% { transform: translateY(-0.5px); }
+            80%, 100% { transform: translateY(0); }
+        }
+        .bear-eye {
+            transform-origin: center center;
+            transform-box: fill-box;
+            animation: bearBlink 4s ease-in-out infinite;
+        }
+        @keyframes bearBlink {
+            0%, 90% { transform: scaleY(1); }
+            93% { transform: scaleY(0); }
+            96% { transform: scaleY(1); }
+            100% { transform: scaleY(1); }
+        }
+        </style>
+        <text class="bear-ear-left" x="2" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="300" fill="rgba(0,0,0,0.4)">ʕ</text>
+        <text class="bear-eye" x="18" y="30" font-family="Inter, sans-serif" font-size="18" fill="rgba(0,0,0,0.4)">•</text>
+        <text class="bear-nose" x="30" y="34" font-family="Inter, sans-serif" font-size="22" fill="rgba(0,0,0,0.4)">ᴥ</text>
+        <text class="bear-eye" x="50" y="30" font-family="Inter, sans-serif" font-size="18" fill="rgba(0,0,0,0.4)">•</text>
+        <text class="bear-ear-right" x="60" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="300" fill="rgba(0,0,0,0.4)">ʔ</text>
+    </svg>
+    </a>
+</nav>
+
+<div id="about-panel">
+    <button class="about-close"><svg width="40" height="40" viewBox="0 0 40 40" stroke="currentColor" stroke-width="0.5" fill="none"><line x1="4" y1="4" x2="36" y2="36"/><line x1="36" y1="4" x2="4" y2="36"/></svg></button>
+    <div class="about-body">
+    </div>
+    <div class="about-center">
+        <p>Off-hours, I follow my curiosity towards: <a href="#" class="about-hover-link">gardening, mostly perennials<img class="about-hover-img" src="Assets/About/Gardening.webp" alt="Gardening"></a> / <a href="#" class="about-hover-link">raising three daughters<img class="about-hover-img" src="Assets/About/daughters.png" alt="Daughters"></a> / <a href="#" class="about-hover-link">tinkering my hifi audio system<img class="about-hover-img" src="Assets/About/hifi.jpg" alt="Hifi"></a> / <a href="#" class="about-hover-link">ambitious home cooking<img class="about-hover-img" src="Assets/About/food.png" alt="Food"></a> / <a href="#">collecting furniture</a> / <a href="#">grafting japanese maples</a></p>
+    </div>
+    <div class="about-links-bottom"><a href="https://www.linkedin.com/in/allen-k-lau-5a58218/">LinkedIn</a>, <a href="#">CV</a></div>
+    <p id="weather-note"></p>
+</div>
+
+<div id="play-page" style="display:none;">
+    <div class="play-big-wrap">
+        <div class="play-big-inner">
+            <span class="play-p" style="position:relative; top:2px; display:inline-block;">P</span><span class="play-l" style="position:relative; top:-2px; margin-left:1px; display:inline-block;">L</span><span class="play-a" style="position:relative; top:2px; margin-left:1px; display:inline-block;">A</span><span class="play-y" style="position:relative; top:-2px; display:inline-block;">Y</span>
+        </div>
+    </div>
+    <div class="play-content">
+        <div id="bear-controls" style="display:flex; flex-direction:column; gap:6px; align-items:center;">
+            <div style="display:flex; align-items:center; gap:0;">
+                <input id="bear-speed" type="range" min="0.2" max="3" step="0.1" value="1">
+                <span id="bear-speed-label" style="font-family:'Inter',sans-serif; font-size:9px; color:var(--muted); letter-spacing:0.03em; margin-left:4px; min-width:20px; text-align:left;">1×</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button id="btn-bear-svg" style="font-family:'Inter',sans-serif; font-size:9px; color:var(--muted); background:none; border:1px solid #ccc; border-radius:3px; padding:3px 8px; letter-spacing:0.03em;">SVG</button>
+                <button id="btn-bear-gif" style="font-family:'Inter',sans-serif; font-size:9px; color:var(--muted); background:none; border:1px solid #ccc; border-radius:3px; padding:3px 8px; letter-spacing:0.03em;">GIF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="page">
+    <div id="ruler"></div>
+
+    <!-- Intro -->
+    <div class="intro">
+        <div class="intro-name">Allen K Lau — Designing software & other curiosities</div>
+        <div class="intro-tagline">
+            For the love of building simpler experiences for billions. Electrical engineer by training, designer by pursuit, driven by play. Currently at Microsoft AI, previously Google.
+        </div>
+    </div>
+
+    <!-- ── Microsoft AI ── -->
+    <div class="row company-row" data-company="Microsoft AI" style="margin-top:99px;">
+        <div class="row-left">
+            <div class="company-name">Microsoft AI</div>
+            <div class="date-marker" style="margin-top:-274px;">Career timeline</div>
+            <div class="date-marker" style="margin-top:-6px;">of selected works</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div style="position:relative;">
+                    <div class="thumb t-mai">
+                        <div class="thumb-overlay-wip">
+                            <span class="wip-text" style="text-align:center; width:80%; display:inline-block; font-size:16px; line-height:1.5;">Currently driving monetization<br>across Microsoft AI<br><br><span style="font-size:18px; font-family:'EB Garamond',serif; font-style:italic;">Coming soon. Still evolving.</span></span>
+                        </div>
+                    </div>
+                    <div class="date-marker" style="position:absolute; left:calc(-60px - var(--ruler-left)); width:calc(var(--ruler-left) - 12px); text-align:right; top:50%; transform:translateY(-50%); margin:0; padding:0;">2026</div>
+                </div>
+                <div class="entry-desc" style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://microsoft.ai/" style="color:var(--muted); text-decoration:underline;">Microsoft.ai</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Google Messages ── -->
+    <div class="row company-row" data-company="Google Messages">
+        <div class="row-left">
+            <div class="company-name">Google Messages</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Extensions Framework</div>
+                <a href="extensions.html" class="thumb-link"><div class="thumb t-ext" data-transition-name="extensions" style="background-image:url('Assets/Extensions Framework/Extensions_thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">EXT</div></a>
+                <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://9to5google.com/2026/03/19/google-messages-real-time-location-sharing/" style="color:var(--muted); text-decoration:underline;">9to5 Google</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2025 date marker -->
+    <div class="row" style="margin-top:20px;">
+        <div class="row-left">
+            <div class="date-marker">2025</div>
+        </div>
+        <div class="row-right"></div>
+    </div>
+
+    <!-- ── Expressions Program ── -->
+    <div class="row company-row" data-company="Expressions Program">
+        <div class="row-left">
+            <div class="company-name" style="visibility:hidden;"></div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Expressions Program</div>
+                <a href="expressions-program.html" class="thumb-link"><div id="expr-wrap" data-transition-name="expressions-program" style="position:relative; width:min(378px, calc(100vw - var(--content-left) - 20px)); aspect-ratio:1; border-radius:8px; margin-bottom:14px; overflow:hidden; transition: transform 1s cubic-bezier(0.45, 0.05, 0.33, 1), box-shadow 0.2s ease, opacity 0.4s cubic-bezier(0.45, 0.05, 0.33, 1), filter 0.4s ease;">
+                    <canvas id="expr-canvas" width="378" height="378" style="display:block; width:100%; height:100%;"></canvas>
+                    <img id="expr-gif"
+                         src=""
+                         alt="Expressions Program"
+                         style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;">
+                </div></a>
+                <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.zdnet.com/article/how-to-use-androids-photomoji-feature-in-google-messages-and-why-you-should/" style="color:var(--muted); text-decoration:underline;">ZD Net</a>, <a href="https://blog.google/products-and-platforms/platforms/android/7-new-messages-features/" style="color:var(--muted); text-decoration:underline;">Google Blog Post</a>, <a href="https://www.androidcentral.com/apps-software/google-messages-starts-rolling-out-screen-effects" style="color:var(--muted); text-decoration:underline;">Android Central</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gemini in Messages -->
+    <div class="row">
+        <div class="row-left"></div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Google GenAI Incubation</div>
+                <a href="genai-incubation.html" class="thumb-link"><div class="thumb t-gemini" data-transition-name="genai" style="background-image:url('Assets/Google GenAI Incubation/GenAI_thumbnail2.gif'); background-size:115%; background-position:center; background-repeat:no-repeat; background-color:#ECECEC; color:transparent;">GEM</div></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2024 date marker -->
+    <div class="row" style="margin-top:20px;">
+        <div class="row-left">
+            <div class="date-marker">2024</div>
+        </div>
+        <div class="row-right"></div>
+    </div>
+
+    <!-- Compose Pill -->
+    <div class="row">
+        <div class="row-left"></div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Compose Pill</div>
+                <a href="compose-pill.html" class="thumb-link"><div class="thumb t-gemini" data-transition-name="compose" style="background-image:url('Assets/Compose Pill/Compose Pill_Thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">CP</div></a>
+                <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.androidpolice.com/google-messages-beta-larger-compose-box-testing/" style="color:var(--muted); text-decoration:underline;">Android Police</a>, <a href="https://www.androidauthority.com/google-messages-compose-box-limit-apk-teardown-3541548/" style="color:var(--muted); text-decoration:underline;">Android Authority</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding -->
+    <div class="row">
+        <div class="row-left"></div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Onboarding</div>
+                <a href="onboarding.html" class="thumb-link"><div class="thumb" data-transition-name="onboarding" style="background-image:url('Assets/Onboarding/Onboarding_thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">OB</div></a>
+                <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.androidpolice.com/google-messages-rolls-out-profile-discovery-privacy-features/" style="color:var(--muted); text-decoration:underline;">Android Police</a>, <a href="https://www.androidauthority.com/google-messages-profile-discovery-privacy-apk-teardown-3490456/" style="color:var(--muted); text-decoration:underline;">Android Authority</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2023 date marker -->
+    <div class="row">
+        <div class="row-left">
+            <div class="date-marker">2023</div>
+        </div>
+        <div class="row-right"></div>
+    </div>
+
+    <!-- Token color system -->
+    <div class="row">
+        <div class="row-left"></div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Token color system</div>
+                <a href="color-system.html" class="thumb-link"><div class="thumb" data-transition-name="color-system" style="background-image:url('Assets/Color System/ColorSystem_Thumbnails.gif'); background-size:cover; background-position:center; color:transparent;">CS</div></a>
+                <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.cnet.com/tech/mobile/google-messages-now-lets-you-turn-blue-chat-bubbles-green-or-orange-or-purple/" style="color:var(--muted); text-decoration:underline;">CNET</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Google Allo ── -->
+    <div class="row company-row" data-company="Google Allo">
+        <div class="row-left">
+            <div class="company-name">Google Allo</div>
+        </div>
+        <div class="row-right"></div>
+    </div>
+
+    <!-- Google Minis -->
+    <div class="row">
+        <div class="row-left"></div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Google Minis</div>
+                <a href="google-minis.html" class="thumb-link"><div class="thumb" data-transition-name="google-minis" style="background-image:url('Assets/Google Minis/GoogleMinis_thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">GM</div></a>
+                <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.theverge.com/2017/5/11/15626690/google-allo-selfies-cartoon-stickers-emoji-neural-network-machine-learning" style="color:var(--muted); text-decoration:underline;">The Verge</a>, <a href="https://techcrunch.com/2018/10/30/googles-gboard-now-lets-you-create-a-set-of-emoji-that-look-like-you/" style="color:var(--muted); text-decoration:underline;">Techcrunch</a>, <a href="https://www.pcworld.com/article/402492/googles-gboard-mini-selfie-stickers.html" style="color:var(--muted); text-decoration:underline;">PC World</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Emotive Picker -->
+    <div class="row">
+        <div class="row-left"></div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Unified Emotive Picker</div>
+                <div class="thumb" data-transition-name="unified-emotive-picker" style="background-image:url('Assets/Allo Emoji/Allo_Gif.gif'); background-size:85%; background-position:center calc(50% - 8px); background-repeat:no-repeat; background-color:#E8978C; color:transparent; cursor:default;">UEP<div class="thumb-overlay-wip"><span class="wip-text" style="text-align:center; font-size:18px; font-family:'EB Garamond',serif; font-style:italic;">Coming soon</span></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Google AI Research ── -->
+    <div class="row company-row" data-company="Google AI Research">
+        <div class="row-left">
+            <div class="company-name">Google AI Research</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Identity Systems</div>
+                <a href="identity-systems.html" class="thumb-link"><div class="thumb" data-transition-name="identity-systems" style="background-image:url('Assets/Google AI Identity Systems/IdentitySystems_thumbnails.gif'); background-size:cover; background-position:center; color:transparent;">IS</div></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Google Material Design ── -->
+    <div class="row company-row" data-company="Google Material Design">
+        <div class="row-left">
+            <div class="company-name">Google Material Design</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Material Design V1</div>
+                <a href="https://m1.material.io/" target="_blank" class="thumb-link">
+                    <div class="thumb" style="background-image:url('Assets/Material Design/Thumbnail.png'); background-size:cover; background-position:center; color:transparent;">MD
+                        <div class="thumb-overlay-wip" style="background:rgba(0,0,0,0.75);">
+                            <span class="wip-text" style="text-align:center; font-size:18px; font-family:'EB Garamond',serif; font-style:italic;">Coming soon</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Allen Lau Studio Inc ── -->
+    <div class="row company-row" data-company="Allen Lau Studio Inc">
+        <div class="row-left">
+            <div class="company-name">Allen Lau Studio Inc</div>
+            <div class="date-marker" style="margin-top:-90px;">2022</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Storyboards & Animation</div>
+                <a href="storyboards.html" class="thumb-link"><div class="thumb" data-transition-name="storyboards" style="background-image:url('Assets/Storyboards/Storyboards_thumbnail.webp'); background-size:cover; background-position:center; color:transparent;">SB</div></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Web Design ── -->
+    <div class="row company-row">
+        <div class="row-left">
+            <div class="company-name"></div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Web Design</div>
+                <a href="web-design.html" class="thumb-link"><div class="thumb" data-transition-name="web-design" style="background-image:url('Assets/Web Design/toyota1.webp'); background-size:cover; background-position:center; background-color:#ffffff; color:transparent;">WD</div></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Motion Reel ── -->
+    <div class="row company-row">
+        <div class="row-left">
+            <div class="company-name"></div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="project-title" data-title>Motion Reel</div>
+                <a href="motion-reel.html" class="thumb-link"><div class="thumb" data-transition-name="motion-reel" style="background-image:url('Assets/Reel/Reel_thumbnails.gif'); background-size:cover; background-position:center; color:transparent;">MR</div></a>
+            </div>
+        </div>
+    </div>
+
+</div><!-- #page -->
+
+<div id="bottom-bloom"></div>
+<div id="flower-garden">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" fill="none" stroke="#888" stroke-width="1">
+        <!-- Stem 1: Curly fern -->
+        <g class="flower-stem">
+            <path d="M60 200 Q55 170 70 140 Q85 110 65 80" stroke-linecap="round"/>
+            <path d="M68 160 Q45 155 35 140 Q45 145 55 155" stroke-linecap="round"/>
+            <path d="M72 130 Q50 120 42 100 Q55 115 65 125" stroke-linecap="round"/>
+            <path d="M70 150 Q90 140 100 125 Q88 135 75 148" stroke-linecap="round"/>
+            <path d="M67 115 Q85 100 95 85 Q82 98 70 112" stroke-linecap="round"/>
+            <path d="M65 85 Q55 70 60 55 Q70 68 65 82" stroke-linecap="round"/>
+        </g>
+        <!-- Stem 2: Whimsical daisy with swirl -->
+        <g class="flower-stem">
+            <path d="M130 200 Q125 160 140 130 Q155 100 140 70" stroke-linecap="round"/>
+            <circle cx="140" cy="55" r="5" fill="#888" stroke="none"/>
+            <path d="M140 55 Q140 40 130 35 Q140 42 140 55" fill="none"/>
+            <path d="M140 55 Q155 50 162 40 Q152 48 140 55" fill="none"/>
+            <path d="M140 55 Q125 50 118 40 Q128 48 140 55" fill="none"/>
+            <path d="M140 55 Q150 45 160 50 Q148 50 140 55" fill="none"/>
+            <path d="M140 55 Q130 45 120 50 Q132 50 140 55" fill="none"/>
+            <path d="M140 55 Q140 42 145 32 Q142 44 140 55" fill="none"/>
+            <path d="M135 120 Q115 115 105 100" stroke-linecap="round"/>
+        </g>
+        <!-- Stem 3: Dandelion puff -->
+        <g class="flower-stem">
+            <path d="M210 200 Q200 150 220 110 Q240 70 215 50" stroke-linecap="round"/>
+            <circle cx="215" cy="40" r="3" fill="#888" stroke="none"/>
+            <line x1="215" y1="37" x2="215" y2="20" stroke-linecap="round"/>
+            <line x1="215" y1="37" x2="200" y2="25" stroke-linecap="round"/>
+            <line x1="215" y1="37" x2="230" y2="25" stroke-linecap="round"/>
+            <line x1="215" y1="37" x2="195" y2="35" stroke-linecap="round"/>
+            <line x1="215" y1="37" x2="235" y2="35" stroke-linecap="round"/>
+            <line x1="215" y1="37" x2="205" y2="22" stroke-linecap="round"/>
+            <line x1="215" y1="37" x2="225" y2="22" stroke-linecap="round"/>
+            <circle cx="215" cy="18" r="1.5" fill="#888" stroke="none"/>
+            <circle cx="198" cy="24" r="1.5" fill="#888" stroke="none"/>
+            <circle cx="232" cy="24" r="1.5" fill="#888" stroke="none"/>
+        </g>
+        <!-- Stem 4: Droopy bell flower -->
+        <g class="flower-stem">
+            <path d="M290 200 Q280 160 300 130 Q320 100 295 75" stroke-linecap="round"/>
+            <path d="M295 75 Q280 80 275 95 Q285 85 295 75" fill="none"/>
+            <path d="M295 75 Q310 80 315 95 Q305 85 295 75" fill="none"/>
+            <path d="M295 75 Q295 85 290 100" fill="none" stroke-linecap="round"/>
+            <path d="M305 120 Q325 110 340 115 Q325 118 308 122" stroke-linecap="round"/>
+        </g>
+        <!-- Stem 5: Spiral tendril -->
+        <g class="flower-stem">
+            <path d="M370 200 Q365 160 380 130" stroke-linecap="round"/>
+            <path d="M380 130 Q395 115 385 100 Q375 85 390 70 Q405 55 395 40" stroke-linecap="round" fill="none"/>
+            <circle cx="395" cy="35" r="4" fill="none"/>
+        </g>
+        <!-- Stem 6: Wild carrot / Queen Anne's lace -->
+        <g class="flower-stem">
+            <path d="M450 200 Q445 150 460 100" stroke-linecap="round"/>
+            <path d="M460 100 Q450 90 445 80" stroke-linecap="round"/>
+            <path d="M460 100 Q470 90 475 80" stroke-linecap="round"/>
+            <path d="M460 100 Q458 88 455 75" stroke-linecap="round"/>
+            <path d="M460 100 Q462 88 465 75" stroke-linecap="round"/>
+            <circle cx="445" cy="76" r="2" fill="#888" stroke="none"/>
+            <circle cx="455" cy="72" r="2" fill="#888" stroke="none"/>
+            <circle cx="465" cy="72" r="2" fill="#888" stroke="none"/>
+            <circle cx="475" cy="76" r="2" fill="#888" stroke="none"/>
+            <circle cx="460" cy="68" r="2" fill="#888" stroke="none"/>
+        </g>
+        <!-- Stem 7: Loopy leaves -->
+        <g class="flower-stem">
+            <path d="M530 200 Q520 160 540 120 Q560 80 535 50" stroke-linecap="round"/>
+            <path d="M535 160 Q510 150 505 130 Q520 145 535 155" fill="none"/>
+            <path d="M545 130 Q570 120 575 100 Q560 115 545 125" fill="none"/>
+            <path d="M540 100 Q515 90 510 70 Q525 85 538 95" fill="none"/>
+            <circle cx="535" cy="45" r="3" fill="#888" stroke="none"/>
+        </g>
+        <!-- Stem 8: Starburst flower -->
+        <g class="flower-stem">
+            <path d="M620 200 Q610 150 630 100" stroke-linecap="round"/>
+            <circle cx="630" cy="85" r="6" fill="#888" stroke="none"/>
+            <path d="M630 85 L630 65 Q635 60 630 55" stroke-linecap="round"/>
+            <path d="M630 85 L645 70 Q652 68 655 62" stroke-linecap="round"/>
+            <path d="M630 85 L615 70 Q608 68 605 62" stroke-linecap="round"/>
+            <path d="M630 85 L650 85 Q658 82 662 80" stroke-linecap="round"/>
+            <path d="M630 85 L610 85 Q602 82 598 80" stroke-linecap="round"/>
+            <path d="M625 130 Q605 125 595 110" stroke-linecap="round"/>
+        </g>
+        <!-- Stem 9: Wavy grass trio -->
+        <g class="flower-stem">
+            <path d="M700 200 Q690 160 710 120 Q730 80 705 50" stroke-linecap="round"/>
+            <path d="M715 200 Q725 150 710 100 Q695 60 720 35" stroke-linecap="round"/>
+            <path d="M690 200 Q680 170 695 140 Q710 110 690 85" stroke-linecap="round"/>
+        </g>
+        <!-- Stem 10: Poppy with curly petals -->
+        <g class="flower-stem">
+            <path d="M790 200 Q780 160 800 120 Q820 80 795 55" stroke-linecap="round"/>
+            <circle cx="795" cy="45" r="5" fill="#888" stroke="none"/>
+            <path d="M795 45 Q780 35 775 45 Q780 50 795 45" fill="none"/>
+            <path d="M795 45 Q810 35 815 45 Q810 50 795 45" fill="none"/>
+            <path d="M795 45 Q785 30 795 25 Q805 30 795 45" fill="none"/>
+            <path d="M795 45 Q780 50 778 60 Q785 52 795 45" fill="none"/>
+            <path d="M795 45 Q810 50 812 60 Q805 52 795 45" fill="none"/>
+            <path d="M805 105 Q825 95 840 100" stroke-linecap="round"/>
+        </g>
+        <!-- Stem 11: Double spiral -->
+        <g class="flower-stem">
+            <path d="M890 200 Q880 160 900 130" stroke-linecap="round"/>
+            <path d="M900 130 Q915 115 905 95 Q895 80 910 65 Q925 50 910 40" stroke-linecap="round"/>
+            <path d="M900 130 Q885 115 895 95 Q905 80 890 65 Q875 50 890 40" stroke-linecap="round"/>
+            <circle cx="910" cy="35" r="3" fill="#888" stroke="none"/>
+            <circle cx="890" cy="35" r="3" fill="#888" stroke="none"/>
+        </g>
+        <!-- Stem 12: Wiggly lavender -->
+        <g class="flower-stem">
+            <path d="M970 200 Q960 150 980 100 Q1000 50 975 30" stroke-linecap="round"/>
+            <circle cx="985" cy="85" r="3" fill="#888" stroke="none"/>
+            <circle cx="978" cy="70" r="3" fill="#888" stroke="none"/>
+            <circle cx="982" cy="55" r="3" fill="#888" stroke="none"/>
+            <circle cx="977" cy="42" r="2.5" fill="#888" stroke="none"/>
+            <circle cx="975" cy="32" r="2" fill="#888" stroke="none"/>
+        </g>
+        <!-- Stem 13: Curly fern right -->
+        <g class="flower-stem">
+            <path d="M1050 200 Q1040 160 1060 120 Q1080 80 1055 50" stroke-linecap="round"/>
+            <path d="M1055 155 Q1030 145 1025 125 Q1040 140 1055 152" fill="none"/>
+            <path d="M1065 125 Q1090 115 1095 95 Q1080 110 1065 122" fill="none"/>
+            <path d="M1058 95 Q1035 85 1030 65 Q1045 80 1058 92" fill="none"/>
+            <path d="M1055 55 Q1045 40 1055 30 Q1062 42 1055 52" fill="none"/>
+        </g>
+        <!-- Stem 14: Heart-shaped bud -->
+        <g class="flower-stem">
+            <path d="M1120 200 Q1110 160 1130 120 Q1150 80 1125 55" stroke-linecap="round"/>
+            <path d="M1125 55 Q1115 45 1120 35 Q1130 45 1125 55" fill="none"/>
+            <path d="M1125 55 Q1135 45 1130 35 Q1120 45 1125 55" fill="none"/>
+        </g>
+        <!-- Stem 15: Tiny dancing flowers -->
+        <g class="flower-stem">
+            <path d="M1180 200 Q1170 160 1185 130" stroke-linecap="round"/>
+            <path d="M1185 130 Q1175 115 1180 100" stroke-linecap="round"/>
+            <path d="M1185 130 Q1195 115 1190 100" stroke-linecap="round"/>
+            <path d="M1185 130 Q1185 115 1185 95" stroke-linecap="round"/>
+            <circle cx="1180" cy="95" r="4" fill="none"/>
+            <circle cx="1190" cy="95" r="4" fill="none"/>
+            <circle cx="1185" cy="90" r="4" fill="none"/>
+            <circle cx="1180" cy="97" r="1.5" fill="#888" stroke="none"/>
+            <circle cx="1190" cy="97" r="1.5" fill="#888" stroke="none"/>
+            <circle cx="1185" cy="92" r="1.5" fill="#888" stroke="none"/>
+        </g>
+    </svg>
+</div>
+
+<script>
+    const TICK_PX   = 6;
+    const RED_RATIO = 0.35;
+    const RED_OFFSET_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const RULER_EXTEND_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ruler-extend')) || 500;
+    const PIN_OFFSET = 10; // px above company row that triggers pinning
+
+    const rulerEl = document.getElementById('ruler');
+    const pageEl  = document.getElementById('page');
+    const redLine = document.getElementById('red-line');
+    const bearSvg = document.getElementById('bear-svg');
+
+    // ── About toggle ─────────────────────────────────────────
+    const aboutToggle = document.getElementById('about-toggle');
+    const aboutPanel = document.getElementById('about-panel');
+    const aboutClose = aboutPanel.querySelector('.about-close');
+    const navEl = document.querySelector('nav');
+
+    function openAbout() {
+        aboutPanel.style.display = 'block';
+        aboutPanel.style.transition = 'opacity 0.3s ease';
+        navEl.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+        aboutPanel.classList.remove('about-open');
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                aboutPanel.style.opacity = '1';
+                aboutPanel.classList.add('about-open');
+            });
+        });
+        // Play about sound
+        if (aboutFadeInterval) {
+            clearInterval(aboutFadeInterval);
+            aboutFadeInterval = null;
+        }
+        if (aboutAudio && audioUnlocked) {
+            aboutAudio.volume = ABOUT_SOUND_VOLUME;
+            aboutAudio.currentTime = 0;
+            aboutAudio.play().catch(() => {});
+        }
+    }
+
+    function closeAbout() {
+        aboutPanel.style.transition = 'opacity 0.6s ease';
+        aboutPanel.style.opacity = '0';
+        navEl.style.display = '';
+        document.body.style.overflow = '';
+        aboutPanel.classList.remove('about-open');
+        setTimeout(() => {
+            aboutPanel.style.display = 'none';
+        }, 600);
+        // Fade out about sound
+        if (aboutAudio && !aboutAudio.paused) {
+            if (aboutFadeInterval) clearInterval(aboutFadeInterval);
+            aboutFadeInterval = setInterval(() => {
+                if (aboutAudio.volume > FADE_STEP) {
+                    aboutAudio.volume = Math.max(0, aboutAudio.volume - FADE_STEP);
+                } else {
+                    aboutAudio.pause();
+                    aboutAudio.volume = ABOUT_SOUND_VOLUME;
+                    clearInterval(aboutFadeInterval);
+                    aboutFadeInterval = null;
+                }
+            }, FADE_INTERVAL_MS);
+        }
+    }
+
+    aboutToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = aboutPanel.style.display === 'block';
+        if (isOpen) closeAbout();
+        else openAbout();
+    });
+
+    aboutClose.addEventListener('click', closeAbout);
+
+    let tickEls   = [];
+    const allThumbs = Array.from(document.querySelectorAll('.thumb, #expr-wrap'));
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = pageEl.scrollHeight + RULER_EXTEND_PX;
+        rulerEl.style.height = h + 'px';
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+        tickEls = Array.from(rulerEl.querySelectorAll('.tick'));
+    }
+
+    // ── Audio setup ────────────────────────────────────────────
+    const BOOP_INITIAL_DELAY_MS = 1000;
+    const BOOP_VOLUME = 0.3;
+    const ABOUT_SOUND_VOLUME = 0.4;
+    const FADE_STEP = 0.05;
+    const FADE_INTERVAL_MS = 50;
+    let boopAudio = null;
+    let aboutAudio = null;
+    let aboutFadeInterval = null;
+    let audioUnlocked = false;
+    let audioReadyTime = Date.now() + BOOP_INITIAL_DELAY_MS;
+    const audioEvents = ['click', 'keydown', 'touchstart', 'pointerdown'];
+
+    function initAudio() {
+        if (audioUnlocked) return;
+        if (!boopAudio) {
+            boopAudio = new Audio('Assets/Sounds/floraphonic-minimal-pop-click-ui-1-198301.mp3');
+            boopAudio.volume = BOOP_VOLUME;
+            boopAudio.load();
+        }
+        if (!aboutAudio) {
+            aboutAudio = new Audio('Assets/Sounds/koiroylers-slow-motion-355961.mp3');
+            aboutAudio.volume = ABOUT_SOUND_VOLUME;
+            aboutAudio.load();
+        }
+        boopAudio.volume = 0;
+        boopAudio.play().then(() => {
+            boopAudio.pause();
+            boopAudio.currentTime = 0;
+            boopAudio.volume = BOOP_VOLUME;
+            audioUnlocked = true;
+            audioEvents.forEach(evt => document.removeEventListener(evt, initAudio));
+        }).catch(() => {});
+    }
+    audioEvents.forEach(evt =>
+        document.addEventListener(evt, initAudio, { passive: true })
+    );
+
+    // Cleanup interval on page unload
+    window.addEventListener('beforeunload', () => {
+        if (aboutFadeInterval) clearInterval(aboutFadeInterval);
+    });
+
+    function boop() {
+        if (!boopAudio || !audioUnlocked) return;
+        if (Date.now() < audioReadyTime) return;
+        boopAudio.currentTime = 0;
+        boopAudio.play().catch(() => {});
+    }
+
+    // ── Company pin ghosts ─────────────────────────────────────
+    // For each company row, create a fixed-position ghost label that
+    // follows the red line while that company is "active".
+    const companyRows = Array.from(document.querySelectorAll('.company-row[data-company]'));
+    const ghosts = [];
+
+    companyRows.forEach((row, i) => {
+        const name = row.dataset.company;
+        const label = row.querySelector('.company-name');
+        const hidden = label && label.style.visibility === 'hidden';
+        const ghost = document.createElement('div');
+        ghost.className = 'company-ghost';
+        ghost.textContent = name;
+        if (hidden) ghost.style.display = 'none';
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label, hidden });
+    });
+
+    const dateMarkers = Array.from(document.querySelectorAll('.date-marker'));
+    const companyNames = Array.from(document.querySelectorAll('.company-name')).filter(el => el.style.visibility !== 'hidden');
+
+    const COMPANY_COLORS = {
+        'Google Messages': '#2d8a4e',
+        'Google AI Research': '#4285f4',
+    };
+    const DEFAULT_ACCENT = '#c0392b';
+
+    const workLink = document.getElementById('work-link');
+
+    let pinnedCompany = null;
+    let accentRGB = [192, 57, 43]; // pre-parsed DEFAULT_ACCENT
+    let lastScrollY = window.scrollY;
+    let scrollTimeout = null;
+    let rafPending = false;
+    let lastStyledTickStart = 0;
+    let lastStyledTickEnd = -1;
+
+    function collapseTicks() {
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            tickEls[i].style.transform = '';
+            tickEls[i].style.background = '';
+        }
+        lastStyledTickStart = 0;
+        lastStyledTickEnd = -1;
+    }
+
+    const BULGE_RADIUS = 45;
+    const MAX_SCALE = 5;
+
+    function update() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(collapseTicks, 150);
+        const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
+        lastScrollY = window.scrollY;
+
+        // Only iterate ticks near the red line
+        const rulerTop = rulerEl.getBoundingClientRect().top;
+        const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
+        const radiusInTicks = Math.ceil(BULGE_RADIUS / TICK_PX);
+        const start = Math.max(0, centerIdx - radiusInTicks);
+        const end = Math.min(tickEls.length - 1, centerIdx + radiusInTicks);
+
+        // Clear previously styled ticks outside new range
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            if (i < start || i > end) {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            const dist = Math.abs(tickEls[i].getBoundingClientRect().top - redY);
+            if (dist < BULGE_RADIUS) {
+                const t = 1 - dist / BULGE_RADIUS;
+                const ease = t * t * t;
+                tickEls[i].style.transform = `scaleX(${1 + (MAX_SCALE - 1) * ease})`;
+                // Ticks fade from neutral gray to the active company's accent near the red line
+                const r = Math.round(170 + (accentRGB[0] - 170) * ease);
+                const g = Math.round(170 + (accentRGB[1] - 170) * ease);
+                const b = Math.round(170 + (accentRGB[2] - 170) * ease);
+                tickEls[i].style.background = `rgb(${r},${g},${b})`;
+            } else {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        lastStyledTickStart = start;
+        lastStyledTickEnd = end;
+
+        // Saturate thumbnail when current timeline line is within its bounds
+        allThumbs.forEach(thumb => {
+            const rect = thumb.getBoundingClientRect();
+            const isInRange = redY >= rect.top && redY <= rect.bottom;
+            const isSaturated = thumb.classList.contains('saturated');
+            if (isInRange !== isSaturated) thumb.classList.toggle('saturated', isInRange);
+        });
+
+        // Company label pinning
+        let newPinned = null;
+        const TRANSITION_ZONE = 60; // px before handoff where ghost starts sliding back
+
+        ghosts.forEach(({ row, ghost, name, label, hidden }, i) => {
+            if (hidden) return;
+            const labelTop = label.getBoundingClientRect().top;
+            // Find the next visible company row
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                if (!ghosts[j].hidden) {
+                    nextTop = ghosts[j].row.getBoundingClientRect().top;
+                    break;
+                }
+            }
+
+            const pinnedY = redY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - redY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                newPinned = name;
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    const ghostY = pinnedY - pixelsMoved;
+                    ghost.style.top = ghostY + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+
+        if (newPinned !== pinnedCompany) {
+            if (newPinned !== null) boop();
+            pinnedCompany = newPinned;
+        }
+
+        // Fade dates when near the current timeline line or any product name/ghost
+        // Fully hidden within 20px, fade starts at 100px distance
+        const lineY = redY;
+        const FADE_HIDE = 20;
+        const FADE_START = 100;
+
+        // Cache company name and ghost rects once per frame
+        const cnRects = companyNames.map(cn => {
+            const rect = cn.getBoundingClientRect();
+            return { cn, row: cn.closest('.row'), center: rect.top + rect.height / 2 };
+        });
+        const ghostRects = ghosts
+            .filter(({ ghost, hidden }) => !hidden && ghost.style.display !== 'none')
+            .map(({ ghost }) => {
+                const rect = ghost.getBoundingClientRect();
+                return rect.top + rect.height / 2;
+            });
+
+        dateMarkers.forEach(dm => {
+            const dmRect = dm.getBoundingClientRect();
+            const dmCenter = dmRect.top + dmRect.height / 2;
+            let minDist = Math.abs(dmCenter - lineY);
+
+            // Early exit if already fully hidden
+            if (minDist > FADE_HIDE) {
+                const dmRow = dm.closest('.row');
+                for (const { row, center } of cnRects) {
+                    if (row === dmRow) continue;
+                    minDist = Math.min(minDist, Math.abs(dmCenter - center));
+                    if (minDist <= FADE_HIDE) break;
+                }
+            }
+
+            if (minDist > FADE_HIDE) {
+                for (const center of ghostRects) {
+                    minDist = Math.min(minDist, Math.abs(dmCenter - center));
+                    if (minDist <= FADE_HIDE) break;
+                }
+            }
+
+            const opacity = minDist <= FADE_HIDE ? 0
+                          : minDist >= FADE_START ? 1
+                          : (minDist - FADE_HIDE) / (FADE_START - FADE_HIDE);
+            dm.style.opacity = opacity;
+        });
+
+        // Scroll hint fade
+        if (scrollHint) {
+            const shouldHide = window.scrollY > 40;
+            if (shouldHide !== scrollHintHidden) {
+                scrollHint.classList.toggle('hidden', shouldHide);
+                scrollHintHidden = shouldHide;
+            }
+        }
+    }
+
+    const scrollHint = document.getElementById('scroll-hint');
+    let scrollHintHidden = false;
+
+    // ── Flower garden at bottom ──
+    const flowerGarden = document.getElementById('flower-garden');
+    const bottomBloom = document.getElementById('bottom-bloom');
+    let flowersVisible = false;
+
+    function checkFlowerGarden() {
+        const scrollBottom = window.scrollY + window.innerHeight;
+        const pageHeight = document.documentElement.scrollHeight;
+        const threshold = 0; // px from bottom to trigger
+
+        if (scrollBottom >= pageHeight - threshold && !flowersVisible) {
+            flowerGarden.classList.add('visible');
+            bottomBloom.classList.add('visible');
+            flowersVisible = true;
+        } else if (scrollBottom < pageHeight - threshold - 100 && flowersVisible) {
+            flowerGarden.classList.remove('visible');
+            bottomBloom.classList.remove('visible');
+            flowersVisible = false;
+        }
+    }
+
+    buildRuler();
+    update();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); checkFlowerGarden(); rafPending = false; });
+        }
+    }, { passive: true });
+    let resizeTimeout = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => { buildRuler(); update(); }, 100);
+    });
+
+    // ── Expressions thumbnail: always play GIF ──
+    const GIF_SRC   = 'Assets/Expressions Program/Expressions_Thumbnail.gif';
+    const exprWrap   = document.getElementById('expr-wrap');
+    const exprCanvas = document.getElementById('expr-canvas');
+    const exprGif    = document.getElementById('expr-gif');
+
+    // Show GIF immediately, hide canvas
+    exprCanvas.style.display = 'none';
+    exprGif.src = GIF_SRC;
+    exprGif.style.display = 'block';
+
+
+    // ── Thumbnail settle-on-scroll ──────────────────────────────
+    const settleObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('settled');
+            }
+        });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.thumb').forEach(t => settleObserver.observe(t));
+    settleObserver.observe(exprWrap);
+
+    // ── 3D tilt on hover for all thumbnails ──
+    document.querySelectorAll('.thumb, #expr-wrap').forEach(thumb => {
+        thumb.addEventListener('mouseenter', () => {
+            thumb.style.transition = 'transform 0.15s ease-out, box-shadow 0.2s ease, filter 0.4s ease';
+        });
+        thumb.addEventListener('mousemove', (e) => {
+            const rect = thumb.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            const rotateY = (x - 0.5) * 4;
+            const rotateX = (0.5 - y) * 4;
+            thumb.style.transform = `perspective(400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        thumb.addEventListener('mouseleave', () => {
+            thumb.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease, filter 0.4s ease';
+            thumb.style.transform = '';
+        });
+    });
+
+    // ── Draggable fuzzy circle ──
+    const fuzzyWrap = document.getElementById('fuzzy-wrap');
+    const fuzzyCircle = document.getElementById('fuzzy-circle');
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    // Position fuzzy circle (upper-right area, always on screen)
+    function positionFuzzyCircle() {
+        if (!fuzzyWrap) return;
+        const wrapSize = 200;
+        const maxX = window.innerWidth - wrapSize;
+        const maxY = window.innerHeight - wrapSize;
+
+        // Fixed starting position: 65% from left, 150px from top
+        let targetX = window.innerWidth * 0.65;
+        let targetY = 150;
+
+        // Clamp to viewport
+        targetX = Math.max(0, Math.min(targetX, maxX));
+        targetY = Math.max(0, Math.min(targetY, maxY));
+
+        fuzzyWrap.style.left = targetX + 'px';
+        fuzzyWrap.style.top = targetY + 'px';
+        fuzzyWrap.style.right = 'auto';
+        fuzzyWrap.style.bottom = 'auto';
+    }
+
+    positionFuzzyCircle();
+    window.addEventListener('resize', () => positionFuzzyCircle(false));
+
+    function onFuzzyMouseMove(e) {
+        const x = e.clientX - dragOffsetX - fuzzyWrap.offsetWidth / 2;
+        const y = e.clientY - dragOffsetY - fuzzyWrap.offsetHeight / 2;
+        fuzzyWrap.style.left = x + 'px';
+        fuzzyWrap.style.top = y + 'px';
+        fuzzyWrap.style.right = 'auto';
+        fuzzyWrap.style.bottom = 'auto';
+    }
+
+    function onFuzzyMouseUp() {
+        isDragging = false;
+        fuzzyCircle.classList.remove('dragging');
+        fuzzyCircle.style.transform = '';
+        document.removeEventListener('mousemove', onFuzzyMouseMove);
+        document.removeEventListener('mouseup', onFuzzyMouseUp);
+    }
+
+    if (fuzzyWrap && fuzzyCircle) {
+        fuzzyWrap.addEventListener('mouseenter', () => {
+            if (!isDragging) {
+                fuzzyCircle.classList.add('growing');
+            }
+        });
+
+        fuzzyWrap.addEventListener('mouseleave', () => {
+            if (!isDragging) {
+                const currentTransform = window.getComputedStyle(fuzzyCircle).transform;
+
+                // Parse the current scale from the matrix transform
+                let currentScale = 1;
+                if (currentTransform && currentTransform !== 'none') {
+                    const match = currentTransform.match(/matrix\(([^,]+)/);
+                    if (match) {
+                        currentScale = parseFloat(match[1]);
+                    }
+                }
+
+                // Freeze at current scale with no transition
+                fuzzyCircle.style.transition = 'none';
+                fuzzyCircle.style.transform = currentTransform;
+                fuzzyCircle.classList.remove('growing');
+
+                // Force reflow, then animate back
+                fuzzyCircle.offsetHeight;
+                fuzzyCircle.style.transition = '';
+                fuzzyCircle.style.transform = '';
+            }
+        });
+
+        fuzzyWrap.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            const currentScale = window.getComputedStyle(fuzzyCircle).transform;
+            fuzzyCircle.classList.add('dragging');
+            fuzzyCircle.classList.remove('growing');
+            if (currentScale && currentScale !== 'none') {
+                fuzzyCircle.style.transform = currentScale;
+            }
+            const rect = fuzzyWrap.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left - rect.width / 2;
+            dragOffsetY = e.clientY - rect.top - rect.height / 2;
+            document.addEventListener('mousemove', onFuzzyMouseMove);
+            document.addEventListener('mouseup', onFuzzyMouseUp);
+        });
+    }
+
+    // ── Bear download buttons ──────────────────────────────────
+
+    // Speed slider
+    const bearSpeedSlider = document.getElementById('bear-speed');
+    const bearSpeedLabel = document.getElementById('bear-speed-label');
+    const bearEarL = bearSvg.querySelector('.bear-ear-left');
+    const bearEarR = bearSvg.querySelector('.bear-ear-right');
+    const bearNose = bearSvg.querySelector('.bear-nose');
+    const bearEyes = bearSvg.querySelectorAll('.bear-eye');
+    bearSpeedSlider.addEventListener('input', () => {
+        const speed = parseFloat(bearSpeedSlider.value);
+        bearSpeedLabel.textContent = speed + '×';
+        if (bearEarL) bearEarL.style.animationDuration = (11 / speed) + 's';
+        if (bearEarR) bearEarR.style.animationDuration = (11 / speed) + 's';
+        if (bearNose) bearNose.style.animationDuration = (3 / speed) + 's';
+        bearEyes.forEach(e => e.style.animationDuration = (4 / speed) + 's');
+    });
+
+    // SVG download
+    document.getElementById('btn-bear-svg').addEventListener('click', () => {
+        const svgData = new XMLSerializer().serializeToString(bearSvg);
+        const blob = new Blob([svgData], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bear.svg';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    // GIF download — render animation frames and encode inline
+    document.getElementById('btn-bear-gif').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-bear-gif');
+        btn.textContent = '...';
+
+        const scale = 4;
+        const w = 80 * scale;
+        const h = 50 * scale;
+        const fps = 15;
+        const duration = 11;
+        const totalFrames = fps * duration;
+        const delay = 1000 / fps;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+
+        // Collect frames as image data
+        const frames = [];
+        for (let i = 0; i < totalFrames; i++) {
+            const svgClone = bearSvg.cloneNode(true);
+            svgClone.setAttribute('width', w);
+            svgClone.setAttribute('height', h);
+            // Remove <style> animations so we control state manually
+            const styleEl = svgClone.querySelector('style');
+            if (styleEl) styleEl.textContent = '';
+
+            const pct = (i / totalFrames) * 100;
+            const nosePct = ((i / (fps * 3)) % 1) * 100; // nose is on 3s loop
+
+            const leftEar = svgClone.querySelector('.bear-ear-left');
+            const rightEar = svgClone.querySelector('.bear-ear-right');
+            const nose = svgClone.querySelector('.bear-nose');
+
+            // Left ear: transform-origin is right bottom of its bounding box
+            // char ʕ at x=2 y=34 fontSize=28 → bbox roughly x=2..18 y=8..34 → pivot (18, 34)
+            if (leftEar) {
+                const angle = getBearLeftRot(pct);
+                leftEar.setAttribute('transform', `rotate(${angle} 18 34)`);
+                leftEar.style.transform = '';
+                leftEar.style.animation = '';
+            }
+            // Right ear: transform-origin is left bottom → pivot (60, 34)
+            if (rightEar) {
+                const angle = getBearRightRot(pct);
+                rightEar.setAttribute('transform', `rotate(${angle} 60 34)`);
+                rightEar.style.transform = '';
+                rightEar.style.animation = '';
+            }
+            // Nose wiggle: translateY
+            if (nose) {
+                const noseY = getBearNoseY(nosePct);
+                nose.setAttribute('transform', `translate(0 ${noseY})`);
+                nose.style.transform = '';
+                nose.style.animation = '';
+            }
+
+            const svgData = new XMLSerializer().serializeToString(svgClone);
+            const img = new Image();
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+            });
+            // Render onto white to composite semi-transparent pixels,
+            // then treat white pixels as transparent
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            const imageData = ctx.getImageData(0, 0, w, h);
+            // Mark pure white pixels as transparent
+            const d = imageData.data;
+            for (let p = 0; p < d.length; p += 4) {
+                if (d[p] >= 254 && d[p+1] >= 254 && d[p+2] >= 254) {
+                    d[p+3] = 0; // mark as transparent
+                }
+            }
+            frames.push(imageData);
+        }
+
+        // Encode as GIF using minimal inline encoder
+        const blob = encodeGIF(frames, w, h, delay);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bear.gif';
+        a.click();
+        URL.revokeObjectURL(url);
+        btn.textContent = 'GIF';
+    });
+
+    // Minimal GIF89a encoder
+    function encodeGIF(frames, width, height, delay) {
+        const buf = [];
+        const wb = (b) => buf.push(b & 0xff);
+        const w16 = (v) => { wb(v & 0xff); wb((v >> 8) & 0xff); };
+        const wStr = (s) => { for (let i = 0; i < s.length; i++) wb(s.charCodeAt(i)); };
+
+        // Build global color table (quantize to 256 colors using median cut)
+        // Simple approach: use a fixed 216-color web-safe palette + 40 grays
+        const palette = [];
+        for (let r = 0; r < 6; r++)
+            for (let g = 0; g < 6; g++)
+                for (let b = 0; b < 6; b++)
+                    palette.push([r * 51, g * 51, b * 51]);
+        for (let i = 0; i < 40; i++)
+            palette.push([Math.round(i * 255 / 39), Math.round(i * 255 / 39), Math.round(i * 255 / 39)]);
+
+        function findClosest(r, g, b, a) {
+            if (a < 128) return 0; // transparent → index 0
+            let best = 1, bestDist = Infinity;
+            for (let i = 1; i < 256; i++) {
+                const dr = palette[i][0] - r, dg = palette[i][1] - g, db = palette[i][2] - b;
+                const d = dr * dr + dg * dg + db * db;
+                if (d < bestDist) { bestDist = d; best = i; }
+            }
+            return best;
+        }
+
+        // Header
+        wStr('GIF89a');
+        w16(width);
+        w16(height);
+        wb(0xf7);
+        wb(0);
+        wb(0);
+
+        // Global Color Table
+        for (let i = 0; i < 256; i++) {
+            wb(palette[i][0]); wb(palette[i][1]); wb(palette[i][2]);
+        }
+
+        // Netscape looping extension
+        wb(0x21); wb(0xff); wb(11);
+        wStr('NETSCAPE2.0');
+        wb(3); wb(1); w16(0); wb(0);
+
+        // Frames
+        const delayCs = Math.round(delay / 10);
+        for (const frame of frames) {
+            wb(0x21); wb(0xf9); wb(4);
+            wb(0x09);
+            w16(delayCs);
+            wb(0);
+            wb(0);
+
+            wb(0x2c);
+            w16(0); w16(0);
+            w16(width); w16(height);
+            wb(0);
+
+            const minCodeSize = 8;
+            wb(minCodeSize);
+            const pixels = new Uint8Array(width * height);
+            const d = frame.data;
+            for (let i = 0; i < width * height; i++) {
+                pixels[i] = findClosest(d[i * 4], d[i * 4 + 1], d[i * 4 + 2], d[i * 4 + 3]);
+            }
+            const lzwData = lzwEncode(minCodeSize, pixels);
+            let offset = 0;
+            while (offset < lzwData.length) {
+                const chunkSize = Math.min(255, lzwData.length - offset);
+                wb(chunkSize);
+                for (let j = 0; j < chunkSize; j++) wb(lzwData[offset + j]);
+                offset += chunkSize;
+            }
+            wb(0);
+        }
+
+        wb(0x3b);
+        return new Blob([new Uint8Array(buf)], { type: 'image/gif' });
+    }
+
+    function lzwEncode(minCodeSize, pixels) {
+        const clearCode = 1 << minCodeSize;
+        const eoiCode = clearCode + 1;
+        let codeSize = minCodeSize + 1;
+        let nextCode = eoiCode + 1;
+        const out = [];
+        let bits = 0, bitCount = 0;
+
+        function emit(code) {
+            bits |= (code << bitCount);
+            bitCount += codeSize;
+            while (bitCount >= 8) {
+                out.push(bits & 0xff);
+                bits >>= 8;
+                bitCount -= 8;
+            }
+        }
+
+        // Use a simple dictionary
+        const dict = new Map();
+        function resetDict() {
+            dict.clear();
+            for (let i = 0; i < clearCode; i++) dict.set(String(i), i);
+            nextCode = eoiCode + 1;
+            codeSize = minCodeSize + 1;
+        }
+
+        resetDict();
+        emit(clearCode);
+
+        let current = String(pixels[0]);
+        for (let i = 1; i < pixels.length; i++) {
+            const next = String(pixels[i]);
+            const combined = current + ',' + next;
+            if (dict.has(combined)) {
+                current = combined;
+            } else {
+                emit(dict.get(current));
+                if (nextCode < 4096) {
+                    dict.set(combined, nextCode);
+                    if (nextCode >= (1 << codeSize) && codeSize < 12) codeSize++;
+                    nextCode++;
+                } else {
+                    emit(clearCode);
+                    resetDict();
+                }
+                current = next;
+            }
+        }
+        emit(dict.get(current));
+        emit(eoiCode);
+
+        if (bitCount > 0) out.push(bits & 0xff);
+        return out;
+    }
+
+    // Interpolate bear keyframes
+    function getBearLeftRot(pct) {
+        const keys = [[0,0],[12,0],[15,-6],[19,0],[35,0],[39,-10],[43,-4],[50,0],[65,0],[69,-20],[76,-18],[84,0],[100,0]];
+        return interpKeys(keys, pct);
+    }
+    function getBearRightRot(pct) {
+        return -getBearLeftRot(pct);
+    }
+    function getBearNoseY(pct) {
+        const keys = [[0,0],[40,0],[43,-1],[46,0.5],[49,0],[100,0]];
+        return interpKeys(keys, pct);
+    }
+    function interpKeys(keys, pct) {
+        for (let i = 0; i < keys.length - 1; i++) {
+            if (pct >= keys[i][0] && pct <= keys[i + 1][0]) {
+                const range = keys[i + 1][0] - keys[i][0];
+                if (range === 0) return keys[i][1];
+                let t = (pct - keys[i][0]) / range;
+                // ease-in-out (smoothstep)
+                t = t * t * (3 - 2 * t);
+                return keys[i][1] + (keys[i + 1][1] - keys[i][1]) * t;
+            }
+        }
+        return keys[keys.length - 1][1];
+    }
+
+    // ── Weather note ──────────────────────────────────────────
+    (async () => {
+        try {
+            const data = await window._weatherP;
+            if (!data) return;
+            const temp = Math.round(data.current.temperature_2m);
+            const code = data.current.weather_code;
+            const el = document.getElementById('weather-note');
+
+            const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+            const hour = new Date().getHours();
+            const isEvening = hour >= 18 || hour < 6;
+            const isMorning = hour >= 6 && hour < 12;
+
+            let condition, activity;
+
+            if (isEvening) {
+                condition = code <= 3 ? 'Clear' : code <= 48 ? 'Foggy' : code <= 67 ? 'Rainy' : 'Overcast';
+                activity = pick([
+                    'I might be finding rest in quiet rooms, with music as the guide.',
+                    'I might be steeping in sound and stillness, the way tea steeps in water.',
+                    'I might be cooking, listening, being — the guest house of evening has opened.',
+                    'I might be with a book, a lamp, low music: what the heart requires, the night provides.',
+                    'I might be letting the needle find its groove while dinner simmers.',
+                    'I might be somewhere between a melody and a memory.',
+                    'I might be tending to the quiet hours, where the soul does its mending.',
+                    'I might be listening to the hifi hum its evening prayer.',
+                    'I might be in the company of old albums and warm light.',
+                    'I might be watching the day fold itself into night.',
+                    'I might be sketching by lamplight, letting the pencil wander.',
+                    'I might be writing letters I may never send.',
+                    'I might be on a video call with someone far away, close now.',
+                    'I might be organizing playlists like a librarian of moods.',
+                    'I might be doing dishes slowly, making ceremony of the ordinary.',
+                    'I might be folding laundry, each crease a small meditation.',
+                    'I might be watering the houseplants, checking on their quiet lives.',
+                    'I might be rewatching something familiar, a blanket of story.',
+                    'I might be journaling, asking the page what the day meant.',
+                    'I might be stretching on the floor, unwinding the hours.'
+                ]);
+            } else if ([0, 1].includes(code)) {
+                condition = 'Clear';
+                activity = pick(isMorning
+                    ? ['I might be walking out to meet the clear morning, hearing what the breeze carries.', 'I might be in the garden, meeting the clear light like a guest.', 'I might be turning with the wheel of the clear sky, on two wheels.', 'I might be greeting this sunny morning, which asks nothing but presence.', 'I might be out where the dew still holds its shine under clear skies.', 'I might be following the clear light as it wakes the neighborhood.', 'I might be pedaling into the clear morning, toward a horizon that keeps its promises.', 'I might be among the early risers on this clear morning — birds, gardeners, dreamers.', 'I might be running while the clear sky is still soft with dawn.', 'I might be at the farmers market, where the morning sun gilds everything.', 'I might be stretching on the porch, saluting this clear day.', 'I might be making breakfast with the windows open to the light.', 'I might be photographing the clear morning before it knows it is beautiful.', 'I might be biking to a café, chasing shadows under sunny skies.', 'I might be swimming laps, the water and sky both clear and blue.']
+                    : ['I might be sitting where the sun reaches, letting it do its golden work.', 'I might be outside, being fed by the clear afternoon light.', 'I might be mid-sentence in a long conversation with the self — a walk under clear skies.', 'I might be following warmth like a cat follows a sunbeam.', 'I might be out where the clear afternoon stretches long and kind.', 'I might be letting the clear sky hold me in its blue gaze.', 'I might be tracing the shadows as they lengthen under sunny skies.', 'I might be somewhere the light pools and lingers.', 'I might be reading on a bench, the sun my bookmark.', 'I might be at a rooftop, watching the city glow.', 'I might be playing basketball in this golden-hour light.', 'I might be sketching outdoors, the clear sky my ceiling.', 'I might be grilling, tending smoke and flame under open skies.', 'I might be on a long drive, windows down, sun on my arm.', 'I might be at the water, watching light scatter like coins.']);
+            } else if ([2, 3].includes(code)) {
+                condition = 'Cloudy';
+                activity = pick(isMorning
+                    ? ['I might be running under this quilted sky — the clouds keep pace.', 'I might be walking through the gray toward coffee, which waits at the end of every good path.', 'I might be out where the clouds soften everything.', 'I might be moving through this cloudy morning like a quiet thought.', 'I might be finding rhythm in footsteps and cloud-drift.', 'I might be on a path the clouds have blessed with shade.', 'I might be at yoga, bending beneath a sky that bends too.', 'I might be biking where the cloudy light asks nothing of me.', 'I might be reading the newspaper with the window cracked.', 'I might be at the bakery, where warmth rises to meet the cool gray.', 'I might be photographing textures the flat cloudy light reveals.', 'I might be walking the dog under this comfortable ceiling.', 'I might be browsing a bookshop, the clouds keeping time outside.', 'I might be at the gym, matching the sky\'s quiet energy.', 'I might be making soup, stirring something slow into being.']
+                    : ['I might be following the unfolding road on quiet wheels under cloudy skies.', 'I might be answering the call of new trails on this cloudy afternoon.', 'I might be exploring under this ceiling of soft gray.', 'I might be pedaling through the afternoon\'s gentle cloudy mood.', 'I might be wandering where the overcast invites reflection.', 'I might be out where the cloudy light is even and the mind is clear.', 'I might be visiting a museum, matching its hushed mood.', 'I might be in a café with a laptop and no deadline.', 'I might be thrifting, finding treasure under fluorescent suns.', 'I might be on a long phone call with someone who matters.', 'I might be at the library, surrounded by quiet company.', 'I might be cooking an elaborate meal, the afternoon my sous chef.', 'I might be doing laundry at the laundromat, watching life spin.', 'I might be organizing photos, revisiting sunnier days.', 'I might be napping without guilt; the clouds agree.']);
+            } else if ([45, 48].includes(code)) {
+                condition = 'Foggy';
+                activity = pick([
+                    'I might be running slowly as the world softens in fog.',
+                    'I might be walking along the water while the fog holds its breath.',
+                    'I might be lifting my camera to this veil between worlds.',
+                    'I might be wandering without aim; the fog approves.',
+                    'I might be disappearing into the mist, only to reappear.',
+                    'I might be out where edges blur and everything is possible.',
+                    'I might be moving through the foggy morning like a half-remembered dream.',
+                    'I might be following paths that the fog has made mysterious.',
+                    'I might be somewhere between here and elsewhere in the mist.',
+                    'I might be letting the fog teach me about patience.',
+                    'I might be at a café where the windows are haloed with mist.',
+                    'I might be on a bridge, watching the fog erase the far shore.',
+                    'I might be listening to jazz, which sounds like fog made audible.',
+                    'I might be driving slow roads where headlights find nothing.',
+                    'I might be writing, the fog a curtain between me and distraction.',
+                    'I might be making tea, steam joining the mist outside.',
+                    'I might be at the harbor, watching boats appear like ghosts.',
+                    'I might be taking a long bath, steaming like the foggy world.',
+                    'I might be meditating, thoughts drifting like this mist.',
+                    'I might be on a morning run, the path revealing itself step by step.'
+                ]);
+            } else if ([51, 53, 55, 56, 57].includes(code)) {
+                condition = 'Drizzle';
+                activity = pick([
+                    'I might be out listening to the sky whisper its light rain.',
+                    'I might be greeting the drizzle, hat and all.',
+                    'I might be jumping in puddles — mirrors for small philosophers.',
+                    'I might be gardening in the drizzle, being gardened by the sky.',
+                    'I might be walking where the rain is more suggestion than statement.',
+                    'I might be out where the drizzle makes the air soft and silver.',
+                    'I might be letting the drizzle bless my shoulders.',
+                    'I might be finding joy in this drizzly weather others avoid.',
+                    'I might be tracing the paths that glisten with drizzle.',
+                    'I might be out where the world smells of rain and possibility.',
+                    'I might be at a window seat, watching the drizzle bead and race.',
+                    'I might be in a bookshop, dry between worlds of wet and word.',
+                    'I might be cooking ramen, slurping against the drizzle outside.',
+                    'I might be on a covered patio, letting the drizzle be my ASMR.',
+                    'I might be photographing how rain makes the city impressionist.',
+                    'I might be at the record store, flipping through vinyl while drizzle taps the glass.',
+                    'I might be baking scones, the kitchen warm against the damp.',
+                    'I might be having a long brunch, letting the drizzle extend my stay.',
+                    'I might be cleaning, making order while the sky scatters water.',
+                    'I might be sketching indoors, the drizzle my ambient soundtrack.'
+                ]);
+            } else if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) {
+                condition = 'Rainy';
+                activity = pick([
+                    'I might be answering the rain with a slow pour of coffee.',
+                    'I might be watching the rain paint the window — a painting that changes.',
+                    'I might be cooking something ambitious; rain is the best company.',
+                    'I might be browsing the covered market as the rain browses the streets.',
+                    'I might be visiting the greenhouse, escaping the rain where summer is held hostage.',
+                    'I might be reading while the rain reads its own stories on the glass.',
+                    'I might be inside, warm, while the rainy world washes itself.',
+                    'I might be listening to the percussion of rain on the roof.',
+                    'I might be baking something this rainy weather demands.',
+                    'I might be steeping tea as the rainy sky steeps the earth.',
+                    'I might be at the movies, the rain my excuse for a double feature.',
+                    'I might be doing a puzzle, the rain filling in the edges of time.',
+                    'I might be calling an old friend, the rain tapping out our rhythm.',
+                    'I might be reorganizing my closet, finding lost things.',
+                    'I might be making bread, kneading while the rain kneads the garden.',
+                    'I might be at a ramen shop, steam rising to match the rain.',
+                    'I might be practicing piano, adding notes to the rain\'s composition.',
+                    'I might be in bed with a book, the ultimate rainy day permission.',
+                    'I might be at a cozy bar, nursing something warm.',
+                    'I might be writing, the rain a curtain around my small world.'
+                ]);
+            } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+                condition = 'Snow';
+                activity = pick([
+                    'I might be bundled like a secret, exploring the white quiet.',
+                    'I might be building in snow, collaborating with impermanence.',
+                    'I might be on the porch with cocoa, watching the world soften under snow.',
+                    'I might be sending small joys arcing through the snowy air — snowballs.',
+                    'I might be walking where each step writes a small story in snow.',
+                    'I might be out where the snowy silence has a texture.',
+                    'I might be catching flakes on my tongue like a child.',
+                    'I might be watching the snow erase and redraw the world.',
+                    'I might be somewhere the cold makes everything crisp and clear.',
+                    'I might be finding warmth in movement through the snow.',
+                    'I might be cross-country skiing, gliding through the hush.',
+                    'I might be making snow angels, leaving my outline behind.',
+                    'I might be at the window with soup, watching the snow accumulate.',
+                    'I might be shoveling, making paths for neighbors.',
+                    'I might be photographing how snow simplifies everything.',
+                    'I might be sledding, screaming joy into the cold.',
+                    'I might be by the fire, thawing hands around a mug.',
+                    'I might be tracking animal prints, reading the snow\'s stories.',
+                    'I might be making a snowman, giving it my scarf.',
+                    'I might be inside, watching the world become a snow globe.'
+                ]);
+            } else if ([95, 96, 99].includes(code)) {
+                condition = 'Stormy';
+                activity = pick([
+                    'I might be turning pages while the storm rages. We each do our work.',
+                    'I might be baking bread as thunder rolls — both are transformations.',
+                    'I might be watching the storm the way one watches a master at work.',
+                    'I might be reorganizing a shelf while the storm reorganizes the sky.',
+                    'I might be inside, grateful for walls and roof during the storm.',
+                    'I might be listening to the stormy sky tell its urgent stories.',
+                    'I might be cooking something warm against the wild storm outside.',
+                    'I might be finding peace in the contrast of stormy chaos and calm.',
+                    'I might be watching lightning write its brief poems.',
+                    'I might be counting the seconds between flash and thunder.',
+                    'I might be playing board games, the storm our dramatic backdrop.',
+                    'I might be on the phone, voices bridging the storm\'s divide.',
+                    'I might be making pasta from scratch, flour against the fury.',
+                    'I might be watching the trees bend and spring back.',
+                    'I might be writing, powered by the storm\'s electricity.',
+                    'I might be napping, the thunder a strange lullaby.',
+                    'I might be at the window, feeling small in the best way.',
+                    'I might be lighting candles, preparing for the power to choose darkness.',
+                    'I might be telling stories, each crack of thunder punctuation.',
+                    'I might be dancing in the kitchen, storm as my orchestra.'
+                ]);
+            } else {
+                condition = 'Overcast';
+                activity = pick([
+                    'I might be visiting the garden, which keeps its counsel under overcast skies.',
+                    'I might be jogging under gray skies — the clouds are patient witnesses.',
+                    'I might be walking toward the park, which waits like a letter to be read.',
+                    'I might be sketching the overcast world; the world sketches back.',
+                    'I might be out where the overcast light is soft and forgiving.',
+                    'I might be wandering in the gentle gray afternoon.',
+                    'I might be moving through this overcast day like a quiet thought.',
+                    'I might be finding beauty in the muted overcast palette.',
+                    'I might be exploring under an overcast sky that asks for nothing.',
+                    'I might be out where the overcast holds everything in soft focus.',
+                    'I might be at a flea market, hunting for stories in old objects.',
+                    'I might be on a long walk, the overcast sky my companion.',
+                    'I might be at the aquarium, watching fish ignore the weather.',
+                    'I might be making pottery, shaping clay under neutral light.',
+                    'I might be at a coffee shop, people-watching through gray windows.',
+                    'I might be cleaning out a drawer, finding what I forgot I had.',
+                    'I might be on a video call, the even light flattering everyone.',
+                    'I might be meal prepping for the week ahead.',
+                    'I might be at the botanical garden, the overcast making greens glow.',
+                    'I might be writing postcards to people who\'ll be surprised.'
+                ]);
+            }
+
+            el.innerHTML = `${temp}°F in Seattle. ${condition}.<br><span style="display:inline-block;margin-top:6px;">${activity}</span>`;
+            el.style.opacity = '1';
+        } catch(e) {}
+    })();
+
+    // ── View Transition: set name on clicked thumbnail ──
+    const transitionEls = document.querySelectorAll('[data-transition-name]');
+    let clickedThumb = null;
+    let lastActiveEl = null;
+
+    document.querySelectorAll('.thumb-link').forEach(link => {
+        const thumb = link.querySelector('.thumb, #expr-wrap');
+        link.addEventListener('click', () => {
+            sessionStorage.setItem('timelineScrollY', window.scrollY);
+            if (thumb && thumb.dataset.transitionName) {
+                clickedThumb = thumb;
+            }
+        });
+    });
+
+    window.addEventListener('pageswap', (e) => {
+        if (clickedThumb && e.viewTransition) {
+            if (lastActiveEl) lastActiveEl.style.viewTransitionName = '';
+            clickedThumb.style.viewTransitionName = 'project-hero';
+            lastActiveEl = clickedThumb;
+            clickedThumb = null;
+        }
+    });
+
+    // ── Restore scroll position when returning from subpage ──
+    const savedScrollY = sessionStorage.getItem('timelineScrollY');
+    if (savedScrollY !== null) {
+        window.scrollTo(0, parseInt(savedScrollY, 10));
+        sessionStorage.removeItem('timelineScrollY');
+    }
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

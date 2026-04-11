@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #ffffff;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            overflow-x: hidden;
+            overflow-y: scroll;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ─── Fixed nav ─── */
+        nav {
+            position: fixed;
+            top: 28px;
+            right: 44px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+        nav a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+        nav a:hover { color: var(--text); }
+        nav .play-link:hover { color: var(--red); }
+        nav .play-link {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+            color: var(--red);
+        }
+        nav .play-link svg text { fill: var(--red); }
+
+        /* ─── PLAY letter animations ─── */
+        .play-p { animation: playP 11s ease-in-out infinite; }
+        .play-l { animation: playL 11s ease-in-out infinite; }
+        .play-a { animation: playA 11s ease-in-out infinite; }
+        .play-y { animation: playY 11s ease-in-out infinite; }
+        @keyframes playP {
+            0%, 5% { transform: rotate(-8deg) translateY(0); }
+            8% { transform: rotate(-14deg) translateY(-2px); }
+            15% { transform: rotate(-12deg) translateY(-1px); }
+            23%, 35% { transform: rotate(-8deg) translateY(0); }
+            38% { transform: rotate(-10deg) translateY(-1px); }
+            42%, 55% { transform: rotate(-8deg) translateY(0); }
+            59% { transform: rotate(-12deg) translateY(-1px); }
+            63% { transform: rotate(-9deg) translateY(0); }
+            70%, 100% { transform: rotate(-8deg) translateY(0); }
+        }
+        @keyframes playL {
+            0%, 5% { transform: translateY(0); }
+            8% { transform: translateY(-3px); }
+            15% { transform: translateY(-2px); }
+            23%, 35% { transform: translateY(0); }
+            38% { transform: translateY(-1px); }
+            42%, 55% { transform: translateY(0); }
+            59% { transform: translateY(-2px); }
+            63% { transform: translateY(-1px); }
+            70%, 100% { transform: translateY(0); }
+        }
+        @keyframes playA {
+            0%, 5% { transform: translateY(0); }
+            8% { transform: translateY(2px); }
+            15% { transform: translateY(1px); }
+            23%, 35% { transform: translateY(0); }
+            38% { transform: translateY(1px); }
+            42%, 55% { transform: translateY(0); }
+            59% { transform: translateY(2px); }
+            63% { transform: translateY(1px); }
+            70%, 100% { transform: translateY(0); }
+        }
+        @keyframes playY {
+            0%, 5% { transform: rotate(8deg) translateX(0); }
+            8% { transform: rotate(14deg) translateX(-1px); }
+            15% { transform: rotate(12deg) translateX(-1px); }
+            23%, 35% { transform: rotate(8deg) translateX(0); }
+            38% { transform: rotate(10deg) translateX(0); }
+            42%, 55% { transform: rotate(8deg) translateX(0); }
+            59% { transform: rotate(12deg) translateX(-1px); }
+            63% { transform: rotate(9deg) translateX(0); }
+            70%, 100% { transform: rotate(8deg) translateX(0); }
+        }
+
+        /* ─── Page header ─── */
+        .page-header {
+            padding-top: 144px;
+            margin-bottom: 110px;
+            padding-left: 40px;
+            padding-right: 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 320px);
+            gap: 40px;
+            justify-content: center;
+        }
+        .page-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            animation-delay: 0.1s;
+        }
+        .page-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* ─── Grid of squares ─── */
+        .squares-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 320px);
+            grid-template-rows: repeat(2, 320px);
+            gap: 40px;
+            justify-content: center;
+            padding-bottom: 100px;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+        .square {
+            width: 320px;
+            height: 320px;
+            background: #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: box-shadow 0.2s ease, opacity 0.6s ease, transform 0.6s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .square.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .square:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ─── Square link ─── */
+        .square-link {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .square-link:hover {
+            color: var(--red);
+        }
+
+        /* ─── Coming soon overlay ─── */
+        .coming-soon-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        .square:hover .coming-soon-overlay {
+            opacity: 1;
+        }
+        .coming-soon-text {
+            color: #fff;
+            font-family: 'EB Garamond', serif;
+            font-size: 18px;
+            font-style: italic;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* ─── Kaomoji animation ─── */
+        .kaomoji-overlay {
+            position: absolute;
+            top: calc(50% + 39px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 34px;
+            color: var(--text);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.1em;
+            font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
+        }
+        .kao-arm-left {
+            display: inline-block;
+            transform-origin: right center;
+            animation: armWaveLeft 2s ease-in-out infinite;
+        }
+        .kao-arm-right {
+            display: inline-block;
+            transform-origin: left center;
+            animation: armWaveRight 2s ease-in-out infinite;
+        }
+        .kao-face {
+            display: inline-block;
+            animation: faceFloat 2s ease-in-out infinite;
+        }
+        .kao-eye-left, .kao-eye-right {
+            display: inline-block;
+            animation: eyeBlink 3s ease-in-out infinite;
+        }
+        .kao-eye-right {
+            animation-delay: 0.1s;
+        }
+        .kao-mouth {
+            display: inline-block;
+            animation: mouthWiggle 2s ease-in-out infinite;
+        }
+        .kao-cheek {
+            display: inline-block;
+            animation: cheekBounce 2s ease-in-out infinite;
+        }
+        .kao-paren-left {
+            display: inline-block;
+            transform-origin: right center;
+            animation: parenLeft 2s ease-in-out infinite;
+        }
+        .kao-paren-right {
+            display: inline-block;
+            transform-origin: left center;
+            animation: parenRight 2s ease-in-out infinite;
+        }
+        @keyframes armWaveLeft {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        @keyframes armWaveRight {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(10deg); }
+        }
+        @keyframes faceFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes eyeBlink {
+            0%, 45%, 55%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.1); }
+        }
+        @keyframes mouthWiggle {
+            0%, 100% { transform: translateY(0) scaleX(1); }
+            25% { transform: translateY(-1px) scaleX(1.05); }
+            50% { transform: translateY(0) scaleX(1); }
+            75% { transform: translateY(1px) scaleX(0.95); }
+        }
+        @keyframes cheekBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        @keyframes parenLeft {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            50% { transform: rotate(-3deg) translateX(-1px); }
+        }
+        @keyframes parenRight {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            50% { transform: rotate(3deg) translateX(1px); }
+        }
+
+        /* ─── Fuzzy pink circle ─── */
+        #fuzzy-wrap {
+            position: fixed;
+            bottom: 15%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            z-index: 1000;
+            cursor: grab;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #fuzzy-wrap:active {
+            cursor: grabbing;
+        }
+        #fuzzy-circle {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at center, rgba(255, 80, 140, 1) 0%, rgba(255, 100, 160, 0.8) 10%, rgba(245, 115, 165, 0.6) 25%, rgba(235, 130, 175, 0.4) 40%, rgba(220, 145, 185, 0.25) 55%, rgba(210, 155, 190, 0.12) 70%, rgba(200, 165, 195, 0.05) 85%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(20px);
+            pointer-events: none;
+            transform: scale(1);
+            transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #fuzzy-circle.growing {
+            transform: scale(100);
+            transition: transform 150s ease-out;
+        }
+        #fuzzy-circle.dragging {
+            transition: none;
+        }
+
+        @media (max-width: 1520px) {
+            .page-header {
+                grid-template-columns: repeat(3, 320px);
+            }
+            .squares-grid {
+                grid-template-columns: repeat(3, 320px);
+                grid-template-rows: auto;
+            }
+        }
+
+        @media (max-width: 1160px) {
+            .page-header {
+                grid-template-columns: repeat(2, 320px);
+            }
+            .squares-grid {
+                grid-template-columns: repeat(2, 320px);
+                grid-template-rows: auto;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .page-header {
+                padding-top: 120px;
+                padding-left: 20px;
+                padding-right: 20px;
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .page-title,
+            .page-tagline {
+                font-size: 18px;
+            }
+            .squares-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                gap: 24px;
+                width: calc(100% - 40px);
+                max-width: 320px;
+                margin: 0 auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .square {
+                width: 100%;
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="timeline.html">Work</a>
+    <a href="timeline.html#about" id="about-toggle">About</a>
+    <a href="#" class="play-link" style="display:inline-flex; align-items:center; text-decoration:none; letter-spacing:-0.02em; font-weight:600; line-height:1; gap:6px;">
+        <span style="display:inline-flex; align-items:center;">
+            <span class="play-p" style="position:relative; top:2px; display:inline-block;">P</span><span class="play-l" style="position:relative; top:-2px; margin-left:1px; display:inline-block;">L</span><span class="play-a" style="position:relative; top:2px; margin-left:1px; display:inline-block;">A</span><span class="play-y" style="position:relative; top:-2px; display:inline-block;">Y</span>
+        </span>
+        <svg width="54" height="34" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;"><style>
+        .bear-ear-left {
+            transform-origin: right bottom;
+            transform-box: fill-box;
+            animation: bearLeftTwitch 11s ease-in-out infinite;
+        }
+        .bear-ear-right {
+            transform-origin: left bottom;
+            transform-box: fill-box;
+            animation: bearRightTwitch 11s ease-in-out infinite;
+        }
+        @keyframes bearLeftTwitch {
+            0%, 5% { transform: rotate(0deg); }
+            8% { transform: rotate(-20deg); }
+            15% { transform: rotate(-18deg); }
+            23%, 35% { transform: rotate(0deg); }
+            38% { transform: rotate(-6deg); }
+            42%, 55% { transform: rotate(0deg); }
+            59% { transform: rotate(-10deg); }
+            63% { transform: rotate(-4deg); }
+            70%, 100% { transform: rotate(0deg); }
+        }
+        @keyframes bearRightTwitch {
+            0%, 5% { transform: rotate(0deg); }
+            8% { transform: rotate(20deg); }
+            15% { transform: rotate(18deg); }
+            23%, 35% { transform: rotate(0deg); }
+            38% { transform: rotate(6deg); }
+            42%, 55% { transform: rotate(0deg); }
+            59% { transform: rotate(10deg); }
+            63% { transform: rotate(4deg); }
+            70%, 100% { transform: rotate(0deg); }
+        }
+        .bear-nose {
+            animation: bearNoseWiggle 3s ease-in-out infinite;
+        }
+        @keyframes bearNoseWiggle {
+            0%, 60% { transform: translateY(0); }
+            65% { transform: translateY(-1px); }
+            70% { transform: translateY(0.5px); }
+            75% { transform: translateY(-0.5px); }
+            80%, 100% { transform: translateY(0); }
+        }
+        .bear-eye {
+            transform-origin: center center;
+            transform-box: fill-box;
+            animation: bearBlink 4s ease-in-out infinite;
+        }
+        @keyframes bearBlink {
+            0%, 90% { transform: scaleY(1); }
+            93% { transform: scaleY(0); }
+            96% { transform: scaleY(1); }
+            100% { transform: scaleY(1); }
+        }
+        </style>
+        <text class="bear-ear-left" x="2" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="300" fill="currentColor">ʕ</text>
+        <text class="bear-eye" x="18" y="30" font-family="Inter, sans-serif" font-size="18" fill="currentColor">•</text>
+        <text class="bear-nose" x="30" y="34" font-family="Inter, sans-serif" font-size="22" fill="currentColor">ᴥ</text>
+        <text class="bear-eye" x="50" y="30" font-family="Inter, sans-serif" font-size="18" fill="currentColor">•</text>
+        <text class="bear-ear-right" x="60" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="300" fill="currentColor">ʔ</text>
+    </svg>
+    </a>
+</nav>
+
+<div class="page-header">
+    <div class="page-title">🍜 Always Noodling</div>
+    <div class="page-tagline">My collection of digital & analog personal projects</div>
+</div>
+
+<div class="squares-grid">
+    <div class="square" style="background: #f4a999;">
+        <a href="kaomojis.html" class="square-link" style="padding: 0; overflow: hidden;">
+            <img src="Assets/Kaomoji/kaomoji_thumbnail.png" alt="Animated Kaomojis" style="width: 98%; height: 98%; object-fit: cover;">
+        </a>
+        <div class="kaomoji-overlay">
+            <span class="kao-arm-left">٩</span><span class="kao-paren-left">(</span><span class="kao-eye-left">ˊ</span><span class="kao-mouth">ᗜ</span><span class="kao-eye-right">ˋ</span><span class="kao-cheek">*</span><span class="kao-paren-right">)</span><span class="kao-arm-right">و</span>
+        </div>
+    </div>
+    <div class="square">
+        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
+            <img src="Assets/Hifi/Hifi_Thumbnail.png" alt="Hifi" style="width: 98%; height: 98%; object-fit: cover;">
+        </a>
+        <div class="coming-soon-overlay">
+            <span class="coming-soon-text">Coming soon</span>
+        </div>
+    </div>
+    <div class="square">
+        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
+            <img src="Assets/Play/Frame/Frame_thumbnail.png" alt="Frame Maker" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+        </a>
+        <div class="coming-soon-overlay">
+            <span class="coming-soon-text">Coming soon</span>
+        </div>
+    </div>
+    <div class="square">
+        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
+            <img src="Assets/Play/Maples/maples_thumbnail.png" alt="Japanese Maples" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+        </a>
+        <div class="coming-soon-overlay">
+            <span class="coming-soon-text">Coming soon</span>
+        </div>
+    </div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+</div>
+
+<div id="fuzzy-wrap"><div id="fuzzy-circle"></div></div>
+
+<script>
+    // ── Progressive thumbnail animation ──
+    document.addEventListener('DOMContentLoaded', () => {
+        const squares = document.querySelectorAll('.square');
+        squares.forEach((square, index) => {
+            setTimeout(() => {
+                square.classList.add('visible');
+            }, 300 + index * 100);
+        });
+    });
+
+    // ── Draggable fuzzy circle ──
+    const fuzzyWrap = document.getElementById('fuzzy-wrap');
+    const fuzzyCircle = document.getElementById('fuzzy-circle');
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    // Position fuzzy circle (bottom-right area)
+    function positionFuzzyCircle() {
+        if (!fuzzyWrap) return;
+        const wrapSize = 200;
+        const maxX = window.innerWidth - wrapSize;
+        const maxY = window.innerHeight - wrapSize;
+
+        // Fixed starting position: bottom-right
+        let targetX = window.innerWidth * 0.85 - wrapSize;
+        let targetY = window.innerHeight * 0.85 - wrapSize;
+
+        // Clamp to viewport
+        targetX = Math.max(0, Math.min(targetX, maxX));
+        targetY = Math.max(0, Math.min(targetY, maxY));
+
+        fuzzyWrap.style.left = targetX + 'px';
+        fuzzyWrap.style.top = targetY + 'px';
+        fuzzyWrap.style.right = 'auto';
+        fuzzyWrap.style.bottom = 'auto';
+    }
+
+    positionFuzzyCircle();
+    window.addEventListener('resize', () => positionFuzzyCircle());
+
+    function onFuzzyMouseMove(e) {
+        const x = e.clientX - dragOffsetX - fuzzyWrap.offsetWidth / 2;
+        const y = e.clientY - dragOffsetY - fuzzyWrap.offsetHeight / 2;
+        fuzzyWrap.style.left = x + 'px';
+        fuzzyWrap.style.top = y + 'px';
+        fuzzyWrap.style.right = 'auto';
+        fuzzyWrap.style.bottom = 'auto';
+    }
+
+    function onFuzzyMouseUp() {
+        isDragging = false;
+        fuzzyCircle.classList.remove('dragging');
+        fuzzyCircle.style.transform = '';
+        document.removeEventListener('mousemove', onFuzzyMouseMove);
+        document.removeEventListener('mouseup', onFuzzyMouseUp);
+    }
+
+    if (fuzzyWrap && fuzzyCircle) {
+        fuzzyWrap.addEventListener('mouseenter', () => {
+            if (!isDragging) {
+                fuzzyCircle.classList.add('growing');
+            }
+        });
+
+        fuzzyWrap.addEventListener('mouseleave', () => {
+            if (!isDragging) {
+                const currentTransform = window.getComputedStyle(fuzzyCircle).transform;
+
+                // Parse the current scale from the matrix transform
+                let currentScale = 1;
+                if (currentTransform && currentTransform !== 'none') {
+                    const match = currentTransform.match(/matrix\(([^,]+)/);
+                    if (match) {
+                        currentScale = parseFloat(match[1]);
+                    }
+                }
+
+                // Freeze at current scale with no transition
+                fuzzyCircle.style.transition = 'none';
+                fuzzyCircle.style.transform = currentTransform;
+                fuzzyCircle.classList.remove('growing');
+
+                // Force reflow, then animate back
+                fuzzyCircle.offsetHeight;
+                fuzzyCircle.style.transition = '';
+                fuzzyCircle.style.transform = '';
+            }
+        });
+
+        fuzzyWrap.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            const currentScale = window.getComputedStyle(fuzzyCircle).transform;
+            fuzzyCircle.classList.add('dragging');
+            fuzzyCircle.classList.remove('growing');
+            if (currentScale && currentScale !== 'none') {
+                fuzzyCircle.style.transform = currentScale;
+            }
+            const rect = fuzzyWrap.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left - rect.width / 2;
+            dragOffsetY = e.clientY - rect.top - rect.height / 2;
+            document.addEventListener('mousemove', onFuzzyMouseMove);
+            document.addEventListener('mouseup', onFuzzyMouseUp);
+        });
+    }
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

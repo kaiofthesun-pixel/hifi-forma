@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red: #c0392b;
+            --red-line-offset: 50px;
+            --text: #e8e8e8;
+            --muted: #888;
+            --bg: #000000;
+        }
+
+        html, body {
+            height: 100%;
+            min-height: 200vh;
+            background: var(--bg);
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ─── Intro ─── */
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 70px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-right: 20px;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        /* ─── Role text ─── */
+        .role-text {
+            margin-top: 28px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.44;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+        .role-label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* ─── Ruler ─── */
+        #ruler {
+            position: fixed;
+            top: 0;
+            left: var(--ruler-left);
+            width: 9px;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #ruler::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            transform: translateX(-50%);
+            width: 0.1px;
+            height: 100%;
+            background: rgba(255,255,255,0.22);
+            opacity: 0;
+            animation: lineReveal 0.4s ease 0.8s forwards;
+        }
+        @keyframes lineReveal {
+            to { opacity: 1; }
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 0.1px;
+            background: rgba(255,255,255,0.22);
+            transform-origin: center center;
+            animation: tickToLine 1s ease-in-out forwards;
+        }
+
+        @keyframes tickToLine {
+            0%   { transform: scaleX(1) scaleY(1); background: rgba(255,255,255,0.15); }
+            50%  { transform: scaleX(0.111) scaleY(1); background: rgba(255,255,255,0.15); }
+            100% { transform: scaleX(0.111) scaleY(6.5); opacity: 0; }
+        }
+
+        /* ─── Current description line (CDL) ─── */
+        #cdl {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* ─── Back button ─── */
+        .back-btn {
+            position: fixed;
+            top: 33.3px;
+            left: calc(var(--ruler-left) + 2px);
+            transform: translateX(-100%);
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: none;
+            transition: box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .back-btn:hover {
+            background: transparent;
+            box-shadow: none;
+            color: #fff;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: #aaa;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ─── Project detail rows ─── */
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+            position: relative;
+        }
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+        .detail-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: sticky;
+            top: calc(35vh + var(--red-line-offset) + 10px);
+        }
+
+        /* Ghost label (pinned detail name at CDL) */
+        .detail-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 90;
+            display: none;
+            transition: none;
+        }
+
+        #page {
+            position: relative;
+        }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        /* ─── Details group ─── */
+        .details-group {
+            padding: 40px 0;
+        }
+        .details-thumb {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            margin-bottom: 24px;
+            background: #000;
+            overflow: hidden;
+        }
+        .details-thumb.hero {
+            view-transition-name: project-hero;
+        }
+        .details-thumb img,
+        .details-thumb video,
+        .details-thumb iframe {
+            width: 100%;
+            display: block;
+        }
+
+        /* Video player container */
+        .video-player {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .video-player .poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+        .video-player .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, background 0.2s ease;
+            z-index: 6;
+        }
+        .video-player:hover .play-btn {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(0,0,0,0.8);
+        }
+        .video-player .play-btn::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 24px solid #fff;
+            border-top: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+            margin-left: 6px;
+        }
+        .video-player.playing .poster,
+        .video-player.playing .play-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .video-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+        .video-player.playing iframe {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .details-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.9);
+            line-height: 1.6;
+            max-width: min(780px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 6px;
+        }
+        .details-desc p {
+            margin-bottom: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="cdl"></div>
+<div id="ruler"></div>
+
+<a href="timeline.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
+
+<div id="page">
+    <div class="row detail-row" data-detail="Reel" style="margin-top:85px;">
+        <div class="row-left">
+            <div class="detail-name" style="margin-top:-50px;">Reel</div>
+        </div>
+        <div class="row-right">
+            <div class="details-group">
+                <div class="details-thumb hero">
+                    <div class="video-player" id="reel-player">
+                        <img class="poster" src="Assets/Reel/Reel_thumbnails.gif" alt="Motion Reel" style="width: 65%; margin: auto; margin-top: 50px;">
+                        <div class="play-btn"></div>
+                        <iframe id="vimeo-iframe" src="" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #666; line-height: 1.8; margin-top: 54px; max-width: min(780px, calc(100vw - var(--content-left) - 40px)); padding: 0 85px; margin-left: -26px;">
+                    00:00 Yahoo! campaign demo / 00:03 Tactile Waveforms / 00:05 Russell Investments Endtag / 00:07 Causality / 00:10 Kirby's Return to Dreamland / 00:15 Causality / 00:17 Shoe Carnival "Grand Opening" / 00:19 White Noise / 00:22 Coke "Formula Files" / 00:29 Nike "Talon" / 00:31 Obama Endtag / 00:33 Aleve / 00:35 Causality / 00:38 Yahoo! campaign demo / 00:40 Tactile Waveforms / 00:43 Microsoft "Telco" / 00:48 Fox on NFL / 00:50 We Heart Seasons / 00:53 Shoe Carnival "Showered in Style" / 00:55 FOX on NFL / 00:57 Causality / 01:00 00:00 Yahoo! campaign demo
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const TICK_PX = 6;
+    const rulerEl = document.getElementById('ruler');
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = document.documentElement.scrollHeight;
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+    }
+
+    buildRuler();
+    window.addEventListener('resize', buildRuler);
+
+    // ── Detail pin ghosts ─────────────────────────────────────────
+    const CDL_RATIO = 0.35;
+    const CDL_OFFSET = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const PIN_OFFSET = 10;
+    const TRANSITION_ZONE = 60;
+    const detailRows = Array.from(document.querySelectorAll('.detail-row'));
+    const ghosts = [];
+
+    detailRows.forEach(row => {
+        const name = row.dataset.detail;
+        const label = row.querySelector('.detail-name');
+        const ghost = document.createElement('div');
+        ghost.className = 'detail-ghost';
+        ghost.textContent = name;
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label });
+    });
+
+    let pinnedDetail = null;
+    let rafPending = false;
+
+    function update() {
+        const cdlY = window.innerHeight * CDL_RATIO + CDL_OFFSET;
+
+        ghosts.forEach((g, i) => {
+            const { row, ghost, label } = g;
+            const labelTop = label.getBoundingClientRect().top;
+
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                nextTop = ghosts[j].row.querySelector('.detail-name').getBoundingClientRect().top;
+                break;
+            }
+
+            const pinnedY = cdlY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - cdlY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    ghost.style.top = (pinnedY - pixelsMoved) + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+    }
+
+    update();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+
+    // ── Video player ─────────────────────────────────────────
+    const videoPlayer = document.getElementById('reel-player');
+    const vimeoIframe = document.getElementById('vimeo-iframe');
+
+    videoPlayer.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!videoPlayer.classList.contains('playing')) {
+            vimeoIframe.src = 'https://player.vimeo.com/video/72391887?autoplay=1&muted=0&title=0&byline=0&portrait=0';
+            videoPlayer.classList.add('playing');
+        }
+    });
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

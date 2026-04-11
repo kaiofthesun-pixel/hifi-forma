@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #e8e8e8;
+            --muted: #888;
+            --bg: #000000;
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red-line-offset: 50px;
+            --ruler-extend: 500px;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            overflow-x: hidden;
+        }
+
+        #red-line {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 33.3px;
+            left: calc(var(--ruler-left) + 2px);
+            transform: translateX(-100%);
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: none;
+            transition: box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .back-btn:hover {
+            background: transparent;
+            box-shadow: none;
+            color: #fff;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: #aaa;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #page {
+            position: relative;
+            padding-bottom: calc(35vh + 50px);
+        }
+
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 90px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-right: 20px;
+            transition: font-size 0.2s ease;
+        }
+        .intro-name.is-sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 50;
+            padding: 42px 0 28px var(--content-left);
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-size: 15px !important;
+        }
+        .intro-name .sticky-logo {
+            display: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-40%);
+            left: calc(var(--content-left) + min(780px, calc(100vw - var(--content-left) - 40px)) - 19px);
+            height: 19px;
+        }
+        .intro-name.is-sticky .sticky-logo {
+            display: block;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .role-text {
+            margin-top: 38px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.44;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+        .role-label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        #ruler {
+            position: fixed;
+            top: 0;
+            left: var(--ruler-left);
+            width: 9px;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #ruler::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            transform: translateX(-50%);
+            width: 0.1px;
+            height: 100%;
+            background: rgba(255,255,255,0.22);
+            opacity: 0;
+            animation: lineReveal 0.4s ease 0.8s forwards;
+        }
+        @keyframes lineReveal {
+            to { opacity: 1; }
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 0.1px;
+            background: rgba(255,255,255,0.22);
+            transform-origin: center center;
+            animation: tickToLine 1s ease-in-out forwards;
+        }
+
+        @keyframes tickToLine {
+            0%   { transform: scaleX(1) scaleY(1); background: rgba(255,255,255,0.15); }
+            50%  { transform: scaleX(0.111) scaleY(1); background: rgba(255,255,255,0.15); }
+            100% { transform: scaleX(0.111) scaleY(6.5); opacity: 0; }
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: relative;
+            top: 40px;
+        }
+
+        .entry {
+            padding: 70px 0 28px;
+        }
+
+        .row + .row:not(.company-row) .entry {
+            padding-top: 44px;
+        }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        .details-thumb {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            margin-bottom: 24px;
+            background: transparent;
+            overflow: hidden;
+        }
+        .details-thumb.hero {
+            view-transition-name: project-hero;
+        }
+        .details-thumb img {
+            width: 100%;
+            display: block;
+        }
+        .details-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: min(680px, calc((100vw - var(--content-left) - 40px) * 0.8));
+            padding-left: 6px;
+        }
+        .details-desc p {
+            margin-bottom: 14px;
+        }
+
+        .tilt-hover {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .fade-hover {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            cursor: pointer;
+        }
+        .fade-hover:hover {
+            opacity: 1;
+        }
+
+        .scale-hover {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .scale-hover:hover {
+            transform: scale(1.1);
+        }
+
+        .company-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 40;
+            display: none;
+            transition: none;
+        }
+
+        /* ─── Responsive: Stack columns on small screens ─── */
+        .flex-row-responsive {
+            display: flex;
+            gap: 24px;
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+        }
+        @media (max-width: 768px) {
+            .flex-row-responsive {
+                flex-direction: column;
+            }
+            .flex-row-responsive img {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="red-line"></div>
+
+<a href="timeline.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
+
+<div id="page">
+    <div id="ruler"></div>
+
+    <div style="display: flex; align-items: center; gap: 6px; position: absolute; top: 43px; left: var(--content-left);">
+        <img src="Assets/Logos/logo_google.png" alt="Google AI Research" style="height: 14px;">
+        <span style="font-size: 15px; color: var(--text); font-weight: 500;">Google AI Research</span>
+    </div>
+
+    <div class="intro">
+        <div class="intro-name">Identity Systems<img src="Assets/Logos/logo_google.png" alt="" class="sticky-logo"></div>
+        <div class="intro-tagline">Identity systems for Google AI research teams</div>
+        <div class="role-text">
+            <div class="role-label">Role</div>
+            <div>Brand identity</div>
+            <div>Visual systems</div>
+            <div>Design guidelines</div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Overview" style="margin-top:99px;">
+        <div class="row-left">
+            <div class="company-name">Overview</div>
+        </div>
+        <div class="row-right">
+            <div class="entry" style="padding-top: 40px;">
+                <div class="details-thumb hero">
+                    <img src="Assets/Google AI Identity Systems/Hero.png" alt="Overview">
+                </div>
+                <div class="details-desc">
+                    <p>Designed identity systems for various Google AI subteams to provide legitimacy for these organizations as they interfaced with both external and internal partners.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Cerebra">
+        <div class="row-left">
+            <div class="company-name">Cerebra</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="position: relative;">
+                    <img src="Assets/Google AI Identity Systems/CerebraLogo_Hover.png" alt="Cerebra Logo" style="width: 100%; display: block;">
+                    <img src="Assets/Google AI Identity Systems/CerebraLogo.png" alt="Cerebra Logo Hover" class="fade-hover" style="position: absolute; top: 0; left: 0; width: 100%;">
+                </div>
+                <div class="details-thumb" style="margin-top: 160px;">
+                    <img src="Assets/Google AI Identity Systems/cerebra2.webp" alt="Cerebra elements" loading="lazy">
+                </div>
+                <div class="details-thumb" style="margin-top: 80px;">
+                    <img src="Assets/Google AI Identity Systems/cerebra3.webp" alt="Cerebra construction" loading="lazy">
+                </div>
+                <div class="details-thumb" style="margin-top: 80px;">
+                    <img src="Assets/Google AI Identity Systems/cerebra4.webp" alt="Cerebra variations" loading="lazy">
+                </div>
+                <div class="flex-row-responsive" style="margin-top: 120px;">
+                    <div class="flex-row-responsive">
+                        <img src="Assets/Google AI Identity Systems/cerebra5.webp" alt="Cerebra t-shirt front" class="tilt-hover" style="flex: 1; width: 0; border-radius: 12px;" loading="lazy">
+                        <img src="Assets/Google AI Identity Systems/cerebra6.webp" alt="Cerebra t-shirt back" class="tilt-hover" style="flex: 1; width: 0; border-radius: 12px;" loading="lazy">
+                    </div>
+                    <div class="flex-row-responsive" style="flex-direction: column; width: 100px;">
+                        <img src="Assets/Google AI Identity Systems/cerebra7.webp" alt="Cerebra badge 1" class="scale-hover" style="width: 100%; border-radius: 12px;" loading="lazy">
+                        <img src="Assets/Google AI Identity Systems/cerebra8.webp" alt="Cerebra badge 2" class="scale-hover" style="width: 100%; border-radius: 12px;" loading="lazy">
+                    </div>
+                </div>
+                <div class="details-desc" style="margin-top: 80px;">
+                    <p>Cerebra was an AI research organization inside Google. I designed an identity system for the team as it scaled its technology to product teams that could leverage the service.</p>
+                    <p>The tagline, "Humanist Intelligence," is a reference to the belief that technologies should embody the values of people who created it.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Dot Project">
+        <div class="row-left">
+            <div class="company-name">Dot Project</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="position: relative;">
+                    <img src="Assets/Google AI Identity Systems/DotProjectLogo.png" alt="Dot Project Logo" style="width: 100%; display: block;">
+                    <img src="Assets/Google AI Identity Systems/DotProjectLogo_Hover.png" alt="Dot Project Logo Hover" class="fade-hover" style="position: absolute; top: 0; left: 0; width: 100%;">
+                </div>
+                <div class="details-thumb" style="margin-top: 80px; border-radius: 0;">
+                    <img src="Assets/Google AI Identity Systems/dot2.webp" alt="Dot Project concept" loading="lazy">
+                </div>
+                <div style="margin-top: 80px; width: min(378px, calc((100vw - var(--content-left) - 40px - 24px) / 2));">
+                    <img src="Assets/Google AI Identity Systems/dot3.webp" alt="Dot Project 3" style="width: 100%; border-radius: 12px;" loading="lazy">
+                </div>
+                <div class="details-desc" style="margin-top: 80px;">
+                    <p>The Dot Project was an internal research project pitched as the default system-level AI assistance for Android. It envisioned a persistent dot on screen that users could drag anywhere for further assistance. This was a precursor to the interaction models Circle to Search.</p>
+                    <p>I designed an identity system to evangelize the concept to Android, based on the metaphor that inside the dot is your private knowledge graph.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Magenta">
+        <div class="row-left">
+            <div class="company-name">Magenta</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb">
+                    <img src="Assets/Google AI Identity Systems/mag1.gif" alt="Magenta">
+                </div>
+                <div class="details-thumb" style="margin-top: 80px; border-radius: 0;">
+                    <img src="Assets/Google AI Identity Systems/mag2.webp" alt="Magenta identity" loading="lazy">
+                </div>
+                <div class="flex-row-responsive" style="margin-top: 80px;">
+                    <img src="Assets/Google AI Identity Systems/mag3.png" alt="Magenta 3" style="flex: 1; width: 0; height: auto; object-fit: contain; border-radius: 0;" loading="lazy">
+                    <img src="Assets/Google AI Identity Systems/mag4.png" alt="Magenta 4" style="flex: 1; width: 0; height: auto; object-fit: contain; border-radius: 0;" loading="lazy">
+                </div>
+                <div class="flex-row-responsive" style="margin-top: 80px;">
+                    <img src="Assets/Google AI Identity Systems/mag5.webp" alt="Magenta 5" class="tilt-hover" style="flex: 1; width: 0; border-radius: 12px;" loading="lazy">
+                    <img src="Assets/Google AI Identity Systems/mag6.webp" alt="Magenta 6" class="tilt-hover" style="flex: 1; width: 0; border-radius: 12px;" loading="lazy">
+                </div>
+                <div style="display: flex; gap: 24px; margin-top: 80px; width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <img src="Assets/Google AI Identity Systems/mag7.webp" alt="Magenta 7" style="flex: 1; width: 0; height: auto; object-fit: contain; border-radius: 0;" loading="lazy">
+                    <img src="Assets/Google AI Identity Systems/mag8.webp" alt="Magenta 8" style="flex: 1; width: 0; height: auto; object-fit: contain; border-radius: 0;" loading="lazy">
+                </div>
+                <div class="details-desc" style="margin-top: 80px;">
+                    <p>Magenta was an open source research project at Google exploring the role of machine learning as a tool in the creative process. I designed an identity system used to interface with external partners at conferences and symposiums.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const TICK_PX   = 6;
+    const RED_RATIO = 0.35;
+    const RED_OFFSET_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const RULER_EXTEND_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ruler-extend')) || 500;
+    const PIN_OFFSET = 10;
+
+    const rulerEl = document.getElementById('ruler');
+    const pageEl  = document.getElementById('page');
+    const redLine = document.getElementById('red-line');
+
+    let tickEls = [];
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = pageEl.scrollHeight + RULER_EXTEND_PX;
+        rulerEl.style.height = h + 'px';
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+        tickEls = Array.from(rulerEl.querySelectorAll('.tick'));
+    }
+
+    const companyRows = Array.from(document.querySelectorAll('.company-row[data-company]'));
+    const ghosts = [];
+
+    companyRows.forEach((row, i) => {
+        const name = row.dataset.company;
+        const label = row.querySelector('.company-name');
+        const hidden = label && label.style.visibility === 'hidden';
+        const ghost = document.createElement('div');
+        ghost.className = 'company-ghost';
+        ghost.textContent = name;
+        if (hidden) ghost.style.display = 'none';
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label, hidden });
+    });
+
+    const TRANSITION_ZONE = 60;
+
+    let scrollTimeout = null;
+    let rafPending = false;
+    let lastStyledTickStart = 0;
+    let lastStyledTickEnd = -1;
+    let resizeTimeout = null;
+
+    function collapseTicks() {
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            tickEls[i].style.transform = '';
+            tickEls[i].style.background = '';
+        }
+        lastStyledTickStart = 0;
+        lastStyledTickEnd = -1;
+    }
+
+    const BULGE_RADIUS = 45;
+    const MAX_SCALE = 5;
+    const accentRGB = [192, 57, 43];
+
+    function update() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(collapseTicks, 150);
+        const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
+
+        const rulerTop = rulerEl.getBoundingClientRect().top;
+        const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
+        const radiusInTicks = Math.ceil(BULGE_RADIUS / TICK_PX);
+        const start = Math.max(0, centerIdx - radiusInTicks);
+        const end = Math.min(tickEls.length - 1, centerIdx + radiusInTicks);
+
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            if (i < start || i > end) {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            const dist = Math.abs(tickEls[i].getBoundingClientRect().top - redY);
+            if (dist < BULGE_RADIUS) {
+                const t = 1 - dist / BULGE_RADIUS;
+                const ease = t * t * t;
+                tickEls[i].style.transform = `scaleX(${1 + (MAX_SCALE - 1) * ease})`;
+                const r = Math.round(170 + (accentRGB[0] - 170) * ease);
+                const g = Math.round(170 + (accentRGB[1] - 170) * ease);
+                const b = Math.round(170 + (accentRGB[2] - 170) * ease);
+                tickEls[i].style.background = `rgb(${r},${g},${b})`;
+            } else {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        lastStyledTickStart = start;
+        lastStyledTickEnd = end;
+
+        ghosts.forEach(({ row, ghost, name, label, hidden }, i) => {
+            if (hidden) return;
+            const labelTop = label.getBoundingClientRect().top;
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                if (!ghosts[j].hidden) {
+                    nextTop = ghosts[j].row.getBoundingClientRect().top;
+                    break;
+                }
+            }
+
+            const pinnedY = redY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - redY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    const ghostY = pinnedY - pixelsMoved;
+                    ghost.style.top = ghostY + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+    }
+
+    // ── Sticky header ──
+    const introName = document.querySelector('.intro-name');
+    let stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+    let isCurrentlySticky = false;
+
+    function updateStickyHeader() {
+        const shouldBeSticky = window.scrollY >= stickyThreshold;
+        if (shouldBeSticky !== isCurrentlySticky) {
+            isCurrentlySticky = shouldBeSticky;
+            introName.classList.toggle('is-sticky', shouldBeSticky);
+        }
+    }
+
+    function recalcStickyThreshold() {
+        // Temporarily remove sticky to get true position
+        const wasSticky = introName.classList.contains('is-sticky');
+        if (wasSticky) introName.classList.remove('is-sticky');
+        stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+        if (wasSticky) introName.classList.add('is-sticky');
+    }
+
+    buildRuler();
+    update();
+    updateStickyHeader();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); updateStickyHeader(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => { buildRuler(); recalcStickyThreshold(); update(); updateStickyHeader(); }, 100);
+    });
+
+    // ── 3D tilt on hover for tilt-hover elements ──
+    document.querySelectorAll('.tilt-hover').forEach(img => {
+        let tiltRaf = null;
+        let cachedRect = null;
+
+        img.addEventListener('mouseenter', () => {
+            img.style.transition = 'transform 0.15s ease-out';
+            cachedRect = img.getBoundingClientRect();
+        });
+        img.addEventListener('mousemove', (e) => {
+            if (tiltRaf) return;
+            tiltRaf = requestAnimationFrame(() => {
+                tiltRaf = null;
+                if (!cachedRect) cachedRect = img.getBoundingClientRect();
+                const x = (e.clientX - cachedRect.left) / cachedRect.width;
+                const y = (e.clientY - cachedRect.top) / cachedRect.height;
+                const rotateY = (x - 0.5) * 20;
+                const rotateX = (0.5 - y) * 20;
+                img.style.transform = `perspective(400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+        });
+        img.addEventListener('mouseleave', () => {
+            img.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            img.style.transform = '';
+            cachedRect = null;
+        });
+    });
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #eae8e4;
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red-line-offset: 50px;
+            --ruler-extend: 500px;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            overflow-x: hidden;
+        }
+
+        #red-line {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 31.3px;
+            left: calc(var(--ruler-left) + 2px);
+            transform: translateX(-100%);
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: none;
+            transition: box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .back-btn:hover {
+            background: transparent;
+            box-shadow: none;
+            color: #000;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: #666;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #page {
+            position: relative;
+            padding-bottom: calc(35vh + 50px);
+        }
+
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 70px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-right: 20px;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .role-text {
+            margin-top: 28px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.44;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+        .role-label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        #ruler {
+            position: fixed;
+            top: 0;
+            left: var(--ruler-left);
+            width: 9px;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #ruler::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: #d8d8d8;
+            opacity: 0;
+            animation: lineReveal 0.4s ease 0.8s forwards;
+        }
+        @keyframes lineReveal {
+            to { opacity: 1; }
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 1px;
+            background: #aaa;
+            transform-origin: center center;
+            animation: tickToLine 1s ease-in-out forwards;
+        }
+
+        @keyframes tickToLine {
+            0%   { transform: scaleX(1) scaleY(1); background: #aaa; }
+            50%  { transform: scaleX(0.111) scaleY(1); background: #aaa; }
+            100% { transform: scaleX(0.111) scaleY(6.5); opacity: 0; }
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: relative;
+            top: 40px;
+        }
+
+        .entry {
+            padding: 70px 0 28px;
+        }
+
+        .row + .row:not(.company-row) .entry {
+            padding-top: 44px;
+        }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        .details-thumb {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            margin-bottom: 24px;
+            background: #E8978C;
+            overflow: hidden;
+        }
+        .details-thumb.hero {
+            view-transition-name: project-hero;
+        }
+        .details-thumb img {
+            width: 100%;
+            display: block;
+        }
+        .details-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.6;
+            max-width: min(780px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 6px;
+        }
+        .details-desc p {
+            margin-bottom: 14px;
+        }
+
+        .company-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 90;
+            display: none;
+            transition: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="red-line"></div>
+
+<a href="timeline.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
+
+<div id="page">
+    <div id="ruler"></div>
+
+    <div class="intro">
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+            <img src="Assets/Logos/logo_allo.png" alt="Google Allo" style="height: 12px;">
+            <span style="font-size: 12px; color: var(--text);">Google Allo</span>
+        </div>
+        <div class="intro-name">Unified Emotive Picker</div>
+        <div class="intro-tagline">A unified interface for emoji, stickers, and GIFs</div>
+        <div class="role-text">
+            <div class="role-label">Role</div>
+            <div>Interaction design</div>
+            <div>Visual design</div>
+            <div>Prototyping</div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Overview" style="margin-top:99px;">
+        <div class="row-left">
+            <div class="company-name">Overview</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb hero">
+                    <img src="Assets/Allo Emoji/Allo_Gif.gif" alt="Overview">
+                </div>
+                <div class="details-desc">
+                    <p>Designed a unified picker experience for Google Allo that seamlessly combined emoji, stickers, and GIFs into a single, intuitive interface.</p>
+                    <p>The design focused on discoverability and quick access to expressive content while maintaining a clean, uncluttered experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Problem Analysis">
+        <div class="row-left">
+            <div class="company-name">Problem Analysis</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#e8d5c4,#c9a87c); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Competitive Research">
+        <div class="row-left">
+            <div class="company-name">Competitive Research</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#f5c6cb,#dc8a96); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Information Architecture">
+        <div class="row-left">
+            <div class="company-name">Information Architecture</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#b8d4e3,#7ab8d4); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                    <p>Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Search Experience">
+        <div class="row-left">
+            <div class="company-name">Search Experience</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#d4c4e8,#a87cc9); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+                    <p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Visual Design">
+        <div class="row-left">
+            <div class="company-name">Visual Design</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#c4e8d4,#7cc9a8); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                    <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Keyboard Integration">
+        <div class="row-left">
+            <div class="company-name">Keyboard Integration</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#e8e4c4,#c9c07c); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum.</p>
+                    <p>Deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Accessibility">
+        <div class="row-left">
+            <div class="company-name">Accessibility</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#f0e6d3,#d4b896); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+                    <p>Et harum quidem rerum facilis est et expedita distinctio nam libero tempore.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="User Testing">
+        <div class="row-left">
+            <div class="company-name">User Testing</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#c4d8e8,#7ca8c9); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet.</p>
+                    <p>Ut et voluptates repudiandae sint et molestiae non recusandae itaque earum rerum hic tenetur.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Launch Impact">
+        <div class="row-left">
+            <div class="company-name">Launch Impact</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="background:linear-gradient(135deg,#d4e8c4,#a8c97c); aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores.</p>
+                    <p>Alias consequatur aut perferendis doloribus asperiores repellat omnis aut voluptates repudiandae sint.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const TICK_PX   = 6;
+    const RED_RATIO = 0.35;
+    const RED_OFFSET_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const RULER_EXTEND_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ruler-extend')) || 500;
+    const PIN_OFFSET = 10;
+
+    const rulerEl = document.getElementById('ruler');
+    const pageEl  = document.getElementById('page');
+    const redLine = document.getElementById('red-line');
+
+    let tickEls = [];
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = pageEl.scrollHeight + RULER_EXTEND_PX;
+        rulerEl.style.height = h + 'px';
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+        tickEls = Array.from(rulerEl.querySelectorAll('.tick'));
+    }
+
+    const companyRows = Array.from(document.querySelectorAll('.company-row[data-company]'));
+    const ghosts = [];
+
+    companyRows.forEach((row, i) => {
+        const name = row.dataset.company;
+        const label = row.querySelector('.company-name');
+        const hidden = label && label.style.visibility === 'hidden';
+        const ghost = document.createElement('div');
+        ghost.className = 'company-ghost';
+        ghost.textContent = name;
+        if (hidden) ghost.style.display = 'none';
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label, hidden });
+    });
+
+    const TRANSITION_ZONE = 60;
+
+    let lastScrollY = window.scrollY;
+    let scrollTimeout = null;
+    let rafPending = false;
+    let lastStyledTickStart = 0;
+    let lastStyledTickEnd = -1;
+
+    function collapseTicks() {
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            tickEls[i].style.transform = '';
+            tickEls[i].style.background = '';
+        }
+        lastStyledTickStart = 0;
+        lastStyledTickEnd = -1;
+    }
+
+    const BULGE_RADIUS = 45;
+    const MAX_SCALE = 5;
+    const accentRGB = [192, 57, 43];
+
+    function update() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(collapseTicks, 150);
+        const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
+        lastScrollY = window.scrollY;
+
+        const rulerTop = rulerEl.getBoundingClientRect().top;
+        const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
+        const radiusInTicks = Math.ceil(BULGE_RADIUS / TICK_PX);
+        const start = Math.max(0, centerIdx - radiusInTicks);
+        const end = Math.min(tickEls.length - 1, centerIdx + radiusInTicks);
+
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            if (i < start || i > end) {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            const dist = Math.abs(tickEls[i].getBoundingClientRect().top - redY);
+            if (dist < BULGE_RADIUS) {
+                const t = 1 - dist / BULGE_RADIUS;
+                const ease = t * t * t;
+                tickEls[i].style.transform = `scaleX(${1 + (MAX_SCALE - 1) * ease})`;
+                const r = Math.round(170 + (accentRGB[0] - 170) * ease);
+                const g = Math.round(170 + (accentRGB[1] - 170) * ease);
+                const b = Math.round(170 + (accentRGB[2] - 170) * ease);
+                tickEls[i].style.background = `rgb(${r},${g},${b})`;
+            } else {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        lastStyledTickStart = start;
+        lastStyledTickEnd = end;
+
+        ghosts.forEach(({ row, ghost, name, label, hidden }, i) => {
+            if (hidden) return;
+            const labelTop = label.getBoundingClientRect().top;
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                if (!ghosts[j].hidden) {
+                    nextTop = ghosts[j].row.getBoundingClientRect().top;
+                    break;
+                }
+            }
+
+            const pinnedY = redY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - redY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    const ghostY = pinnedY - pixelsMoved;
+                    ghost.style.top = ghostY + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+    }
+
+    buildRuler();
+    update();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', () => { buildRuler(); update(); });
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

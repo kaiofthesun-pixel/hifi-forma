@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.box {
+    width: 100px;
+    height: 100px;
+    background: red;
+    transform: scale(0);
+    transition: transform 5s;
+    rotate: 0deg;
+}
+.box.visible {
+    transform: scale(3);
+    animation: sway 2s infinite alternate;
+}
+@keyframes sway {
+    0% { rotate: -10deg; }
+    100% { rotate: 10deg; }
+}
+</style>
+</head>
+<body>
+<div class="box"></div>
+<script>
+setTimeout(() => document.querySelector('.box').classList.add('visible'), 500);
+</script>
+</body>
+</html>

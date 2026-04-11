@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #ffffff;
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red-line-offset: 50px;
+            --ruler-extend: 500px;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            overflow-x: hidden;
+        }
+
+        #red-line {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 31.3px;
+            left: calc(var(--ruler-left) + 2px);
+            transform: translateX(-100%);
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: none;
+            transition: color 0.2s ease;
+        }
+        .back-btn:hover {
+            color: #000;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text);
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #page {
+            position: relative;
+            padding-bottom: calc(35vh + 50px);
+        }
+
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 70px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            transition: font-size 0.2s ease;
+        }
+        .intro-name.is-sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 50;
+            padding: 42px 0 28px var(--content-left);
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            font-size: 15px !important;
+        }
+        .intro-name .sticky-logo {
+            display: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-40%);
+            left: calc(var(--content-left) + min(780px, calc(100vw - var(--content-left) - 40px)) - 19px);
+            height: 19px;
+        }
+        .intro-name.is-sticky .sticky-logo {
+            display: block;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .role-text {
+            margin-top: 48px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.44;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+        .role-label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        #ruler {
+            position: fixed;
+            top: 0;
+            left: var(--ruler-left);
+            width: 9px;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #ruler::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: #d8d8d8;
+            opacity: 0;
+            animation: lineReveal 0.4s ease 0.8s forwards;
+        }
+        @keyframes lineReveal {
+            to { opacity: 1; }
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 1px;
+            background: #aaa;
+            transform-origin: center center;
+            animation: tickToLine 1s ease-in-out forwards;
+        }
+
+        @keyframes tickToLine {
+            0%   { transform: scaleX(1) scaleY(1); background: #aaa; }
+            50%  { transform: scaleX(0.111) scaleY(1); background: #aaa; }
+            100% { transform: scaleX(0.111) scaleY(6.5); opacity: 0; }
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: relative;
+            top: 40px;
+        }
+
+        .entry {
+            padding: 70px 0 28px;
+        }
+
+        .row + .row:not(.company-row) .entry {
+            padding-top: 44px;
+        }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        .details-thumb {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            margin-bottom: 24px;
+            background: #ddd8d2;
+            overflow: hidden;
+        }
+        .details-thumb.hero {
+            view-transition-name: project-hero;
+        }
+        .details-thumb img {
+            width: 100%;
+            display: block;
+        }
+        .details-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.6;
+            max-width: min(390px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 6px;
+        }
+        .details-desc p {
+            margin-bottom: 14px;
+        }
+        .emoji-item {
+            width: 105px;
+            max-width: 18vw;
+            border-radius: 8px;
+        }
+
+        .outcome-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .outcome-card:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+            transform: translateY(-2px);
+        }
+        .outcome-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s 3;
+            pointer-events: none;
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+        .outcome-card img {
+            display: block;
+            width: 100%;
+            border-radius: 30px;
+        }
+
+        .company-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 40;
+            display: none;
+            transition: none;
+        }
+
+        /* ─── Responsive: Stack columns on small screens ─── */
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+            }
+            .image-row {
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+            .image-row > img {
+                width: 100% !important;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(3, auto) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="red-line"></div>
+
+<a href="timeline.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
+
+<div id="page">
+    <div id="ruler"></div>
+
+    <div style="display: flex; align-items: center; gap: 6px; position: absolute; top: 43px; left: var(--content-left);">
+        <img src="Assets/Messages/messages.png" alt="Google Messages" style="height: 15px;">
+        <span style="font-size: 15px; color: var(--text); font-weight: 500;">Google Messages</span>
+    </div>
+
+    <div class="intro">
+        <div class="intro-name">Expressions Program<img src="Assets/Messages/messages.png" alt="" class="sticky-logo"></div>
+        <div class="intro-tagline">Building personal connections through chat expression</div>
+        <div class="role-text">
+            <div class="role-label">Role</div>
+            <div>0→1 Product strategy</div>
+            <div>End-to-end experience for Photomoji</div>
+            <div>Creative direction for external agency</div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Overview" style="margin-top:99px;">
+        <div class="row-left">
+            <div class="company-name">Overview</div>
+        </div>
+        <div class="row-right">
+            <div class="entry" style="padding-top: 40px;">
+                <div class="details-thumb hero" style="aspect-ratio: 16/9;">
+                    <img src="Assets/Expressions Program/Expressions_Thumbnail.gif" alt="Overview" style="object-fit: cover; height: 100%;">
+                </div>
+                <div class="details-desc" style="max-width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <p>The Messages brand faced a critical decline in public perception–it was viewed as dated and uninteresting, with only basic functionality.</p>
+                    <p>I developed and evangelized a new vision for Messaging, centered on augmenting self expression with the goal of building deeper connections.</p>
+                    <p>This newly-resourced workstream was strategically timed with the release of the Google Pixel marketing launch, announced in 2024.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Screen Effects">
+        <div class="row-left">
+            <div class="company-name">Screen Effects</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="image-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-top: 35px; width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <img src="Assets/Expressions Program/expression1.gif" alt="Expression 1" style="width: 100%; border-radius: 12px;">
+                    <img src="Assets/Expressions Program/expression3.gif" alt="Expression 3" style="width: 100%; border-radius: 12px;">
+                    <img src="Assets/Expressions Program/expression2.gif" alt="Expression 2" style="width: 100%; border-radius: 12px;">
+                </div>
+                <div class="details-desc" style="max-width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <p>To bring delight to users, I created a system in which certain keyboard inputs (eg "I love you", "👎👎") would trigger fullscreen, visually rich reactions to messages.</p>
+                    <p>Part of this effort was to develop a unique, systematic visual language that is graphically flat, but leverages z-space and incorporates gradients to create depth and volume. Along with concept and creative direction, I collaborated with Oddfellows on execution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Reaction Effects">
+        <div class="row-left">
+            <div class="company-name">Reaction Effects</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="aspect-ratio:16/9;"></div>
+                <div class="details-desc">
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Animated emoji">
+        <div class="row-left">
+            <div class="company-name">Animated emoji</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="emoji-grid" style="display:grid; grid-template-columns:repeat(5, auto); justify-content:space-between; row-gap:24px; width:min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <img src="Assets/Expressions Program/emojis/512.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-1.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-2.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-3.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-4.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-5.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-6.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-7.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-8.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-9.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-10.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-11.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-12.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-13.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-14.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-15.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-16.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-17.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/512-18.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                    <img src="Assets/Expressions Program/emojis/5_20.webp" alt="Emoji" class="emoji-item" loading="lazy">
+                </div>
+                <div class="details-desc" style="margin-top:32px; max-width:min(780px, calc(100vw - var(--content-left) - 40px)); padding-left:0;">
+                    <p>Worked with the Google emoji team to bring emojis to life inside Messages.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Photomoji™">
+        <div class="row-left">
+            <div class="company-name">Photomoji™</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="image-row" style="display: flex; gap: 24px; align-items: center; width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <img src="Assets/Expressions Program/photomoji.gif" alt="Photomoji" style="width: 40%; border-radius: 12px;">
+                    <img src="Assets/Expressions Program/photomoji.jpg" alt="Photomoji Select" style="width: calc(60% - 24px); border-radius: 12px;">
+                </div>
+                <div class="details-desc" style="padding-left: 35px; max-width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <p>Photomoji is a Google Message feature that allows users to create their own custom stickers or reactions based on personal photos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Outcomes">
+        <div class="row-left">
+            <div class="company-name">Outcomes</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div style="display: flex; flex-direction: column; gap: 12px; width: min(624px, calc(100vw - var(--content-left) - 40px)); margin-bottom: 12px;">
+                    <a href="https://blog.google/products-and-platforms/platforms/android/7-new-messages-features/" target="_blank" class="outcome-card"><img src="Assets/Expressions Program/outcome2.webp" alt="Outcome 2"></a>
+                    <a href="https://www.youtube.com/watch?v=4tnSjs1dLew" target="_blank" class="outcome-card"><img src="Assets/Expressions Program/outcome1.gif" alt="Outcome 1" style="border: 1px solid rgba(0,0,0,0.1);"></a>
+                </div>
+                <div class="details-desc" style="max-width: 624px;">
+                    <p>To maximize impact and elevate Android's personalization and expression story, launches were strategically timed with various Android marketing touch points.</p>
+                    <p style="margin-bottom: 2px;"><u>Youtube video</u></p>
+                    <p style="margin-bottom: 2px;"><u>Social media posts</u></p>
+                    <p style="margin-bottom: 2px;"><u>Pixel hardware release post</u></p>
+                    <p style="margin-bottom: 2px;"><u>Google Blog post</u></p>
+                    <p><u>Sunar Pichai (Google CEO) tweet</u></p>
+                    <p style="margin-top: 18px;">In addition, the following gains were seen from the Photomoji launch:</p>
+                    <ul style="margin-left: 20px; margin-top: -8px;">
+                        <li><strong>+0.41%</strong> increase in images sent and <strong>+0.22%</strong> increase in image senders.</li>
+                        <li><strong>+0.65%</strong> increase in sticker senders on flagship devices for en launch and a <strong>19%</strong> increase in sticker senders on flagship devices.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const TICK_PX   = 6;
+    const RED_RATIO = 0.35;
+    const RED_OFFSET_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const RULER_EXTEND_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ruler-extend')) || 500;
+    const PIN_OFFSET = 10;
+
+    const rulerEl = document.getElementById('ruler');
+    const pageEl  = document.getElementById('page');
+    const redLine = document.getElementById('red-line');
+
+    let tickEls = [];
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = pageEl.scrollHeight + RULER_EXTEND_PX;
+        rulerEl.style.height = h + 'px';
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+        tickEls = Array.from(rulerEl.querySelectorAll('.tick'));
+    }
+
+    const companyRows = Array.from(document.querySelectorAll('.company-row[data-company]'));
+    const ghosts = [];
+
+    companyRows.forEach((row, i) => {
+        const name = row.dataset.company;
+        const label = row.querySelector('.company-name');
+        const hidden = label && label.style.visibility === 'hidden';
+        const ghost = document.createElement('div');
+        ghost.className = 'company-ghost';
+        ghost.textContent = name;
+        if (hidden) ghost.style.display = 'none';
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label, hidden });
+    });
+
+    const TRANSITION_ZONE = 60;
+
+    let scrollTimeout = null;
+    let rafPending = false;
+    let lastStyledTickStart = 0;
+    let lastStyledTickEnd = -1;
+    let resizeTimeout = null;
+
+    function collapseTicks() {
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            tickEls[i].style.transform = '';
+            tickEls[i].style.background = '';
+        }
+        lastStyledTickStart = 0;
+        lastStyledTickEnd = -1;
+    }
+
+    const BULGE_RADIUS = 45;
+    const MAX_SCALE = 5;
+    const accentRGB = [192, 57, 43];
+
+    function update() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(collapseTicks, 150);
+        const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
+        lastScrollY = window.scrollY;
+
+        const rulerTop = rulerEl.getBoundingClientRect().top;
+        const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
+        const radiusInTicks = Math.ceil(BULGE_RADIUS / TICK_PX);
+        const start = Math.max(0, centerIdx - radiusInTicks);
+        const end = Math.min(tickEls.length - 1, centerIdx + radiusInTicks);
+
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            if (i < start || i > end) {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            const dist = Math.abs(tickEls[i].getBoundingClientRect().top - redY);
+            if (dist < BULGE_RADIUS) {
+                const t = 1 - dist / BULGE_RADIUS;
+                const ease = t * t * t;
+                tickEls[i].style.transform = `scaleX(${1 + (MAX_SCALE - 1) * ease})`;
+                const r = Math.round(170 + (accentRGB[0] - 170) * ease);
+                const g = Math.round(170 + (accentRGB[1] - 170) * ease);
+                const b = Math.round(170 + (accentRGB[2] - 170) * ease);
+                tickEls[i].style.background = `rgb(${r},${g},${b})`;
+            } else {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        lastStyledTickStart = start;
+        lastStyledTickEnd = end;
+
+        ghosts.forEach(({ row, ghost, name, label, hidden }, i) => {
+            if (hidden) return;
+            const labelTop = label.getBoundingClientRect().top;
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                if (!ghosts[j].hidden) {
+                    nextTop = ghosts[j].row.getBoundingClientRect().top;
+                    break;
+                }
+            }
+
+            const pinnedY = redY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - redY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    const ghostY = pinnedY - pixelsMoved;
+                    ghost.style.top = ghostY + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+    }
+
+    buildRuler();
+    update();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); updateStickyHeader(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => { buildRuler(); recalcStickyThreshold(); update(); updateStickyHeader(); }, 100);
+    });
+
+    // ── Sticky header ──
+    const introName = document.querySelector('.intro-name');
+    let stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+    let isCurrentlySticky = false;
+
+    function updateStickyHeader() {
+        const shouldBeSticky = window.scrollY >= stickyThreshold;
+        if (shouldBeSticky !== isCurrentlySticky) {
+            isCurrentlySticky = shouldBeSticky;
+            introName.classList.toggle('is-sticky', shouldBeSticky);
+        }
+    }
+
+    function recalcStickyThreshold() {
+        const wasSticky = introName.classList.contains('is-sticky');
+        if (wasSticky) introName.classList.remove('is-sticky');
+        stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+        if (wasSticky) introName.classList.add('is-sticky');
+    }
+
+    updateStickyHeader();
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>

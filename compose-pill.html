@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>🍜 always noodling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #ffffff;
+            --ruler-left: calc(26vw + 30px);
+            --content-left: calc(var(--ruler-left) + 60px);
+            --red-line-offset: 50px;
+            --ruler-extend: 500px;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            overflow-x: hidden;
+        }
+
+        #red-line {
+            position: fixed;
+            top: calc(35vh + var(--red-line-offset));
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            height: 1px;
+            background: var(--red);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 31.3px;
+            left: calc(var(--ruler-left) + 2px);
+            transform: translateX(-100%);
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: none;
+            transition: color 0.2s ease;
+        }
+        .back-btn:hover {
+            color: #000;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text);
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #page {
+            position: relative;
+            padding-bottom: calc(35vh + 50px);
+        }
+
+        .intro {
+            padding: 74px 0 0 var(--content-left);
+            position: relative;
+            top: 70px;
+        }
+        .intro-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            transition: font-size 0.2s ease;
+        }
+        .intro-name.is-sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 50;
+            padding: 42px 0 28px var(--content-left);
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            font-size: 15px !important;
+        }
+        .intro-name .sticky-logo {
+            display: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-40%);
+            left: calc(var(--content-left) + min(780px, calc(100vw - var(--content-left) - 40px)) - 19px);
+            height: 19px;
+        }
+        .intro-name.is-sticky .sticky-logo {
+            display: block;
+        }
+        .intro-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            color: var(--muted);
+            line-height: 1.27;
+            max-width: min(633px, calc(100vw - var(--content-left) - 20px));
+        }
+
+        .intro-name, .intro-tagline {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .intro-name { animation-delay: 0.1s; }
+        .intro-tagline { animation-delay: 0.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .role-text {
+            margin-top: 48px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.44;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.3s forwards;
+        }
+        .role-label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        #ruler {
+            position: fixed;
+            top: 0;
+            left: var(--ruler-left);
+            width: 9px;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #ruler::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: #d8d8d8;
+            opacity: 0;
+            animation: lineReveal 0.4s ease 0.8s forwards;
+        }
+        @keyframes lineReveal {
+            to { opacity: 1; }
+        }
+
+        .tick {
+            position: absolute;
+            left: 0;
+            width: 9px;
+            height: 1px;
+            background: #aaa;
+            transform-origin: center center;
+            animation: tickToLine 1s ease-in-out forwards;
+        }
+
+        @keyframes tickToLine {
+            0%   { transform: scaleX(1) scaleY(1); background: #aaa; }
+            50%  { transform: scaleX(0.111) scaleY(1); background: #aaa; }
+            100% { transform: scaleX(0.111) scaleY(6.5); opacity: 0; }
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .row-left {
+            width: var(--ruler-left);
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .row-right {
+            padding-left: 60px;
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            text-align: right;
+            margin-right: -28px;
+            position: relative;
+            top: 40px;
+        }
+
+        .entry {
+            padding: 70px 0 28px;
+        }
+
+        .row + .row:not(.company-row) .entry {
+            padding-top: 44px;
+        }
+
+        /* ─── View Transitions ─── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-group(project-hero) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::view-transition-image-pair(project-hero) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(project-hero),
+        ::view-transition-new(project-hero) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(project-hero) {
+            opacity: 0;
+        }
+
+        ::view-transition-new(project-hero) {
+            opacity: 1;
+        }
+
+        .details-thumb {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            margin-bottom: 24px;
+            background: #ddd8d2;
+            overflow: hidden;
+        }
+        .details-thumb.hero {
+            view-transition-name: project-hero;
+        }
+        .details-thumb img {
+            width: 100%;
+            display: block;
+        }
+        .details-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.6;
+            max-width: min(780px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 6px;
+        }
+        .details-desc p {
+            margin-bottom: 14px;
+        }
+        .details-intro {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.6;
+            max-width: min(780px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 6px;
+            margin-bottom: 40px;
+        }
+        .details-press {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.8;
+            max-width: min(780px, calc(100vw - var(--content-left) - 40px));
+            padding-left: 24px;
+            margin: 0;
+        }
+        .details-press li {
+            margin-bottom: 12px;
+        }
+        .details-press a {
+            color: rgba(0,0,0,0.7);
+            text-decoration: underline;
+        }
+        .details-press a:hover {
+            color: rgba(0,0,0,0.6);
+        }
+        .step-heading {
+            font-weight: 600;
+            margin-top: 75px;
+            margin-bottom: 24px;
+        }
+        .step-img {
+            width: min(468px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+        }
+
+        /* ─── Zoomable Image ─── */
+        .zoomable {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 24px;
+            background: #e8edf5;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .zoomable img {
+            width: min(780px, calc(100vw - var(--content-left) - 40px));
+            border-radius: 12px;
+            display: block;
+        }
+        .zoomable .zoom-icon {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+        .zoomable .zoom-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #333;
+            stroke-width: 2;
+            fill: none;
+        }
+        .zoomable:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        }
+        .zoomable:hover .zoom-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ─── Lightbox ─── */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, background 0.4s ease, visibility 0.4s;
+            cursor: zoom-out;
+        }
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+            background: rgba(0,0,0,0.9);
+        }
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        }
+        .lightbox.active img {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .company-ghost {
+            position: fixed;
+            right: auto;
+            left: 0;
+            width: calc(var(--ruler-left) - 12px);
+            text-align: right;
+            top: 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 0.01em;
+            pointer-events: none;
+            z-index: 40;
+            display: none;
+            transition: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <img src="" alt="Enlarged view" id="lightbox-img">
+</div>
+
+<div id="red-line"></div>
+
+<a href="timeline.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
+
+<div id="page">
+    <div id="ruler"></div>
+
+    <div style="display: flex; align-items: center; gap: 6px; position: absolute; top: 43px; left: var(--content-left);">
+        <img src="Assets/Messages/messages.png" alt="Google Messages" style="height: 15px;">
+        <span style="font-size: 15px; color: var(--text); font-weight: 500;">Google Messages</span>
+    </div>
+
+    <div class="intro">
+        <div class="intro-name">Compose Pill<img src="Assets/Messages/messages.png" alt="" class="sticky-logo"></div>
+        <div class="intro-tagline">Improving text input field for increased engagement</div>
+        <div class="role-text">
+            <div class="role-label">Role</div>
+            <div>Product strategy</div>
+            <div>End-to-end experience</div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Overview" style="margin-top:99px;">
+        <div class="row-left">
+            <div class="company-name">Overview</div>
+        </div>
+        <div class="row-right">
+            <div class="entry" style="padding-top: 40px;">
+                <div class="details-thumb hero" style="aspect-ratio: 780 / 520; display: flex; align-items: center; justify-content: center; background: #E3E3E3;">
+                    <img src="Assets/Compose Pill/Compose Pill_Thumbnail.gif" alt="Overview" style="width: auto; height: 100%; object-fit: contain;">
+                </div>
+                <div class="details-desc">
+                    <p>Redesigned the message composition interface to be more intuitive and feature-rich while maintaining simplicity.</p>
+                    <p>The new design provides quick access to AI-powered suggestions and rich media without cluttering the interface.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Phase 1/3: Diverge">
+        <div class="row-left">
+            <div class="company-name">Phase 1/3: Diverge</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="zoomable" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="Assets/Compose Pill/Diverge1.png" alt="Phase 1/3: Diverge">
+                    <span class="zoom-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></span>
+                </div>
+                <div class="details-desc" style="margin-top: 12px; margin-bottom: 70px;">
+                    <p>Explored a broad set of approaches in a matrix organized by variants.</p>
+                </div>
+                <div class="zoomable" onclick="openLightbox(this.querySelector('img').src)">
+                    <img src="Assets/Compose Pill/Diverge2.png" alt="Diverge 2">
+                    <span class="zoom-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></span>
+                </div>
+                <div class="details-desc" style="margin-top: 12px;">
+                    <p>Full map of variants</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Phase 2/3: Filter">
+        <div class="row-left">
+            <div class="company-name">Phase 2/3: Filter</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <p class="details-intro" style="margin-bottom: 60px;">Principles established to narrow down options.</p>
+                <img src="Assets/Compose Pill/Filter.webp" alt="Phase 2/3: Filter" style="width: min(780px, calc(100vw - var(--content-left) - 40px)); border-radius: 12px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Phase 3/3: Test">
+        <div class="row-left">
+            <div class="company-name">Phase 3/3: Test</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <p class="details-intro">With Data Science, created a progressive experiment plan to test the hypothesis. First, reverting to the original design before the dip in engagement, then tested incremental changes until the desired result.</p>
+                <p class="details-intro step-heading">Step 1: Revert to original design</p>
+                <img src="Assets/Compose Pill/1.webp" alt="Step 1: Revert to original design" class="step-img" loading="lazy">
+
+                <p class="details-intro step-heading">Step 2: Move important actions to the right</p>
+                <img src="Assets/Compose Pill/2.webp" alt="Step 2: Move important actions to the right" class="step-img" loading="lazy">
+
+                <p class="details-intro step-heading">Step 3: Remove and reorder actions</p>
+                <img src="Assets/Compose Pill/3.webp" alt="Step 3: Remove and reorder actions" class="step-img" loading="lazy">
+
+                <p class="details-intro step-heading">Step 4: Move voice action outside of input box</p>
+                <img src="Assets/Compose Pill/4.webp" alt="Step 4: Move voice action outside of input box" class="step-img" loading="lazy">
+
+                <p class="details-intro step-heading">Step 5: Visually group actions</p>
+                <img src="Assets/Compose Pill/5.webp" alt="Step 5: Visually group actions" class="step-img" loading="lazy">
+
+                <p class="details-intro step-heading">Step 6: Apply color to send action</p>
+                <img src="Assets/Compose Pill/6.webp" alt="Step 6: Apply color to send action" class="step-img" loading="lazy">
+
+                <p class="details-intro step-heading">Step 7: Taller container</p>
+                <img src="Assets/Compose Pill/7.webp" alt="Step 7: Taller container" class="step-img" loading="lazy">
+            </div>
+        </div>
+    </div>
+
+    <div class="row company-row" data-company="Outcome">
+        <div class="row-left">
+            <div class="company-name">Outcome</div>
+        </div>
+        <div class="row-right">
+            <div class="entry">
+                <div class="details-thumb" style="margin-bottom: 24px;">
+                    <img src="Assets/Compose Pill/Compose_Hero.png" alt="Compose Pill Hero" loading="lazy">
+                </div>
+                <p class="details-intro">The effort included both a phased design and testing approach, resulting in recovered metric losses and increased voice message usage by 5.7%.</p>
+                <p class="details-intro">Additionally, having a taller text input box, support for more text, and bold coloring of the Voice / Send buttons created brand differentiation from competitors, a priority for Google.</p>
+                <p class="details-intro step-heading">All compose states:</p>
+                <img src="Assets/Compose Pill/Outcome.webp" alt="Final design" class="step-img" style="margin-left: 8px;" loading="lazy">
+
+                <div class="details-desc" style="margin-top: 28px;">
+                    <p style="margin-bottom: 4px;"><strong style="color: var(--text);">Press</strong></p>
+                    <p style="margin-bottom: 0;">Google Messages is finally doing something about its annoying compose box limit - <a href="https://www.androidauthority.com/google-messages-compose-box-3433292/" target="_blank" style="color: inherit;">Android Authority</a></p>
+                    <p style="margin-bottom: 0;">Google Messages could make it easier to view your lengthy texts before sending them - <a href="https://www.androidpolice.com/google-messages-taller-compose-box/" target="_blank" style="color: inherit;">Android Police</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const TICK_PX   = 6;
+    const RED_RATIO = 0.35;
+    const RED_OFFSET_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--red-line-offset')) || 50;
+    const RULER_EXTEND_PX = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ruler-extend')) || 500;
+    const PIN_OFFSET = 10;
+
+    const rulerEl = document.getElementById('ruler');
+    const pageEl  = document.getElementById('page');
+    const redLine = document.getElementById('red-line');
+
+    let tickEls = [];
+
+    function buildRuler() {
+        rulerEl.innerHTML = '';
+        const h = pageEl.scrollHeight + RULER_EXTEND_PX;
+        rulerEl.style.height = h + 'px';
+        const n = Math.floor(h / TICK_PX);
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i <= n; i++) {
+            const t = document.createElement('span');
+            t.className = 'tick';
+            t.style.top = (i * TICK_PX) + 'px';
+            frag.appendChild(t);
+        }
+        rulerEl.appendChild(frag);
+        tickEls = Array.from(rulerEl.querySelectorAll('.tick'));
+    }
+
+    const companyRows = Array.from(document.querySelectorAll('.company-row[data-company]'));
+    const ghosts = [];
+
+    companyRows.forEach((row, i) => {
+        const name = row.dataset.company;
+        const label = row.querySelector('.company-name');
+        const hidden = label && label.style.visibility === 'hidden';
+        const ghost = document.createElement('div');
+        ghost.className = 'company-ghost';
+        ghost.textContent = name;
+        if (hidden) ghost.style.display = 'none';
+        document.body.appendChild(ghost);
+        ghosts.push({ row, ghost, name, label, hidden });
+    });
+
+    const TRANSITION_ZONE = 60;
+
+    let scrollTimeout = null;
+    let rafPending = false;
+    let lastStyledTickStart = 0;
+    let lastStyledTickEnd = -1;
+    let resizeTimeout = null;
+
+    function collapseTicks() {
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            tickEls[i].style.transform = '';
+            tickEls[i].style.background = '';
+        }
+        lastStyledTickStart = 0;
+        lastStyledTickEnd = -1;
+    }
+
+    const BULGE_RADIUS = 45;
+    const MAX_SCALE = 5;
+    const accentRGB = [192, 57, 43];
+
+    function update() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(collapseTicks, 150);
+        const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
+        lastScrollY = window.scrollY;
+
+        const rulerTop = rulerEl.getBoundingClientRect().top;
+        const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
+        const radiusInTicks = Math.ceil(BULGE_RADIUS / TICK_PX);
+        const start = Math.max(0, centerIdx - radiusInTicks);
+        const end = Math.min(tickEls.length - 1, centerIdx + radiusInTicks);
+
+        for (let i = lastStyledTickStart; i <= lastStyledTickEnd && i < tickEls.length; i++) {
+            if (i < start || i > end) {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            const dist = Math.abs(tickEls[i].getBoundingClientRect().top - redY);
+            if (dist < BULGE_RADIUS) {
+                const t = 1 - dist / BULGE_RADIUS;
+                const ease = t * t * t;
+                tickEls[i].style.transform = `scaleX(${1 + (MAX_SCALE - 1) * ease})`;
+                const r = Math.round(170 + (accentRGB[0] - 170) * ease);
+                const g = Math.round(170 + (accentRGB[1] - 170) * ease);
+                const b = Math.round(170 + (accentRGB[2] - 170) * ease);
+                tickEls[i].style.background = `rgb(${r},${g},${b})`;
+            } else {
+                tickEls[i].style.transform = '';
+                tickEls[i].style.background = '';
+            }
+        }
+
+        lastStyledTickStart = start;
+        lastStyledTickEnd = end;
+
+        ghosts.forEach(({ row, ghost, name, label, hidden }, i) => {
+            if (hidden) return;
+            const labelTop = label.getBoundingClientRect().top;
+            let nextTop = Infinity;
+            for (let j = i + 1; j < ghosts.length; j++) {
+                if (!ghosts[j].hidden) {
+                    nextTop = ghosts[j].row.getBoundingClientRect().top;
+                    break;
+                }
+            }
+
+            const pinnedY = redY + 10;
+            const entered = labelTop <= pinnedY;
+            const distToNext = nextTop - redY - PIN_OFFSET;
+
+            const departStart = 50;
+            const totalScrollRange = TRANSITION_ZONE * 12;
+            const scrollIntoDeparture = departStart - distToNext;
+
+            if (entered && scrollIntoDeparture < totalScrollRange) {
+                ghost.style.display = 'block';
+                label.style.visibility = 'hidden';
+
+                if (scrollIntoDeparture > 0) {
+                    const pixelsMoved = scrollIntoDeparture * 0.975;
+                    const ghostY = pinnedY - pixelsMoved;
+                    ghost.style.top = ghostY + 'px';
+                } else {
+                    ghost.style.top = Math.max(labelTop, pinnedY) + 'px';
+                }
+            } else {
+                ghost.style.display = 'none';
+                label.style.visibility = 'visible';
+            }
+        });
+    }
+
+    buildRuler();
+    update();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); updateStickyHeader(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => { buildRuler(); recalcStickyThreshold(); update(); updateStickyHeader(); }, 100);
+    });
+
+    // ── Sticky header ──
+    const introName = document.querySelector('.intro-name');
+    let stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+    let isCurrentlySticky = false;
+
+    function updateStickyHeader() {
+        const shouldBeSticky = window.scrollY >= stickyThreshold;
+        if (shouldBeSticky !== isCurrentlySticky) {
+            isCurrentlySticky = shouldBeSticky;
+            introName.classList.toggle('is-sticky', shouldBeSticky);
+        }
+    }
+
+    function recalcStickyThreshold() {
+        const wasSticky = introName.classList.contains('is-sticky');
+        if (wasSticky) introName.classList.remove('is-sticky');
+        stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
+        if (wasSticky) introName.classList.add('is-sticky');
+    }
+
+    updateStickyHeader();
+
+    // ── Lightbox ──
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    function handleEscape(e) {
+        if (e.key === 'Escape') closeLightbox();
+    }
+
+    function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', handleEscape);
+    }
+</script>
+
+<script src="text-editor.js"></script>
+</body>
+</html>
