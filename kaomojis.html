@@ -59,7 +59,7 @@
         .back-btn {
             position: fixed;
             top: 28px;
-            left: 44px;
+            left: 64px;
             z-index: 200;
             display: inline-flex;
             align-items: center;
@@ -73,10 +73,11 @@
             font-weight: 500;
             color: var(--text);
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: color 0.2s ease, box-shadow 0.2s ease;
         }
         .back-btn:hover {
             color: #000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         .back-btn:hover svg {
             stroke: #000;
@@ -145,7 +146,7 @@
         /* ─── Grid of squares ─── */
         .squares-grid {
             position: relative;
-            margin: 40px auto 100px;
+            margin: 60px auto 100px;
             display: grid;
             grid-template-columns: repeat(4, 320px);
             gap: 40px;
@@ -1303,7 +1304,7 @@
         /* ─── Create kaomoji input bar ─── */
         .create-bar {
             position: relative;
-            margin: 120px auto 0;
+            margin: 140px auto 0;
             display: flex;
             align-items: flex-start;
             gap: 8px;
@@ -1369,10 +1370,7 @@
             align-items: center;
         }
         .inspiration-link {
-            display: block;
-            text-align: center;
-            width: 100%;
-            margin-top: 16px;
+            display: inline;
             font-family: 'Inter', sans-serif;
             font-size: 10px;
             color: #bbb;
@@ -1381,6 +1379,27 @@
         .inspiration-link:hover {
             color: var(--muted);
             text-decoration: underline;
+        }
+        .suggestion-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .suggestion-chip {
+            padding: 4px 8px;
+            font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .suggestion-chip:hover {
+            background: rgba(0,0,0,0.06);
+            border-color: rgba(0,0,0,0.25);
         }
 
         /* ─── Custom kaomoji square ─── */
@@ -1436,81 +1455,16 @@
     Back
 </a>
 
-<nav>
-    <a href="index.html">Work</a>
-    <a href="index.html#about" id="about-toggle">About</a>
-    <a href="play.html" class="play-link" style="display:inline-flex; align-items:center; text-decoration:none; letter-spacing:-0.02em; font-weight:600; line-height:1; gap:6px;">
-        <span style="display:inline-flex; align-items:center;">
-            <span class="play-p" style="position:relative; top:2px; display:inline-block;">P</span><span class="play-l" style="position:relative; top:-2px; margin-left:1px; display:inline-block;">L</span><span class="play-a" style="position:relative; top:2px; margin-left:1px; display:inline-block;">A</span><span class="play-y" style="position:relative; top:-2px; display:inline-block;">Y</span>
-        </span>
-        <svg width="54" height="34" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;"><style>
-        .bear-ear-left {
-            transform-origin: right bottom;
-            transform-box: fill-box;
-            animation: bearLeftTwitch 11s ease-in-out infinite;
-        }
-        .bear-ear-right {
-            transform-origin: left bottom;
-            transform-box: fill-box;
-            animation: bearRightTwitch 11s ease-in-out infinite;
-        }
-        @keyframes bearLeftTwitch {
-            0%, 5% { transform: rotate(0deg); }
-            8% { transform: rotate(-20deg); }
-            15% { transform: rotate(-18deg); }
-            23%, 35% { transform: rotate(0deg); }
-            38% { transform: rotate(-6deg); }
-            42%, 55% { transform: rotate(0deg); }
-            59% { transform: rotate(-10deg); }
-            63% { transform: rotate(-4deg); }
-            70%, 100% { transform: rotate(0deg); }
-        }
-        @keyframes bearRightTwitch {
-            0%, 5% { transform: rotate(0deg); }
-            8% { transform: rotate(20deg); }
-            15% { transform: rotate(18deg); }
-            23%, 35% { transform: rotate(0deg); }
-            38% { transform: rotate(6deg); }
-            42%, 55% { transform: rotate(0deg); }
-            59% { transform: rotate(10deg); }
-            63% { transform: rotate(4deg); }
-            70%, 100% { transform: rotate(0deg); }
-        }
-        .bear-nose {
-            animation: bearNoseWiggle 3s ease-in-out infinite;
-        }
-        @keyframes bearNoseWiggle {
-            0%, 60% { transform: translateY(0); }
-            65% { transform: translateY(-1px); }
-            70% { transform: translateY(0.5px); }
-            75% { transform: translateY(-0.5px); }
-            80%, 100% { transform: translateY(0); }
-        }
-        .bear-eye {
-            transform-origin: center center;
-            transform-box: fill-box;
-            animation: bearBlink 4s ease-in-out infinite;
-        }
-        @keyframes bearBlink {
-            0%, 90% { transform: scaleY(1); }
-            93% { transform: scaleY(0); }
-            96% { transform: scaleY(1); }
-            100% { transform: scaleY(1); }
-        }
-        </style>
-        <text class="bear-ear-left" x="2" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="300" fill="currentColor">ʕ</text>
-        <text class="bear-eye" x="18" y="30" font-family="Inter, sans-serif" font-size="18" fill="currentColor">•</text>
-        <text class="bear-nose" x="30" y="34" font-family="Inter, sans-serif" font-size="22" fill="currentColor">ᴥ</text>
-        <text class="bear-eye" x="50" y="30" font-family="Inter, sans-serif" font-size="18" fill="currentColor">•</text>
-        <text class="bear-ear-right" x="60" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="300" fill="currentColor">ʔ</text>
-    </svg>
-    </a>
-</nav>
-
 <div class="create-bar">
     <div class="create-input-wrapper">
         <textarea class="create-input" id="kaomoji-input" placeholder="Enter your kaomoji" rows="1"></textarea>
-        <a href="https://www.kaomoji.co/pages/emoji?srsltid=AfmBOopTtbfd8hDG9ETxSBA4_EiKvhF6joUoEb-ETppdj3cEIK93U-aG" target="_blank" class="inspiration-link">Find your inspiration</a>
+        <div class="suggestion-row">
+            <button class="suggestion-chip" data-kaomoji="⸜(｡˃ ᵕ ˂ )⸝♡">⸜(｡˃ ᵕ ˂ )⸝♡</button>
+            <button class="suggestion-chip" data-kaomoji="(*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ">(*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ</button>
+            <button class="suggestion-chip" data-kaomoji="ᐠ( ᐛ )ᐟ">ᐠ( ᐛ )ᐟ</button>
+            <button class="suggestion-chip" data-kaomoji="≽^•⩊•^≼">≽^•⩊•^≼</button>
+            <a href="https://www.kaomoji.co/pages/emoji?srsltid=AfmBOopTtbfd8hDG9ETxSBA4_EiKvhF6joUoEb-ETppdj3cEIK93U-aG" target="_blank" class="inspiration-link">Find more</a>
+        </div>
     </div>
     <button class="create-btn" id="create-btn">Create</button>
 </div>
@@ -1794,10 +1748,20 @@
 </div>
 
 <script>
+    // ── Suggestion chips ──
+    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const input = document.getElementById('kaomoji-input');
+            input.value = chip.dataset.kaomoji;
+            input.focus();
+        });
+    });
+
     // ── Constants ──
     const DELETE_PASSWORD = '0';
     const SLIDER_MAX = 30;
     const DEFAULT_SLIDER_VALUE = 8;
+    const CUSTOM_SLIDER_BOOST = 12; // Boost applied to custom kaomoji slider values
     const COLOR_BLACK_POSITION = 8;
 
     // ── Kaomoji configuration ──
@@ -3030,8 +2994,8 @@
             square.classList.remove('new-entry');
         }, 500);
 
-        // Initialize speed
-        square.style.setProperty('--kao-speed', calcSpeed(DEFAULT_SLIDER_VALUE) + 's');
+        // Initialize speed (custom kaomojis are faster at same slider position)
+        square.style.setProperty('--kao-speed', calcSpeed(DEFAULT_SLIDER_VALUE + CUSTOM_SLIDER_BOOST) + 's');
 
         // Add dynamic style for this custom kaomoji
         const style = document.createElement('style');
@@ -3042,8 +3006,8 @@
         // Add keyframe templates for custom kaomoji
         keyframeTemplates[customId] = animations;
 
-        // Initialize wildness
-        updateFrenzy(customId, calcFrenzy(DEFAULT_SLIDER_VALUE));
+        // Initialize wildness (custom kaomojis are more wild at same slider position)
+        updateFrenzy(customId, calcFrenzy(DEFAULT_SLIDER_VALUE + CUSTOM_SLIDER_BOOST));
 
         // Initialize color to black (value 8)
         updateColor(customId, calcColor(DEFAULT_SLIDER_VALUE));
@@ -3055,12 +3019,14 @@
         const gifBtn = document.getElementById(`download-gif${customId}`);
 
         const speedHandler = (e) => {
-            const speed = calcSpeed(parseInt(e.target.value));
+            const boostedValue = Math.min(parseInt(e.target.value) + CUSTOM_SLIDER_BOOST, SLIDER_MAX);
+            const speed = calcSpeed(boostedValue);
             square.style.setProperty('--kao-speed', speed + 's');
         };
 
         const wildHandler = (e) => {
-            const wild = calcFrenzy(parseInt(e.target.value));
+            const boostedValue = Math.min(parseInt(e.target.value) + CUSTOM_SLIDER_BOOST, SLIDER_MAX);
+            const wild = calcFrenzy(boostedValue);
             updateFrenzy(customId, wild);
         };
 

@@ -52,11 +52,20 @@
             z-index: 200;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
+            transition: transform 0.3s ease;
+            transform-origin: bottom right;
+        }
+        .footer-links.scaled {
+            transform: scale(2);
         }
         .footer-links a {
             color: #999;
             text-decoration: none;
             font-weight: 400;
+            transition: color 0.3s ease;
+        }
+        .footer-links.scaled a {
+            color: var(--text);
         }
         .footer-links a:hover {
             color: var(--red);
@@ -752,78 +761,6 @@
             transition: none;
         }
 
-        /* ─── Bottom flower garden ─── */
-        #flower-garden {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            pointer-events: none;
-            z-index: 50;
-            overflow: visible;
-            --fade-duration: 0.5s;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity var(--fade-duration) ease-out, visibility 0s var(--fade-duration);
-        }
-        #flower-garden.visible {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity var(--fade-duration) ease-in, visibility 0s;
-        }
-        #flower-garden svg {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 100px;
-            overflow: visible;
-        }
-        #flower-garden .flower-stem {
-            transform-origin: bottom center;
-            transform-box: fill-box;
-            transform: translateY(50px) scale(0);
-        }
-        #flower-garden .flower-stem path,
-        #flower-garden .flower-stem circle,
-        #flower-garden .flower-stem line {
-            vector-effect: non-scaling-stroke;
-        }
-        #flower-garden.visible .flower-stem {
-            transform: translateY(0) scale(3.5);
-            transition: transform 120s cubic-bezier(0.1, 1.0, 0.4, 1.0);
-            animation: gentleSway 5s ease-in-out infinite alternate;
-        }
-        #flower-garden.visible .flower-stem:nth-child(even) {
-            animation-duration: 6s;
-            animation-direction: alternate-reverse;
-        }
-        #flower-garden.visible .flower-stem:nth-child(3n) {
-            animation-duration: 7s;
-            animation-delay: -2s;
-        }
-        @keyframes gentleSway {
-            0% { rotate: -6deg; }
-            100% { rotate: 6deg; }
-        }
-        #flower-garden:not(.visible) .flower-stem {
-            transition: transform 0s var(--fade-duration);
-        }
-        #flower-garden .flower-stem:nth-child(1) { transition-delay: 0s; }
-        #flower-garden .flower-stem:nth-child(2) { transition-delay: 0.05s; }
-        #flower-garden .flower-stem:nth-child(3) { transition-delay: 0.1s; }
-        #flower-garden .flower-stem:nth-child(4) { transition-delay: 0.15s; }
-        #flower-garden .flower-stem:nth-child(5) { transition-delay: 0.2s; }
-        #flower-garden .flower-stem:nth-child(6) { transition-delay: 0.08s; }
-        #flower-garden .flower-stem:nth-child(7) { transition-delay: 0.18s; }
-        #flower-garden .flower-stem:nth-child(8) { transition-delay: 0.12s; }
-        #flower-garden .flower-stem:nth-child(9) { transition-delay: 0.22s; }
-        #flower-garden .flower-stem:nth-child(10) { transition-delay: 0.03s; }
-        #flower-garden .flower-stem:nth-child(11) { transition-delay: 0.16s; }
-        #flower-garden .flower-stem:nth-child(12) { transition-delay: 0.25s; }
-        #flower-garden .flower-stem:nth-child(13) { transition-delay: 0.07s; }
-        #flower-garden .flower-stem:nth-child(14) { transition-delay: 0.13s; }
-        #flower-garden .flower-stem:nth-child(15) { transition-delay: 0.19s; }
     </style>
 </head>
 <body>
@@ -1171,155 +1108,6 @@
 
 </div><!-- #page -->
 
-<div id="bottom-bloom"></div>
-<div id="flower-garden">
-    <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" fill="none" stroke="#888" stroke-width="1">
-        <!-- Stem 1: Curly fern -->
-        <g class="flower-stem">
-            <path d="M60 200 Q55 170 70 140 Q85 110 65 80" stroke-linecap="round"/>
-            <path d="M68 160 Q45 155 35 140 Q45 145 55 155" stroke-linecap="round"/>
-            <path d="M72 130 Q50 120 42 100 Q55 115 65 125" stroke-linecap="round"/>
-            <path d="M70 150 Q90 140 100 125 Q88 135 75 148" stroke-linecap="round"/>
-            <path d="M67 115 Q85 100 95 85 Q82 98 70 112" stroke-linecap="round"/>
-            <path d="M65 85 Q55 70 60 55 Q70 68 65 82" stroke-linecap="round"/>
-        </g>
-        <!-- Stem 2: Whimsical daisy with swirl -->
-        <g class="flower-stem">
-            <path d="M130 200 Q125 160 140 130 Q155 100 140 70" stroke-linecap="round"/>
-            <circle cx="140" cy="55" r="5" fill="#888" stroke="none"/>
-            <path d="M140 55 Q140 40 130 35 Q140 42 140 55" fill="none"/>
-            <path d="M140 55 Q155 50 162 40 Q152 48 140 55" fill="none"/>
-            <path d="M140 55 Q125 50 118 40 Q128 48 140 55" fill="none"/>
-            <path d="M140 55 Q150 45 160 50 Q148 50 140 55" fill="none"/>
-            <path d="M140 55 Q130 45 120 50 Q132 50 140 55" fill="none"/>
-            <path d="M140 55 Q140 42 145 32 Q142 44 140 55" fill="none"/>
-            <path d="M135 120 Q115 115 105 100" stroke-linecap="round"/>
-        </g>
-        <!-- Stem 3: Dandelion puff -->
-        <g class="flower-stem">
-            <path d="M210 200 Q200 150 220 110 Q240 70 215 50" stroke-linecap="round"/>
-            <circle cx="215" cy="40" r="3" fill="#888" stroke="none"/>
-            <line x1="215" y1="37" x2="215" y2="20" stroke-linecap="round"/>
-            <line x1="215" y1="37" x2="200" y2="25" stroke-linecap="round"/>
-            <line x1="215" y1="37" x2="230" y2="25" stroke-linecap="round"/>
-            <line x1="215" y1="37" x2="195" y2="35" stroke-linecap="round"/>
-            <line x1="215" y1="37" x2="235" y2="35" stroke-linecap="round"/>
-            <line x1="215" y1="37" x2="205" y2="22" stroke-linecap="round"/>
-            <line x1="215" y1="37" x2="225" y2="22" stroke-linecap="round"/>
-            <circle cx="215" cy="18" r="1.5" fill="#888" stroke="none"/>
-            <circle cx="198" cy="24" r="1.5" fill="#888" stroke="none"/>
-            <circle cx="232" cy="24" r="1.5" fill="#888" stroke="none"/>
-        </g>
-        <!-- Stem 4: Droopy bell flower -->
-        <g class="flower-stem">
-            <path d="M290 200 Q280 160 300 130 Q320 100 295 75" stroke-linecap="round"/>
-            <path d="M295 75 Q280 80 275 95 Q285 85 295 75" fill="none"/>
-            <path d="M295 75 Q310 80 315 95 Q305 85 295 75" fill="none"/>
-            <path d="M295 75 Q295 85 290 100" fill="none" stroke-linecap="round"/>
-            <path d="M305 120 Q325 110 340 115 Q325 118 308 122" stroke-linecap="round"/>
-        </g>
-        <!-- Stem 5: Spiral tendril -->
-        <g class="flower-stem">
-            <path d="M370 200 Q365 160 380 130" stroke-linecap="round"/>
-            <path d="M380 130 Q395 115 385 100 Q375 85 390 70 Q405 55 395 40" stroke-linecap="round" fill="none"/>
-            <circle cx="395" cy="35" r="4" fill="none"/>
-        </g>
-        <!-- Stem 6: Wild carrot / Queen Anne's lace -->
-        <g class="flower-stem">
-            <path d="M450 200 Q445 150 460 100" stroke-linecap="round"/>
-            <path d="M460 100 Q450 90 445 80" stroke-linecap="round"/>
-            <path d="M460 100 Q470 90 475 80" stroke-linecap="round"/>
-            <path d="M460 100 Q458 88 455 75" stroke-linecap="round"/>
-            <path d="M460 100 Q462 88 465 75" stroke-linecap="round"/>
-            <circle cx="445" cy="76" r="2" fill="#888" stroke="none"/>
-            <circle cx="455" cy="72" r="2" fill="#888" stroke="none"/>
-            <circle cx="465" cy="72" r="2" fill="#888" stroke="none"/>
-            <circle cx="475" cy="76" r="2" fill="#888" stroke="none"/>
-            <circle cx="460" cy="68" r="2" fill="#888" stroke="none"/>
-        </g>
-        <!-- Stem 7: Loopy leaves -->
-        <g class="flower-stem">
-            <path d="M530 200 Q520 160 540 120 Q560 80 535 50" stroke-linecap="round"/>
-            <path d="M535 160 Q510 150 505 130 Q520 145 535 155" fill="none"/>
-            <path d="M545 130 Q570 120 575 100 Q560 115 545 125" fill="none"/>
-            <path d="M540 100 Q515 90 510 70 Q525 85 538 95" fill="none"/>
-            <circle cx="535" cy="45" r="3" fill="#888" stroke="none"/>
-        </g>
-        <!-- Stem 8: Starburst flower -->
-        <g class="flower-stem">
-            <path d="M620 200 Q610 150 630 100" stroke-linecap="round"/>
-            <circle cx="630" cy="85" r="6" fill="#888" stroke="none"/>
-            <path d="M630 85 L630 65 Q635 60 630 55" stroke-linecap="round"/>
-            <path d="M630 85 L645 70 Q652 68 655 62" stroke-linecap="round"/>
-            <path d="M630 85 L615 70 Q608 68 605 62" stroke-linecap="round"/>
-            <path d="M630 85 L650 85 Q658 82 662 80" stroke-linecap="round"/>
-            <path d="M630 85 L610 85 Q602 82 598 80" stroke-linecap="round"/>
-            <path d="M625 130 Q605 125 595 110" stroke-linecap="round"/>
-        </g>
-        <!-- Stem 9: Wavy grass trio -->
-        <g class="flower-stem">
-            <path d="M700 200 Q690 160 710 120 Q730 80 705 50" stroke-linecap="round"/>
-            <path d="M715 200 Q725 150 710 100 Q695 60 720 35" stroke-linecap="round"/>
-            <path d="M690 200 Q680 170 695 140 Q710 110 690 85" stroke-linecap="round"/>
-        </g>
-        <!-- Stem 10: Poppy with curly petals -->
-        <g class="flower-stem">
-            <path d="M790 200 Q780 160 800 120 Q820 80 795 55" stroke-linecap="round"/>
-            <circle cx="795" cy="45" r="5" fill="#888" stroke="none"/>
-            <path d="M795 45 Q780 35 775 45 Q780 50 795 45" fill="none"/>
-            <path d="M795 45 Q810 35 815 45 Q810 50 795 45" fill="none"/>
-            <path d="M795 45 Q785 30 795 25 Q805 30 795 45" fill="none"/>
-            <path d="M795 45 Q780 50 778 60 Q785 52 795 45" fill="none"/>
-            <path d="M795 45 Q810 50 812 60 Q805 52 795 45" fill="none"/>
-            <path d="M805 105 Q825 95 840 100" stroke-linecap="round"/>
-        </g>
-        <!-- Stem 11: Double spiral -->
-        <g class="flower-stem">
-            <path d="M890 200 Q880 160 900 130" stroke-linecap="round"/>
-            <path d="M900 130 Q915 115 905 95 Q895 80 910 65 Q925 50 910 40" stroke-linecap="round"/>
-            <path d="M900 130 Q885 115 895 95 Q905 80 890 65 Q875 50 890 40" stroke-linecap="round"/>
-            <circle cx="910" cy="35" r="3" fill="#888" stroke="none"/>
-            <circle cx="890" cy="35" r="3" fill="#888" stroke="none"/>
-        </g>
-        <!-- Stem 12: Wiggly lavender -->
-        <g class="flower-stem">
-            <path d="M970 200 Q960 150 980 100 Q1000 50 975 30" stroke-linecap="round"/>
-            <circle cx="985" cy="85" r="3" fill="#888" stroke="none"/>
-            <circle cx="978" cy="70" r="3" fill="#888" stroke="none"/>
-            <circle cx="982" cy="55" r="3" fill="#888" stroke="none"/>
-            <circle cx="977" cy="42" r="2.5" fill="#888" stroke="none"/>
-            <circle cx="975" cy="32" r="2" fill="#888" stroke="none"/>
-        </g>
-        <!-- Stem 13: Curly fern right -->
-        <g class="flower-stem">
-            <path d="M1050 200 Q1040 160 1060 120 Q1080 80 1055 50" stroke-linecap="round"/>
-            <path d="M1055 155 Q1030 145 1025 125 Q1040 140 1055 152" fill="none"/>
-            <path d="M1065 125 Q1090 115 1095 95 Q1080 110 1065 122" fill="none"/>
-            <path d="M1058 95 Q1035 85 1030 65 Q1045 80 1058 92" fill="none"/>
-            <path d="M1055 55 Q1045 40 1055 30 Q1062 42 1055 52" fill="none"/>
-        </g>
-        <!-- Stem 14: Heart-shaped bud -->
-        <g class="flower-stem">
-            <path d="M1120 200 Q1110 160 1130 120 Q1150 80 1125 55" stroke-linecap="round"/>
-            <path d="M1125 55 Q1115 45 1120 35 Q1130 45 1125 55" fill="none"/>
-            <path d="M1125 55 Q1135 45 1130 35 Q1120 45 1125 55" fill="none"/>
-        </g>
-        <!-- Stem 15: Tiny dancing flowers -->
-        <g class="flower-stem">
-            <path d="M1180 200 Q1170 160 1185 130" stroke-linecap="round"/>
-            <path d="M1185 130 Q1175 115 1180 100" stroke-linecap="round"/>
-            <path d="M1185 130 Q1195 115 1190 100" stroke-linecap="round"/>
-            <path d="M1185 130 Q1185 115 1185 95" stroke-linecap="round"/>
-            <circle cx="1180" cy="95" r="4" fill="none"/>
-            <circle cx="1190" cy="95" r="4" fill="none"/>
-            <circle cx="1185" cy="90" r="4" fill="none"/>
-            <circle cx="1180" cy="97" r="1.5" fill="#888" stroke="none"/>
-            <circle cx="1190" cy="97" r="1.5" fill="#888" stroke="none"/>
-            <circle cx="1185" cy="92" r="1.5" fill="#888" stroke="none"/>
-        </g>
-    </svg>
-</div>
-
 <script>
     const TICK_PX   = 6;
     const RED_RATIO = 0.35;
@@ -1331,6 +1119,8 @@
     const pageEl  = document.getElementById('page');
     const redLine = document.getElementById('red-line');
     const bearSvg = document.getElementById('bear-svg');
+    const motionReelThumb = document.querySelector('[data-transition-name="motion-reel"]');
+    const footerLinks = document.querySelector('.footer-links');
 
     let tickEls   = [];
     const allThumbs = Array.from(document.querySelectorAll('.thumb, #expr-wrap'));
@@ -1484,6 +1274,15 @@
             if (isInRange !== isSaturated) thumb.classList.toggle('saturated', isInRange);
         });
 
+        // Scale footer links when red line reaches middle of Motion Reel thumbnail
+        if (motionReelThumb && footerLinks) {
+            const rect = motionReelThumb.getBoundingClientRect();
+            const thumbMiddle = rect.top + rect.height / 2;
+            const isAtMiddle = redY >= thumbMiddle;
+            const isScaled = footerLinks.classList.contains('scaled');
+            if (isAtMiddle !== isScaled) footerLinks.classList.toggle('scaled', isAtMiddle);
+        }
+
         // Company label pinning
         let newPinned = null;
         const TRANSITION_ZONE = 60; // px before handoff where ghost starts sliding back
@@ -1590,33 +1389,12 @@
     const scrollHint = document.getElementById('scroll-hint');
     let scrollHintHidden = false;
 
-    // ── Flower garden at bottom ──
-    const flowerGarden = document.getElementById('flower-garden');
-    const bottomBloom = document.getElementById('bottom-bloom');
-    let flowersVisible = false;
-
-    function checkFlowerGarden() {
-        const scrollBottom = window.scrollY + window.innerHeight;
-        const pageHeight = document.documentElement.scrollHeight;
-        const threshold = 0; // px from bottom to trigger
-
-        if (scrollBottom >= pageHeight - threshold && !flowersVisible) {
-            flowerGarden.classList.add('visible');
-            bottomBloom.classList.add('visible');
-            flowersVisible = true;
-        } else if (scrollBottom < pageHeight - threshold - 100 && flowersVisible) {
-            flowerGarden.classList.remove('visible');
-            bottomBloom.classList.remove('visible');
-            flowersVisible = false;
-        }
-    }
-
     buildRuler();
     update();
     window.addEventListener('scroll', () => {
         if (!rafPending) {
             rafPending = true;
-            requestAnimationFrame(() => { update(); checkFlowerGarden(); rafPending = false; });
+            requestAnimationFrame(() => { update(); rafPending = false; });
         }
     }, { passive: true });
     let resizeTimeout = null;
