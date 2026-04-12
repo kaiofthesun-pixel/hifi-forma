@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍜 always noodling</title>
+    <meta name="view-transition" content="same-origin">
+    <title>Material Design V1</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
 
@@ -83,7 +84,7 @@
         .intro {
             padding: 74px 0 0 var(--content-left);
             position: relative;
-            top: 70px;
+            top: 90px;
         }
         .intro-name {
             font-size: 22px;
@@ -106,17 +107,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             font-size: 15px !important;
         }
-        .intro-name .sticky-logo {
-            display: none;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-40%);
-            left: calc(var(--content-left) + min(780px, calc(100vw - var(--content-left) - 40px)) - 19px);
-            height: 19px;
-        }
-        .intro-name.is-sticky .sticky-logo {
-            display: block;
-        }
         .intro-tagline {
             font-family: 'Inter', sans-serif;
             font-size: 22px;
@@ -138,7 +128,7 @@
         }
 
         .role-text {
-            margin-top: 48px;
+            margin-top: 38px;
             font-family: 'Inter', sans-serif;
             font-size: 15px;
             color: rgba(0,0,0,0.7);
@@ -281,33 +271,6 @@
         .details-desc p {
             margin-bottom: 14px;
         }
-        .details-desc a {
-            color: var(--muted);
-            text-decoration: underline;
-        }
-        .details-desc a:hover {
-            color: rgba(0,0,0,0.6);
-        }
-        .grid-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 14px;
-            text-align: center;
-        }
-        .hero-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            width: min(780px, calc(100vw - var(--content-left) - 40px));
-        }
-        .hero-grid > div {
-            text-align: center;
-        }
-        .hero-grid img {
-            width: 100%;
-            border-radius: 8px;
-        }
 
         .company-ghost {
             position: fixed;
@@ -325,6 +288,25 @@
             display: none;
             transition: none;
         }
+
+        /* ─── Responsive: Stack columns on small screens ─── */
+        @media (max-width: 768px) {
+            .image-row {
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+            .image-row > div {
+                flex: none !important;
+                width: 100% !important;
+            }
+            .side-by-side {
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            .side-by-side .details-thumb {
+                width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -340,110 +322,48 @@
     <div id="ruler"></div>
 
     <div style="display: flex; align-items: center; gap: 6px; position: absolute; top: 43px; left: var(--content-left);">
-        <img src="Assets/Logos/logo_allo.png" alt="Google Allo" style="height: 15px;">
-        <span style="font-size: 15px; color: var(--text); font-weight: 500;">Google Allo</span>
+        <img src="Assets/Logos/logo_google.png" alt="Google" style="height: 14px;">
+        <span style="font-size: 15px; color: var(--text); font-weight: 500;">Google</span>
     </div>
 
     <div class="intro">
-        <div class="intro-name">Google Minis<img src="Assets/Logos/logo_allo.png" alt="" class="sticky-logo"></div>
-        <div class="intro-tagline">Unlocking self-expression ✨automagically✨</div>
+        <div class="intro-name">Material Design V1</div>
+        <div class="intro-tagline">Solving fragmentation through a unified design system</div>
         <div class="role-text">
             <div class="role-label">Role</div>
-            <div>0→1 Product strategy</div>
-            <div>End-to-end experience</div>
-            <div>Creative direction, Design</div>
+            <div>Visual design</div>
+            <div>Motion design</div>
+            <div>Interaction design</div>
         </div>
     </div>
 
-    <div class="row company-row" data-company="Overview" style="margin-top:65px;">
+    <div class="row company-row" data-company="Overview" style="margin-top:99px;">
         <div class="row-left">
             <div class="company-name">Overview</div>
         </div>
         <div class="row-right">
             <div class="entry">
-                <div class="details-thumb hero" style="aspect-ratio: 780 / 520; display: flex; align-items: center; justify-content: center; background: #B5A9C1;">
-                    <img src="Assets/Google Minis/GoogleMinis_thumbnail.gif" alt="Overview" style="width: auto; height: 100%; object-fit: contain;">
+                <div class="details-thumb hero" style="aspect-ratio: 780 / 520; display: flex; align-items: center; justify-content: center; background: #E8E4F0;">
+                    <img src="Assets/Material Design/material_thumbnail.png" alt="Material Design overview" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <div class="details-desc">
-                    <p>Google Minis allows users to create personalized digital sticker packs that reflect their appearance.</p>
-                    <p>At time of release, Minis was considered revolutionary because it leveraged AI to generate stickers rather than manual creation.</p>
+                    <p>I was a founding member of the Material Design systems team, where we unified Google's fragmented product ecosystem for the first time. I contributed to core component and motion design.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row company-row" data-company="Hero screens">
+    <div class="row company-row" data-company="Contacts app" style="margin-top: -40px;">
         <div class="row-left">
-            <div class="company-name">Hero screens</div>
+            <div class="company-name">Contacts app</div>
         </div>
         <div class="row-right">
             <div class="entry">
-                <div class="hero-grid">
-                    <div>
-                        <div class="grid-label">Capture</div>
-                        <img src="Assets/Google Minis/main1.webp" alt="Capture" loading="lazy">
-                    </div>
-                    <div>
-                        <div class="grid-label">Output</div>
-                        <img src="Assets/Google Minis/main2.webp" alt="Output" loading="lazy">
-                    </div>
-                    <div>
-                        <div class="grid-label">Customize</div>
-                        <img src="Assets/Google Minis/main3.webp" alt="Customize" loading="lazy">
-                    </div>
-                    <div>
-                        <div class="grid-label">Share</div>
-                        <img src="Assets/Google Minis/main4.webp" alt="Share" loading="lazy">
-                    </div>
+                <div class="details-thumb" style="aspect-ratio: 780 / 520; background: #E3E3E3;">
+                    <img src="Assets/Material Design/Contacts.png" alt="Contacts app" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <div class="details-desc" style="margin-top: 24px;">
-                    <p>After a user captures their selfie, the AI system outputs a poster which allows them to further customize their avatar in the sticker pack UX. From there, they are able to fine-tune and send stickers to others.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row company-row" data-company="Output details">
-        <div class="row-left">
-            <div class="company-name">Output details</div>
-        </div>
-        <div class="row-right">
-            <div class="entry">
-                <div class="details-thumb" style="background: none; border-radius: 0;"><img src="Assets/Google Minis/Output.webp" alt="Output details" style="width: 100%; display: block;" loading="lazy"></div>
                 <div class="details-desc">
-                    <p>To maintain freshness, the output received by the recipient is randomized to show a variety of styles and colors.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row company-row" data-company="Customization details">
-        <div class="row-left">
-            <div class="company-name">Customization details</div>
-        </div>
-        <div class="row-right">
-            <div class="entry">
-                <div class="details-thumb" style="background: none; border-radius: 0;"><img src="Assets/Google Minis/customize.webp" alt="Customization details" style="width: 100%; display: block;" loading="lazy"></div>
-                <div class="details-desc">
-                    <p>Users are provided the ability to tweak their visual representation, in detail.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row company-row" data-company="Styles">
-        <div class="row-left">
-            <div class="company-name">Styles</div>
-        </div>
-        <div class="row-right">
-            <div class="entry">
-                <div class="details-thumb" style="background: none; border-radius: 0;"><img src="Assets/Google Minis/styles1.webp" alt="Styles" style="width: 100%; display: block;" loading="lazy"></div>
-                <div class="details-desc">
-                    <p>Worked with illustrator, <a href="https://en.wikipedia.org/wiki/Lamar_Abrams" target="_blank">Lamar Abrams</a> on developing a sticker pack style that closely aligns with the style he developed for the animated series <a href="https://en.wikipedia.org/wiki/Steven_Universe" target="_blank">Steven Universe</a>.</p>
-                </div>
-                <div class="details-thumb" style="background: none; border-radius: 0; margin-top: 40px;"><img src="Assets/Google Minis/styles2.webp" alt="Styles" style="width: 100%; display: block;" loading="lazy"></div>
-                <div class="details-desc">
-                    <p>Additionally, launched a style based on Google's emoji visual language.</p>
+                    <p>I applied Material to the Android Contacts app while designing the entire app from the ground up. There, I pioneered motion patterns still in use today—specifically the adaptive header scaling that responds to user intent.</p>
                 </div>
             </div>
         </div>
@@ -455,13 +375,19 @@
         </div>
         <div class="row-right">
             <div class="entry">
-                <div class="details-desc">
-                    <p>The launch was met with positive press, celebrating Google's entry into personalized sticker packs and noted for the lack of friction during creation.</p>
-                    <ul style="padding-left: 40px;">
-                        <li><a href="https://techcrunch.com/2017/05/11/googles-gboard-now-lets-you-create-a-set-of-emoji-that-look-like-you/" target="_blank">Google's Gboard now lets you create a set of emoji that look like you</a> - <strong>Techcrunch</strong></li>
-                        <li><a href="https://www.theverge.com/2017/5/11/15621886/google-allo-selfie-stickers-neural-network" target="_blank">Google Allo can now turn your selfies into cartoon stickers</a> - <strong>The Verge</strong></li>
-                        <li><a href="https://www.pcworld.com/article/418827/move-over-memoji-heres-how-to-use-googles-custom-mini-selfie-stickers-in-gboard.html" target="_blank">Move over Memoji: Here's how to use Google's custom Mini selfie stickers in Gboard</a> - <strong>PC World</strong></li>
-                    </ul>
+                <div class="image-row" style="display: flex; gap: 24px; width: min(780px, calc(100vw - var(--content-left) - 40px));">
+                    <div style="flex: 1;">
+                        <div style="aspect-ratio: 1; background: #6200EE; border-radius: 12px;"></div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="aspect-ratio: 1; background: #03DAC6; border-radius: 12px;"></div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="aspect-ratio: 1; background: #FF0266; border-radius: 12px;"></div>
+                    </div>
+                </div>
+                <div class="details-desc" style="margin-top: 20px;">
+                    <p>The Material color system supports dynamic color, enabling personalization and accessibility while maintaining visual consistency across products.</p>
                 </div>
             </div>
         </div>
@@ -538,7 +464,6 @@
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(collapseTicks, 150);
         const redY = window.innerHeight * RED_RATIO + RED_OFFSET_PX;
-        lastScrollY = window.scrollY;
 
         const rulerTop = rulerEl.getBoundingClientRect().top;
         const centerIdx = Math.round((redY - rulerTop) / TICK_PX);
@@ -609,19 +534,6 @@
         });
     }
 
-    buildRuler();
-    update();
-    window.addEventListener('scroll', () => {
-        if (!rafPending) {
-            rafPending = true;
-            requestAnimationFrame(() => { update(); updateStickyHeader(); rafPending = false; });
-        }
-    }, { passive: true });
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => { buildRuler(); recalcStickyThreshold(); update(); updateStickyHeader(); }, 100);
-    });
-
     // ── Sticky header ──
     const introName = document.querySelector('.intro-name');
     let stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
@@ -636,15 +548,27 @@
     }
 
     function recalcStickyThreshold() {
+        // Temporarily remove sticky to get true position
         const wasSticky = introName.classList.contains('is-sticky');
         if (wasSticky) introName.classList.remove('is-sticky');
         stickyThreshold = introName.getBoundingClientRect().top + window.scrollY - 28;
         if (wasSticky) introName.classList.add('is-sticky');
     }
 
+    buildRuler();
+    update();
     updateStickyHeader();
+    window.addEventListener('scroll', () => {
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => { update(); updateStickyHeader(); rafPending = false; });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => { buildRuler(); recalcStickyThreshold(); update(); updateStickyHeader(); }, 100);
+    });
 </script>
 
-<script src="text-editor.js"></script>
 </body>
 </html>
