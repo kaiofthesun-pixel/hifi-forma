@@ -158,7 +158,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 22px;
             color: var(--muted);
-            line-height: 1.27;
+            line-height: 1.4;
             max-width: min(633px, calc(100vw - var(--content-left) - 20px));
         }
 
@@ -1542,16 +1542,6 @@
                 aboutPanel.classList.add('about-open');
             });
         });
-        // Play about sound
-        if (aboutFadeInterval) {
-            clearInterval(aboutFadeInterval);
-            aboutFadeInterval = null;
-        }
-        if (aboutAudio && audioUnlocked) {
-            aboutAudio.volume = ABOUT_SOUND_VOLUME;
-            aboutAudio.currentTime = 0;
-            aboutAudio.play().catch(() => {});
-        }
     }
 
     function closeAbout() {
@@ -1563,20 +1553,6 @@
         setTimeout(() => {
             aboutPanel.style.display = 'none';
         }, 600);
-        // Fade out about sound
-        if (aboutAudio && !aboutAudio.paused) {
-            if (aboutFadeInterval) clearInterval(aboutFadeInterval);
-            aboutFadeInterval = setInterval(() => {
-                if (aboutAudio.volume > FADE_STEP) {
-                    aboutAudio.volume = Math.max(0, aboutAudio.volume - FADE_STEP);
-                } else {
-                    aboutAudio.pause();
-                    aboutAudio.volume = ABOUT_SOUND_VOLUME;
-                    clearInterval(aboutFadeInterval);
-                    aboutFadeInterval = null;
-                }
-            }, FADE_INTERVAL_MS);
-        }
     }
 
     aboutToggle.addEventListener('click', (e) => {
@@ -1610,12 +1586,7 @@
     // ── Audio setup ────────────────────────────────────────────
     const BOOP_INITIAL_DELAY_MS = 1000;
     const BOOP_VOLUME = 0.3;
-    const ABOUT_SOUND_VOLUME = 0.4;
-    const FADE_STEP = 0.05;
-    const FADE_INTERVAL_MS = 50;
     let boopAudio = null;
-    let aboutAudio = null;
-    let aboutFadeInterval = null;
     let audioUnlocked = false;
     let audioReadyTime = Date.now() + BOOP_INITIAL_DELAY_MS;
     const audioEvents = ['click', 'keydown', 'touchstart', 'pointerdown'];
@@ -1626,11 +1597,6 @@
             boopAudio = new Audio('Assets/Sounds/floraphonic-minimal-pop-click-ui-1-198301.mp3');
             boopAudio.volume = BOOP_VOLUME;
             boopAudio.load();
-        }
-        if (!aboutAudio) {
-            aboutAudio = new Audio('Assets/Sounds/koiroylers-slow-motion-355961.mp3');
-            aboutAudio.volume = ABOUT_SOUND_VOLUME;
-            aboutAudio.load();
         }
         boopAudio.volume = 0;
         boopAudio.play().then(() => {
@@ -1644,11 +1610,6 @@
     audioEvents.forEach(evt =>
         document.addEventListener(evt, initAudio, { passive: true })
     );
-
-    // Cleanup interval on page unload
-    window.addEventListener('beforeunload', () => {
-        if (aboutFadeInterval) clearInterval(aboutFadeInterval);
-    });
 
     function boop() {
         if (!boopAudio || !audioUnlocked) return;
