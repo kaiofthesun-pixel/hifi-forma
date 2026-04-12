@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍜 always noodling</title>
+    <title>Allen K Lau</title>
+    <link rel="icon" type="image/png" href="Assets/About/A.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
@@ -24,6 +25,10 @@
             overflow-x: hidden;
             overflow-y: hidden;
             font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scrollbar-gutter: stable both-edges;
         }
 
         /* ─── Fixed nav ─── */
@@ -234,10 +239,10 @@
             background: var(--red);
         }
         .lofi-item:hover::before {
-            left: -1px;
+            left: 0;
         }
         .lofi-item:hover::after {
-            right: -0.5px;
+            right: 0;
         }
 
         /* ─── Lofi coming soon overlay ─── */
@@ -251,9 +256,10 @@
         }
         .lofi-overlay-text {
             color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-family: 'EB Garamond', serif;
+            font-size: 18px;
             font-weight: 400;
+            font-style: italic;
             text-align: center;
             line-height: 1.4;
         }

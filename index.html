@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="view-transition" content="same-origin">
-    <title>🍜 always noodling</title>
+    <title>Allen K Lau</title>
+    <link rel="icon" type="image/png" href="Assets/About/A.png">
     <script>window._weatherP = fetch('https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&current=temperature_2m,weather_code&temperature_unit=fahrenheit').then(r=>r.json()).catch(()=>null);</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Newsreader:ital,wght@0,400;1,400&display=swap');
@@ -23,6 +24,10 @@
         }
 
         html, body { height: 100%; }
+
+        html {
+            scrollbar-gutter: stable both-edges;
+        }
 
         body {
             background: var(--bg);
