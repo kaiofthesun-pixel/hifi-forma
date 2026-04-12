@@ -108,7 +108,7 @@
         /* ─── Grid of squares ─── */
         .squares-grid {
             position: relative;
-            margin: 100px auto 100px;
+            margin: 40px auto 100px;
             display: grid;
             grid-template-columns: repeat(4, 320px);
             gap: 40px;
@@ -120,7 +120,7 @@
             --kao-wild: 1;
             width: 320px;
             height: 320px;
-            background: #ccc;
+            background: #ffffff;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
@@ -1121,23 +1121,23 @@
             flex: 1;
             -webkit-appearance: none;
             appearance: none;
-            height: 4px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 2px;
+            height: 1px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 0;
             outline: none;
         }
         .kao-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: var(--text);
             border-radius: 50%;
             cursor: pointer;
         }
         .kao-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: var(--text);
             border-radius: 50%;
             cursor: pointer;
