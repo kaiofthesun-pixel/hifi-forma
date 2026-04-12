@@ -55,6 +55,43 @@
         }
         nav .play-link svg text { fill: var(--red); }
 
+        /* ─── Back button ─── */
+        .back-btn {
+            position: fixed;
+            top: 28px;
+            left: 44px;
+            z-index: 200;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px 10px 11px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .back-btn:hover {
+            color: #000;
+        }
+        .back-btn:hover svg {
+            stroke: #000;
+        }
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text);
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s ease;
+        }
+
         /* ─── PLAY letter animations ─── */
         .play-p { animation: playP 11s ease-in-out infinite; }
         .play-l { animation: playL 11s ease-in-out infinite; }
@@ -1393,6 +1430,11 @@
     </style>
 </head>
 <body>
+
+<a href="play.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
+    Back
+</a>
 
 <nav>
     <a href="index.html">Work</a>

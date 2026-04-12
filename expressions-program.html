@@ -298,25 +298,36 @@
             box-shadow: 0 12px 32px rgba(0,0,0,0.18);
             transform: translateY(-2px);
         }
-        .outcome-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 3s 3;
-            pointer-events: none;
-        }
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
         .outcome-card img {
             display: block;
             width: 100%;
-            border-radius: 30px;
+        }
+        .outcome-card .hover-overlay {
+            position: absolute;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .outcome-card:hover .hover-overlay {
+            opacity: 0.6;
+        }
+        .outcome-card .hover-overlay span {
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            text-decoration: underline;
+        }
+        .outcome-card .hover-overlay svg {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+            stroke: none;
         }
 
         .company-ghost {
@@ -336,6 +347,24 @@
             transition: none;
         }
 
+        .reaction-row {
+            display: flex;
+            gap: 24px;
+            width: min(585px, calc((100vw - var(--content-left) - 40px) * 0.75));
+            align-items: flex-start;
+        }
+        .reaction-row > img {
+            border-radius: 12px;
+        }
+        .reaction-row > img:first-child {
+            width: calc(55% - 12px);
+            transform: rotate(-10deg);
+        }
+        .reaction-row > img:last-child {
+            width: calc(50% - 12px);
+            transform: rotate(15deg);
+        }
+
         /* ─── Responsive: Stack columns on small screens ─── */
         @media (max-width: 768px) {
             .image-grid {
@@ -348,6 +377,17 @@
             }
             .image-row > img {
                 width: 100% !important;
+            }
+            .reaction-row {
+                flex-direction: column;
+                gap: 16px;
+                width: 100%;
+            }
+            .reaction-row > img,
+            .reaction-row > img:first-child,
+            .reaction-row > img:last-child {
+                width: 100%;
+                transform: none;
             }
             .emoji-grid {
                 grid-template-columns: repeat(3, auto) !important;
@@ -413,8 +453,7 @@
                     <img src="Assets/Expressions Program/expression2.gif" alt="Expression 2" style="width: 100%; border-radius: 12px;">
                 </div>
                 <div class="details-desc" style="max-width: min(780px, calc(100vw - var(--content-left) - 40px));">
-                    <p>To bring delight to users, I created a system in which certain keyboard inputs (eg "I love you", "👎👎") would trigger fullscreen, visually rich reactions to messages.</p>
-                    <p>Part of this effort was to develop a unique, systematic visual language that is graphically flat, but leverages z-space and incorporates gradients to create depth and volume. Along with concept and creative direction, I collaborated with Oddfellows on execution.</p>
+                    <p>I designed a system of fullscreen message reactions triggered by specific keyboard inputs (e.g., "I love you", "👎👎"). I established a unique visual language that used z-space and gradients to add depth to flat graphics, providing creative direction and collaborating with <a href="https://oddfellows.tv/" target="_blank" style="color: inherit;">Oddfellows</a> on execution.</p>
                 </div>
             </div>
         </div>
@@ -426,10 +465,9 @@
         </div>
         <div class="row-right">
             <div class="entry">
-                <div class="details-thumb" style="aspect-ratio:16/9;"></div>
-                <div class="details-desc">
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="reaction-row">
+                    <img src="Assets/Expressions Program/reactions1.gif" alt="Reaction 1">
+                    <img src="Assets/Expressions Program/reactions2.gif" alt="Reaction 2">
                 </div>
             </div>
         </div>
@@ -494,16 +532,22 @@
         <div class="row-right">
             <div class="entry">
                 <div style="display: flex; flex-direction: column; gap: 12px; width: min(624px, calc(100vw - var(--content-left) - 40px)); margin-bottom: 12px;">
-                    <a href="https://blog.google/products-and-platforms/platforms/android/7-new-messages-features/" target="_blank" class="outcome-card"><img src="Assets/Expressions Program/outcome2.webp" alt="Outcome 2"></a>
-                    <a href="https://www.youtube.com/watch?v=4tnSjs1dLew" target="_blank" class="outcome-card"><img src="Assets/Expressions Program/outcome1.gif" alt="Outcome 1" style="border: 1px solid rgba(0,0,0,0.1);"></a>
+                    <a href="https://blog.google/products-and-platforms/platforms/android/7-new-messages-features/" target="_blank" class="outcome-card">
+                        <img src="Assets/Expressions Program/outcome2.webp" alt="Outcome 2">
+                        <div class="hover-overlay">
+                            <span>Google Blog</span>
+                            <svg viewBox="0 0 24 24"><path d="M5 19V5h6V3H3v18h18v-8h-2v6H5zM14 3v2h4.586l-9.293 9.293 1.414 1.414L20 6.414V11h2V3h-8z"/></svg>
+                        </div>
+                    </a>
+                    <a href="https://www.youtube.com/watch?v=4tnSjs1dLew" target="_blank" class="outcome-card">
+                        <img src="Assets/Expressions Program/outcome1.gif" alt="Outcome 1" style="border: 1px solid rgba(0,0,0,0.1);">
+                    </a>
                 </div>
                 <div class="details-desc" style="max-width: 624px;">
                     <p>To maximize impact and elevate Android's personalization and expression story, launches were strategically timed with various Android marketing touch points.</p>
-                    <p style="margin-bottom: 2px;"><u>Youtube video</u></p>
-                    <p style="margin-bottom: 2px;"><u>Social media posts</u></p>
-                    <p style="margin-bottom: 2px;"><u>Pixel hardware release post</u></p>
-                    <p style="margin-bottom: 2px;"><u>Google Blog post</u></p>
-                    <p><u>Sunar Pichai (Google CEO) tweet</u></p>
+                    <p style="margin-bottom: 2px;"><a href="https://www.instagram.com/android/reel/C6hE1YQJ4OC/" target="_blank" style="color: inherit;">Social media posts</a></p>
+                    <p style="margin-bottom: 2px;"><a href="https://blog.google/products-and-platforms/devices/pixel/pixel-feature-drop-january-2024/" target="_blank" style="color: inherit;">Pixel hardware release post</a></p>
+                    <p><a href="https://x.com/sundarpichai/status/1730384480274420024" target="_blank" style="color: inherit;">Sundar Pichai (Google CEO) tweet</a></p>
                     <p style="margin-top: 18px;">In addition, the following gains were seen from the Photomoji launch:</p>
                     <ul style="margin-left: 20px; margin-top: -8px;">
                         <li><strong>+0.41%</strong> increase in images sent and <strong>+0.22%</strong> increase in image senders.</li>

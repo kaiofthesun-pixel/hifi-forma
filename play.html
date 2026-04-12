@@ -127,7 +127,7 @@
             font-size: 22px;
             color: var(--muted);
             line-height: 1.4;
-            max-width: 633px;
+            max-width: 550px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
             animation-delay: 0.2s;
@@ -145,7 +145,7 @@
             gap: 0;
             width: 100%;
             padding: 0;
-            margin-top: 200px;
+            margin-top: 250px;
         }
         .lofi-item {
             border-bottom: 1px solid #ccc;
@@ -185,6 +185,7 @@
             margin-bottom: auto;
         }
         .lofi-thumb {
+            position: relative;
             aspect-ratio: 1;
             width: 100%;
             background: #e8e8e8;
@@ -198,6 +199,9 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: relative;
+            top: -20px;
+            transform: scale(1.15);
         }
         .lofi-meta {
             font-family: 'Inter', sans-serif;
@@ -216,18 +220,27 @@
             justify-content: space-between;
         }
         .lofi-item:hover {
-            background: #fafafa;
+            background: #f0f0f0;
             position: relative;
             z-index: 1;
-            box-shadow:
-                1px 0 0 var(--red),
-                -1px 0 0 var(--red);
+        }
+        .lofi-item:hover::before,
+        .lofi-item:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--red);
+        }
+        .lofi-item:hover::before {
+            left: -1px;
+        }
+        .lofi-item:hover::after {
+            right: -0.5px;
         }
 
         /* ─── Lofi coming soon overlay ─── */
-        .lofi-thumb {
-            position: relative;
-        }
         .lofi-overlay {
             position: absolute;
             inset: 0;
@@ -412,8 +425,8 @@
 </nav>
 
 <div class="intro">
-    <div class="intro-name">Allen K Lau — Designing software & other curiosities</div>
-    <div class="intro-tagline">For the love of building simpler experiences for billions. Electrical engineer by training, designer by pursuit, driven by play. Currently at Microsoft AI, previously Google.</div>
+    <div class="intro-name">🍜 Always Noodling</div>
+    <div class="intro-tagline">A collection of digital & analog personal projects.</div>
 </div>
 
 <div class="lofi-grid">
@@ -435,10 +448,10 @@
         <a href="#">
             <div class="lofi-text-group">
                 <div class="lofi-title">HIFI Component Matcher</div>
-                <div class="lofi-desc">Optimize hi-fi component combinations</div>
+                <div class="lofi-desc">Calibrate component combinations for your ideal acoustic profile</div>
             </div>
             <div class="lofi-thumb">
-                <img src="Assets/Hifi/Hifi_Thumbnail.png" alt="Hifi">
+                <img src="Assets/Hifi/Hifi_thumbnail.png" alt="Hifi">
                 <div class="lofi-overlay">
                     <span class="lofi-overlay-text">In-progress. Coming soon.</span>
                 </div>
@@ -462,8 +475,8 @@
     <div class="lofi-item">
         <a href="#">
             <div class="lofi-text-group">
-                <div class="lofi-title">Japanese Maples</div>
-                <div class="lofi-desc">Horticultural grafting work</div>
+                <div class="lofi-title">Grafting Japanese Maples</div>
+                <div class="lofi-desc">My horticulture practice includes grafting Acer palmatums</div>
             </div>
             <div class="lofi-thumb">
                 <img src="Assets/Play/Maples/maples_thumbnail.png" alt="Japanese Maples">
@@ -477,7 +490,7 @@
         <a href="#">
             <div class="lofi-text-group">
                 <div class="lofi-title">Corporate Swag</div>
-                <div class="lofi-desc">Team swag design</div>
+                <div class="lofi-desc">Never turn down the opportunity to design team swag</div>
             </div>
             <div class="lofi-thumb">
                 <img src="Assets/Play/swag/swag_thumbnail.png" alt="Corporate swag">
@@ -487,12 +500,6 @@
             </div>
         </a>
     </div>
-    <!-- Row 2 -->
-    <div class="lofi-item"></div>
-    <div class="lofi-item"></div>
-    <div class="lofi-item"></div>
-    <div class="lofi-item"></div>
-    <div class="lofi-item"></div>
 </div>
 
 <script>
@@ -506,7 +513,5 @@
         });
     });
 </script>
-
-<script src="text-editor.js"></script>
 </body>
 </html>
