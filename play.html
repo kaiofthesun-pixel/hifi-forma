@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Allen K Lau</title>
     <link rel="icon" type="image/png" href="Assets/About/A.png">
+    <script>window._weatherP = fetch('https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&current=temperature_2m,weather_code&temperature_unit=fahrenheit').then(r=>r.json()).catch(()=>null);</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
@@ -112,9 +113,9 @@
 
         /* ─── Intro block (matches main page) ─── */
         .intro {
-            padding: 74px 0 0 calc(26vw + 90px);
+            padding: 74px 0 0 calc(20vw + 2px);
             position: relative;
-            top: 70px;
+            top: 150px;
             margin-bottom: 110px;
         }
         .intro-name {
@@ -216,6 +217,20 @@
             text-transform: uppercase;
             letter-spacing: 0.03em;
         }
+        .new-badge {
+            display: inline-block;
+            background: #39FF14;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            padding: 3px 6px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
         .lofi-item a {
             text-decoration: none;
             color: inherit;
@@ -243,6 +258,12 @@
         }
         .lofi-item:hover::after {
             right: 0;
+        }
+        .lofi-item:first-child:hover::before {
+            display: none;
+        }
+        .lofi-item:nth-child(5n):hover::after {
+            display: none;
         }
 
         /* ─── Lofi coming soon overlay ─── */
@@ -356,9 +377,42 @@
             50% { transform: rotate(3deg) translateX(1px); }
         }
 
+        /* ─── Footer copyright ─── */
+        .footer-copyright {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.02em;
+        }
+        .footer-copyright .year {
+            letter-spacing: -0.03em;
+        }
+
+        /* ─── Weather note ─── */
+        #weather-note {
+            position: fixed;
+            top: 42px;
+            left: 44px;
+            z-index: 200;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1;
+            max-width: none;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
     </style>
 </head>
 <body>
+
+<div id="weather-note"></div>
 
 <nav>
     <a href="index.html">Work</a>
@@ -440,7 +494,7 @@
     <div class="lofi-item">
         <a href="kaomojis.html">
             <div class="lofi-text-group">
-                <div class="lofi-title">Kaomoji Animation Maker</div>
+                <div class="lofi-title">Kaomoji Animation Maker<span class="new-badge">New</span></div>
                 <div class="lofi-desc">Create animated text emoticons</div>
             </div>
             <div class="lofi-thumb">
@@ -508,6 +562,8 @@
     </div>
 </div>
 
+<div class="footer-copyright">© <span class="year">2025</span> Allen K Lau</div>
+
 <script>
     // ── Progressive thumbnail animation ──
     document.addEventListener('DOMContentLoaded', () => {
@@ -518,6 +574,107 @@
             }, 200 + index * 80);
         });
     });
+
+    // ── Weather note ──
+    (async () => {
+        try {
+            const data = await window._weatherP;
+            if (!data) return;
+            const temp = Math.round(data.current.temperature_2m);
+            const code = data.current.weather_code;
+            const el = document.getElementById('weather-note');
+
+            const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+            const hour = new Date().getHours();
+            const isEvening = hour >= 18 || hour < 6;
+            const isMorning = hour >= 6 && hour < 12;
+
+            let condition, activity;
+
+            if (isEvening) {
+                condition = code <= 3 ? 'Clear' : code <= 48 ? 'Foggy' : code <= 67 ? 'Rainy' : 'Overcast';
+                activity = pick([
+                    'I might be finding rest in quiet rooms, with music as the guide.',
+                    'I might be steeping in sound and stillness, the way tea steeps in water.',
+                    'I might be cooking, listening, being — the guest house of evening has opened.',
+                    'I might be with a book, a lamp, low music: what the heart requires, the night provides.',
+                    'I might be letting the needle find its groove while dinner simmers.',
+                    'I might be somewhere between a melody and a memory.',
+                    'I might be tending to the quiet hours, where the soul does its mending.',
+                    'I might be listening to the hifi hum its evening prayer.',
+                    'I might be in the company of old albums and warm light.',
+                    'I might be watching the day fold itself into night.'
+                ]);
+            } else if ([0, 1].includes(code)) {
+                condition = 'Clear';
+                activity = pick(isMorning
+                    ? ['I might be walking out to meet the clear morning, hearing what the breeze carries.', 'I might be in the garden, meeting the clear light like a guest.', 'I might be turning with the wheel of the clear sky, on two wheels.', 'I might be greeting this sunny morning, which asks nothing but presence.', 'I might be out where the dew still holds its shine under clear skies.']
+                    : ['I might be sitting where the sun reaches, letting it do its golden work.', 'I might be outside, being fed by the clear afternoon light.', 'I might be mid-sentence in a long conversation with the self — a walk under clear skies.', 'I might be following warmth like a cat follows a sunbeam.', 'I might be out where the clear afternoon stretches long and kind.']);
+            } else if ([2, 3].includes(code)) {
+                condition = 'Cloudy';
+                activity = pick(isMorning
+                    ? ['I might be running under this quilted sky — the clouds keep pace.', 'I might be walking through the gray toward coffee, which waits at the end of every good path.', 'I might be out where the clouds soften everything.', 'I might be moving through this cloudy morning like a quiet thought.', 'I might be finding rhythm in footsteps and cloud-drift.']
+                    : ['I might be following the unfolding road on quiet wheels under cloudy skies.', 'I might be answering the call of new trails on this cloudy afternoon.', 'I might be exploring under this ceiling of soft gray.', 'I might be pedaling through the afternoon\'s gentle cloudy mood.', 'I might be wandering where the overcast invites reflection.']);
+            } else if ([45, 48].includes(code)) {
+                condition = 'Foggy';
+                activity = pick([
+                    'I might be running slowly as the world softens in fog.',
+                    'I might be walking along the water while the fog holds its breath.',
+                    'I might be lifting my camera to this veil between worlds.',
+                    'I might be wandering without aim; the fog approves.',
+                    'I might be disappearing into the mist, only to reappear.'
+                ]);
+            } else if ([51, 53, 55, 56, 57].includes(code)) {
+                condition = 'Drizzle';
+                activity = pick([
+                    'I might be out listening to the sky whisper its light rain.',
+                    'I might be greeting the drizzle, hat and all.',
+                    'I might be jumping in puddles — mirrors for small philosophers.',
+                    'I might be gardening in the drizzle, being gardened by the sky.',
+                    'I might be finding joy in this drizzly weather others avoid.'
+                ]);
+            } else if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) {
+                condition = 'Rainy';
+                activity = pick([
+                    'I might be answering the rain with a slow pour of coffee.',
+                    'I might be watching the rain paint the window — a painting that changes.',
+                    'I might be cooking something ambitious; rain is the best company.',
+                    'I might be browsing the covered market as the rain browses the streets.',
+                    'I might be baking something this rainy weather demands.'
+                ]);
+            } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+                condition = 'Snow';
+                activity = pick([
+                    'I might be bundled like a secret, exploring the white quiet.',
+                    'I might be building in snow, collaborating with impermanence.',
+                    'I might be on the porch with cocoa, watching the world soften under snow.',
+                    'I might be sending small joys arcing through the snowy air — snowballs.',
+                    'I might be walking where each step writes a small story in snow.'
+                ]);
+            } else if ([95, 96, 99].includes(code)) {
+                condition = 'Stormy';
+                activity = pick([
+                    'I might be turning pages while the storm rages. We each do our work.',
+                    'I might be baking bread as thunder rolls — both are transformations.',
+                    'I might be watching the storm the way one watches a master at work.',
+                    'I might be reorganizing a shelf while the storm reorganizes the sky.',
+                    'I might be inside, grateful for walls and roof during the storm.'
+                ]);
+            } else {
+                condition = 'Overcast';
+                activity = pick([
+                    'I might be visiting the garden, which keeps its counsel under overcast skies.',
+                    'I might be jogging under gray skies — the clouds are patient witnesses.',
+                    'I might be walking toward the park, which waits like a letter to be read.',
+                    'I might be sketching the overcast world; the world sketches back.',
+                    'I might be out where the overcast light is soft and forgiving.'
+                ]);
+            }
+
+            el.innerHTML = `${temp}°F in Seattle. ${condition}.<br><span style="display:inline-block;margin-top:6px;">${activity}</span>`;
+            el.style.opacity = '1';
+        } catch(e) {}
+    })();
 </script>
 </body>
 </html>
