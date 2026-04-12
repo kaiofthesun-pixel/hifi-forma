@@ -22,7 +22,7 @@
             height: 100%;
             background: var(--bg);
             overflow-x: hidden;
-            overflow-y: scroll;
+            overflow-y: hidden;
             font-family: 'Inter', sans-serif;
         }
 
@@ -46,7 +46,7 @@
         nav a:hover { color: var(--text); }
         nav .play-link:hover { color: var(--red); }
         nav .play-link {
-            font-weight: 600;
+            font-weight: 500;
             letter-spacing: -0.02em;
             display: inline-flex;
             align-items: center;
@@ -105,33 +105,29 @@
             70%, 100% { transform: rotate(8deg) translateX(0); }
         }
 
-        /* ─── Page header ─── */
-        .page-header {
-            padding-top: 144px;
+        /* ─── Intro block (matches main page) ─── */
+        .intro {
+            padding: 74px 0 0 calc(26vw + 90px);
+            position: relative;
+            top: 70px;
             margin-bottom: 110px;
-            padding-left: 40px;
-            padding-right: 40px;
-            display: grid;
-            grid-template-columns: repeat(4, 320px);
-            gap: 40px;
-            justify-content: center;
         }
-        .page-title {
-            font-family: 'Inter', sans-serif;
+        .intro-name {
             font-size: 22px;
             font-weight: 500;
             color: var(--text);
             margin-bottom: 6px;
+            margin-right: 20px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
             animation-delay: 0.1s;
         }
-        .page-tagline {
+        .intro-tagline {
             font-family: 'Inter', sans-serif;
             font-size: 22px;
             color: var(--muted);
-            line-height: 1.27;
-            white-space: nowrap;
+            line-height: 1.4;
+            max-width: 633px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
             animation-delay: 0.2s;
@@ -142,87 +138,120 @@
             to   { opacity: 1; }
         }
 
-        /* ─── Grid of squares ─── */
-        .squares-grid {
+        /* ─── Lo-fi grid layout ─── */
+        .lofi-grid {
             display: grid;
-            grid-template-columns: repeat(4, 320px);
-            grid-template-rows: repeat(2, 320px);
-            gap: 40px;
-            justify-content: center;
-            padding-bottom: 100px;
-            padding-left: 40px;
-            padding-right: 40px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0;
+            width: 100%;
+            padding: 0;
+            margin-top: 200px;
         }
-        .square {
-            width: 320px;
-            height: 320px;
-            background: #ccc;
-            border-radius: 8px;
+        .lofi-item {
+            border-bottom: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: box-shadow 0.2s ease, opacity 0.6s ease, transform 0.6s ease;
+            background: #fff;
+            transition: opacity 0.6s ease, transform 0.6s ease, background 0.4s ease, box-shadow 0.4s ease;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(10px);
+            min-height: 500px;
         }
-        .square.visible {
+        .lofi-item:nth-child(5n) {
+            border-right: none;
+        }
+        .lofi-item.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        .square:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        .lofi-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 2px;
+            line-height: 1.3;
         }
-
-        /* ─── Square link ─── */
-        .square-link {
+        .lofi-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--muted);
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+        .lofi-text-group {
+            margin-bottom: auto;
+        }
+        .lofi-thumb {
+            aspect-ratio: 1;
+            width: 100%;
+            background: #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .lofi-thumb img {
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 500;
+            object-fit: cover;
         }
-        .square-link:hover {
-            color: var(--red);
+        .lofi-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            color: #aaa;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .lofi-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+        .lofi-item:hover {
+            background: #fafafa;
+            position: relative;
+            z-index: 1;
+            box-shadow:
+                1px 0 0 var(--red),
+                -1px 0 0 var(--red);
         }
 
-        /* ─── Coming soon overlay ─── */
-        .coming-soon-overlay {
+        /* ─── Lofi coming soon overlay ─── */
+        .lofi-thumb {
+            position: relative;
+        }
+        .lofi-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(50, 50, 50, 0.75);
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            border-radius: 8px;
-            pointer-events: none;
         }
-        .square:hover .coming-soon-overlay {
-            opacity: 1;
-        }
-        .coming-soon-text {
+        .lofi-overlay-text {
             color: #fff;
-            font-family: 'EB Garamond', serif;
-            font-size: 18px;
-            font-style: italic;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
             font-weight: 400;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            text-align: center;
+            line-height: 1.4;
         }
 
         /* ─── Kaomoji animation ─── */
         .kaomoji-overlay {
             position: absolute;
-            top: calc(50% + 39px);
+            top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 34px;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            font-size: 68px;
             color: var(--text);
             pointer-events: none;
             display: flex;
@@ -308,98 +337,13 @@
             50% { transform: rotate(3deg) translateX(1px); }
         }
 
-        /* ─── Fuzzy pink circle ─── */
-        #fuzzy-wrap {
-            position: fixed;
-            bottom: 15%;
-            right: 10%;
-            width: 200px;
-            height: 200px;
-            z-index: 1000;
-            cursor: grab;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #fuzzy-wrap:active {
-            cursor: grabbing;
-        }
-        #fuzzy-circle {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle at center, rgba(255, 80, 140, 1) 0%, rgba(255, 100, 160, 0.8) 10%, rgba(245, 115, 165, 0.6) 25%, rgba(235, 130, 175, 0.4) 40%, rgba(220, 145, 185, 0.25) 55%, rgba(210, 155, 190, 0.12) 70%, rgba(200, 165, 195, 0.05) 85%, transparent 100%);
-            border-radius: 50%;
-            filter: blur(20px);
-            pointer-events: none;
-            transform: scale(1);
-            transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        #fuzzy-circle.growing {
-            transform: scale(100);
-            transition: transform 150s ease-out;
-        }
-        #fuzzy-circle.dragging {
-            transition: none;
-        }
-
-        @media (max-width: 1520px) {
-            .page-header {
-                grid-template-columns: repeat(3, 320px);
-            }
-            .squares-grid {
-                grid-template-columns: repeat(3, 320px);
-                grid-template-rows: auto;
-            }
-        }
-
-        @media (max-width: 1160px) {
-            .page-header {
-                grid-template-columns: repeat(2, 320px);
-            }
-            .squares-grid {
-                grid-template-columns: repeat(2, 320px);
-                grid-template-rows: auto;
-            }
-        }
-
-        @media (max-width: 800px) {
-            .page-header {
-                padding-top: 120px;
-                padding-left: 20px;
-                padding-right: 20px;
-                grid-template-columns: 1fr;
-                max-width: 320px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .page-title,
-            .page-tagline {
-                font-size: 18px;
-            }
-            .squares-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-                gap: 24px;
-                width: calc(100% - 40px);
-                max-width: 320px;
-                margin: 0 auto;
-                padding-left: 0;
-                padding-right: 0;
-            }
-            .square {
-                width: 100%;
-                height: 280px;
-            }
-        }
     </style>
 </head>
 <body>
 
 <nav>
     <a href="index.html">Work</a>
-    <a href="index.html#about" id="about-toggle">About</a>
-    <a href="#" class="play-link" style="display:inline-flex; align-items:center; text-decoration:none; letter-spacing:-0.02em; font-weight:600; line-height:1; gap:6px;">
+    <a href="#" class="play-link" style="display:inline-flex; align-items:center; text-decoration:none; gap:6px;">
         <span style="display:inline-flex; align-items:center;">
             <span class="play-p" style="position:relative; top:2px; display:inline-block;">P</span><span class="play-l" style="position:relative; top:-2px; margin-left:1px; display:inline-block;">L</span><span class="play-a" style="position:relative; top:2px; margin-left:1px; display:inline-block;">A</span><span class="play-y" style="position:relative; top:-2px; display:inline-block;">Y</span>
         </span>
@@ -467,169 +411,100 @@
     </a>
 </nav>
 
-<div class="page-header">
-    <div class="page-title">🍜 Always Noodling</div>
-    <div class="page-tagline">My collection of digital & analog personal projects</div>
+<div class="intro">
+    <div class="intro-name">Allen K Lau — Designing software & other curiosities</div>
+    <div class="intro-tagline">For the love of building simpler experiences for billions. Electrical engineer by training, designer by pursuit, driven by play. Currently at Microsoft AI, previously Google.</div>
 </div>
 
-<div class="squares-grid">
-    <div class="square" style="background: #eae8e4;">
-        <a href="kaomojis.html" class="square-link" style="padding: 0; overflow: hidden;">
-            <img src="Assets/Kaomoji/kaomoji_thumbnail.png" alt="Animated Kaomojis" style="width: 98%; height: 98%; object-fit: cover;">
+<div class="lofi-grid">
+    <!-- Row 1 -->
+    <div class="lofi-item">
+        <a href="kaomojis.html">
+            <div class="lofi-text-group">
+                <div class="lofi-title">Kaomoji Animation Maker</div>
+                <div class="lofi-desc">Create animated text emoticons</div>
+            </div>
+            <div class="lofi-thumb">
+                <div class="kaomoji-overlay">
+                    <span class="kao-arm-left">٩</span><span class="kao-paren-left">(</span><span class="kao-eye-left">´</span><span class="kao-mouth">ᗜ</span><span class="kao-eye-right">`</span><span class="kao-cheek">*</span><span class="kao-paren-right">)</span><span class="kao-arm-right">و</span>
+                </div>
+            </div>
         </a>
-        <div class="kaomoji-overlay">
-            <span class="kao-arm-left">٩</span><span class="kao-paren-left">(</span><span class="kao-eye-left">ˊ</span><span class="kao-mouth">ᗜ</span><span class="kao-eye-right">ˋ</span><span class="kao-cheek">*</span><span class="kao-paren-right">)</span><span class="kao-arm-right">و</span>
-        </div>
     </div>
-    <div class="square">
-        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
-            <img src="Assets/Hifi/Hifi_Thumbnail.png" alt="Hifi" style="width: 98%; height: 98%; object-fit: cover;">
+    <div class="lofi-item">
+        <a href="#">
+            <div class="lofi-text-group">
+                <div class="lofi-title">HIFI Component Matcher</div>
+                <div class="lofi-desc">Optimize hi-fi component combinations</div>
+            </div>
+            <div class="lofi-thumb">
+                <img src="Assets/Hifi/Hifi_Thumbnail.png" alt="Hifi">
+                <div class="lofi-overlay">
+                    <span class="lofi-overlay-text">In-progress. Coming soon.</span>
+                </div>
+            </div>
         </a>
-        <div class="coming-soon-overlay" style="flex-direction: column; gap: 8px;">
-            <span class="coming-soon-text">Coming soon</span>
-            <span style="color: #fff; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; text-align: center; padding: 0 16px; line-height: 1.4;">A tool to optimize hi-fi component combinations for ideal sound.</span>
-        </div>
     </div>
-    <div class="square">
-        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
-            <img src="Assets/Play/Frame/Frame_thumbnail.png" alt="Frame Maker" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+    <div class="lofi-item">
+        <a href="#">
+            <div class="lofi-text-group">
+                <div class="lofi-title">Frame Maker</div>
+                <div class="lofi-desc">Design custom gallery frames</div>
+            </div>
+            <div class="lofi-thumb">
+                <img src="Assets/Play/Frame/Frame_thumbnail.png" alt="Frame Maker">
+                <div class="lofi-overlay">
+                    <span class="lofi-overlay-text">In-progress. Coming soon.</span>
+                </div>
+            </div>
         </a>
-        <div class="coming-soon-overlay" style="flex-direction: column; gap: 8px;">
-            <span class="coming-soon-text">Coming soon</span>
-            <span style="color: #fff; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; text-align: center; padding: 0 16px; line-height: 1.4;">A tool for designing custom gallery pictures frames</span>
-        </div>
     </div>
-    <div class="square">
-        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
-            <img src="Assets/Play/Maples/maples_thumbnail.png" alt="Japanese Maples" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+    <div class="lofi-item">
+        <a href="#">
+            <div class="lofi-text-group">
+                <div class="lofi-title">Japanese Maples</div>
+                <div class="lofi-desc">Horticultural grafting work</div>
+            </div>
+            <div class="lofi-thumb">
+                <img src="Assets/Play/Maples/maples_thumbnail.png" alt="Japanese Maples">
+                <div class="lofi-overlay">
+                    <span class="lofi-overlay-text">In-progress. Coming soon.</span>
+                </div>
+            </div>
         </a>
-        <div class="coming-soon-overlay" style="flex-direction: column; gap: 8px;">
-            <span class="coming-soon-text">Coming soon</span>
-            <span style="color: #fff; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; text-align: center; padding: 0 16px; line-height: 1.4;">My horticultural work includes the grafting of Japanese maples.</span>
-        </div>
     </div>
-    <div class="square">
-        <a href="#" class="square-link" style="padding: 0; overflow: hidden;">
-            <img src="Assets/Play/swag/swag_thumbnail.png" alt="Corporate swag" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+    <div class="lofi-item">
+        <a href="#">
+            <div class="lofi-text-group">
+                <div class="lofi-title">Corporate Swag</div>
+                <div class="lofi-desc">Team swag design</div>
+            </div>
+            <div class="lofi-thumb">
+                <img src="Assets/Play/swag/swag_thumbnail.png" alt="Corporate swag">
+                <div class="lofi-overlay">
+                    <span class="lofi-overlay-text">In-progress. Coming soon.</span>
+                </div>
+            </div>
         </a>
-        <div class="coming-soon-overlay" style="flex-direction: column; gap: 8px;">
-            <span class="coming-soon-text">Coming soon</span>
-            <span style="color: #fff; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; text-align: center; padding: 0 16px; line-height: 1.4;">Seize every opening to design team swag</span>
-        </div>
     </div>
-    <div class="square"></div>
-    <div class="square"></div>
-    <div class="square"></div>
+    <!-- Row 2 -->
+    <div class="lofi-item"></div>
+    <div class="lofi-item"></div>
+    <div class="lofi-item"></div>
+    <div class="lofi-item"></div>
+    <div class="lofi-item"></div>
 </div>
-
-<div id="fuzzy-wrap"><div id="fuzzy-circle"></div></div>
 
 <script>
     // ── Progressive thumbnail animation ──
     document.addEventListener('DOMContentLoaded', () => {
-        const squares = document.querySelectorAll('.square');
-        squares.forEach((square, index) => {
+        const items = document.querySelectorAll('.lofi-item');
+        items.forEach((item, index) => {
             setTimeout(() => {
-                square.classList.add('visible');
-            }, 300 + index * 100);
+                item.classList.add('visible');
+            }, 200 + index * 80);
         });
     });
-
-    // ── Draggable fuzzy circle ──
-    const fuzzyWrap = document.getElementById('fuzzy-wrap');
-    const fuzzyCircle = document.getElementById('fuzzy-circle');
-    let isDragging = false;
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
-
-    // Position fuzzy circle (bottom-right area)
-    function positionFuzzyCircle() {
-        if (!fuzzyWrap) return;
-        const wrapSize = 200;
-        const maxX = window.innerWidth - wrapSize;
-        const maxY = window.innerHeight - wrapSize;
-
-        // Fixed starting position: bottom-right
-        let targetX = window.innerWidth * 0.85 - wrapSize;
-        let targetY = window.innerHeight * 0.85 - wrapSize;
-
-        // Clamp to viewport
-        targetX = Math.max(0, Math.min(targetX, maxX));
-        targetY = Math.max(0, Math.min(targetY, maxY));
-
-        fuzzyWrap.style.left = targetX + 'px';
-        fuzzyWrap.style.top = targetY + 'px';
-        fuzzyWrap.style.right = 'auto';
-        fuzzyWrap.style.bottom = 'auto';
-    }
-
-    positionFuzzyCircle();
-    window.addEventListener('resize', () => positionFuzzyCircle());
-
-    function onFuzzyMouseMove(e) {
-        const x = e.clientX - dragOffsetX - fuzzyWrap.offsetWidth / 2;
-        const y = e.clientY - dragOffsetY - fuzzyWrap.offsetHeight / 2;
-        fuzzyWrap.style.left = x + 'px';
-        fuzzyWrap.style.top = y + 'px';
-        fuzzyWrap.style.right = 'auto';
-        fuzzyWrap.style.bottom = 'auto';
-    }
-
-    function onFuzzyMouseUp() {
-        isDragging = false;
-        fuzzyCircle.classList.remove('dragging');
-        fuzzyCircle.style.transform = '';
-        document.removeEventListener('mousemove', onFuzzyMouseMove);
-        document.removeEventListener('mouseup', onFuzzyMouseUp);
-    }
-
-    if (fuzzyWrap && fuzzyCircle) {
-        fuzzyWrap.addEventListener('mouseenter', () => {
-            if (!isDragging) {
-                fuzzyCircle.classList.add('growing');
-            }
-        });
-
-        fuzzyWrap.addEventListener('mouseleave', () => {
-            if (!isDragging) {
-                const currentTransform = window.getComputedStyle(fuzzyCircle).transform;
-
-                // Parse the current scale from the matrix transform
-                let currentScale = 1;
-                if (currentTransform && currentTransform !== 'none') {
-                    const match = currentTransform.match(/matrix\(([^,]+)/);
-                    if (match) {
-                        currentScale = parseFloat(match[1]);
-                    }
-                }
-
-                // Freeze at current scale with no transition
-                fuzzyCircle.style.transition = 'none';
-                fuzzyCircle.style.transform = currentTransform;
-                fuzzyCircle.classList.remove('growing');
-
-                // Force reflow, then animate back
-                fuzzyCircle.offsetHeight;
-                fuzzyCircle.style.transition = '';
-                fuzzyCircle.style.transform = '';
-            }
-        });
-
-        fuzzyWrap.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            const currentScale = window.getComputedStyle(fuzzyCircle).transform;
-            fuzzyCircle.classList.add('dragging');
-            fuzzyCircle.classList.remove('growing');
-            if (currentScale && currentScale !== 'none') {
-                fuzzyCircle.style.transform = currentScale;
-            }
-            const rect = fuzzyWrap.getBoundingClientRect();
-            dragOffsetX = e.clientX - rect.left - rect.width / 2;
-            dragOffsetY = e.clientY - rect.top - rect.height / 2;
-            document.addEventListener('mousemove', onFuzzyMouseMove);
-            document.addEventListener('mouseup', onFuzzyMouseUp);
-        });
-    }
 </script>
 
 <script src="text-editor.js"></script>

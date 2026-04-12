@@ -44,6 +44,24 @@
             pointer-events: none;
         }
 
+        /* ─── Footer links ─── */
+        .footer-links {
+            position: fixed;
+            bottom: 28px;
+            right: 44px;
+            z-index: 200;
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+        }
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
         /* ─── Fixed nav ─── */
         nav {
             position: fixed;
@@ -356,7 +374,6 @@
         }
         .thumb.saturated, #expr-wrap.saturated {
             filter: grayscale(0);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.22);
         }
         .thumb:hover, #expr-wrap:hover {
             filter: grayscale(0) !important;
@@ -607,185 +624,6 @@
             transition: none;
         }
 
-        /* ─── About panel ─── */
-        #about-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #A29BD4;
-            z-index: 250;
-            padding: 60px 164px 80px 164px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            max-width: 100%;
-            opacity: 0;
-            transition: opacity 1.2s ease;
-        }
-        #about-panel::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #EE7CA2 0%, #EE7CA2 20%, #ED6689 50%, transparent 100%);
-            opacity: 0;
-            pointer-events: none;
-            will-change: transform, opacity;
-        }
-        #about-panel.about-open::before {
-            animation: pinkBloom 7s cubic-bezier(0.25, 0.8, 0.5, 1) forwards;
-        }
-        @keyframes pinkBloom {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        #about-panel::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 350 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.08;
-            pointer-events: none;
-            z-index: 300;
-        }
-        #about-panel .about-close {
-            position: absolute;
-            top: 28px;
-            right: 164px;
-            background: none;
-            border: none;
-            padding: 0;
-            color: #000;
-            cursor: pointer;
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-        #about-panel .about-close:hover {
-            color: #000;
-            transform: rotate(90deg);
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
-        }
-        #about-panel .about-body {
-            position: relative;
-            z-index: 10;
-            max-width: 340px;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #333;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        #about-panel.about-open .about-body {
-            opacity: 1;
-        }
-        #about-panel .about-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: left;
-            max-width: 500px;
-            font-family: 'Inter', sans-serif;
-            font-size: 18px;
-            line-height: 1.6;
-            color: #333;
-            z-index: 10;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        #about-panel.about-open .about-center {
-            opacity: 1;
-        }
-        #about-panel .about-center a {
-            color: #333;
-            text-decoration: underline;
-        }
-        #about-panel .about-center a:hover {
-            color: #1a1a1a;
-        }
-        #about-panel .about-body p {
-            margin-bottom: 16px;
-        }
-        #about-panel .about-body a {
-            color: #333;
-            text-decoration: underline;
-        }
-        #about-panel .about-body a:hover {
-            color: #1a1a1a;
-        }
-        #about-panel .about-body .about-location {
-            color: var(--muted);
-            font-size: 11px;
-        }
-        #about-panel .about-location-corner {
-            position: absolute;
-            bottom: 60px;
-            right: 164px;
-            color: #333;
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
-            z-index: 10;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        #about-panel.about-open .about-location-corner {
-            opacity: 1;
-        }
-        #about-panel .about-links-bottom {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            z-index: 10;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        #about-panel.about-open .about-links-bottom {
-            opacity: 1;
-        }
-        #about-panel .about-links-bottom a {
-            color: #333;
-            text-decoration: underline;
-        }
-        #about-panel .about-links-bottom a:hover {
-            color: #1a1a1a;
-        }
-        .about-hover-link {
-            position: static;
-        }
-        .about-hover-img {
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            margin-bottom: 30px;
-            width: 100%;
-            max-height: calc(50vh - 130px);
-            object-fit: cover;
-            border-radius: 18px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.8s ease, box-shadow 0.8s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            z-index: 400;
-        }
-        .about-hover-link:hover .about-hover-img {
-            opacity: 1;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-        }
-
         /* ─── Play page ─── */
         #play-page {
             position: fixed;
@@ -821,24 +659,6 @@
             align-items: center;
             transform: scale(21) rotate(-30deg);
             transform-origin: top left;
-        }
-
-        /* ─── Weather note ─── */
-        #weather-note {
-            position: absolute;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
-            color: #333;
-            z-index: 5;
-            opacity: 0;
-            transition: opacity 1s ease;
-            text-align: center;
-        }
-        #about-panel.about-open #weather-note {
-            opacity: 1;
         }
 
         /* ─── Small screen / mobile adjustments ─── */
@@ -1010,9 +830,12 @@
 
 <div id="red-line"></div>
 
+<div class="footer-links">
+    <a href="https://www.linkedin.com/in/allen-k-lau-5a58218/">LinkedIn</a>, <a href="#">CV</a>
+</div>
+
 <nav>
     <a href="#" class="active" id="work-link">Work</a>
-    <a href="#" id="about-toggle">About</a>
     <a href="play.html" id="play-toggle" class="play-link" style="display:inline-flex; align-items:center; text-decoration:none; letter-spacing:-0.02em; font-weight:600; line-height:1; gap:6px;">
         <span style="display:inline-flex; align-items:center;">
             <span class="play-p" style="position:relative; top:2px; display:inline-block;">P</span><span class="play-l" style="position:relative; top:-2px; margin-left:1px; display:inline-block;">L</span><span class="play-a" style="position:relative; top:2px; margin-left:1px; display:inline-block;">A</span><span class="play-y" style="position:relative; top:-2px; display:inline-block;">Y</span>
@@ -1082,17 +905,6 @@
     </svg>
     </a>
 </nav>
-
-<div id="about-panel">
-    <button class="about-close"><svg width="40" height="40" viewBox="0 0 40 40" stroke="currentColor" stroke-width="0.5" fill="none"><line x1="4" y1="4" x2="36" y2="36"/><line x1="36" y1="4" x2="4" y2="36"/></svg></button>
-    <div class="about-body">
-    </div>
-    <div class="about-center">
-        <p>Off-hours, I follow my curiosity towards: <a href="#" class="about-hover-link">gardening, mostly perennials<img class="about-hover-img" src="Assets/About/Gardening.webp" alt="Gardening"></a> / <a href="#" class="about-hover-link">raising three daughters<img class="about-hover-img" src="Assets/About/daughters.png" alt="Daughters"></a> / <a href="#" class="about-hover-link">tinkering my hifi audio system<img class="about-hover-img" src="Assets/About/hifi.jpg" alt="Hifi"></a> / <a href="#" class="about-hover-link">ambitious home cooking<img class="about-hover-img" src="Assets/About/food.png" alt="Food"></a> / <a href="#">collecting furniture</a> / <a href="#">grafting japanese maples</a></p>
-    </div>
-    <div class="about-links-bottom"><a href="https://www.linkedin.com/in/allen-k-lau-5a58218/">LinkedIn</a>, <a href="#">CV</a></div>
-    <p id="weather-note"></p>
-</div>
 
 <div id="play-page" style="display:none;">
     <div class="play-big-wrap">
@@ -1519,46 +1331,6 @@
     const pageEl  = document.getElementById('page');
     const redLine = document.getElementById('red-line');
     const bearSvg = document.getElementById('bear-svg');
-
-    // ── About toggle ─────────────────────────────────────────
-    const aboutToggle = document.getElementById('about-toggle');
-    const aboutPanel = document.getElementById('about-panel');
-    const aboutClose = aboutPanel.querySelector('.about-close');
-    const navEl = document.querySelector('nav');
-
-    function openAbout() {
-        aboutPanel.style.display = 'block';
-        aboutPanel.style.transition = 'opacity 0.3s ease';
-        navEl.style.display = 'none';
-        document.body.style.overflow = 'hidden';
-        aboutPanel.classList.remove('about-open');
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                aboutPanel.style.opacity = '1';
-                aboutPanel.classList.add('about-open');
-            });
-        });
-    }
-
-    function closeAbout() {
-        aboutPanel.style.transition = 'opacity 0.6s ease';
-        aboutPanel.style.opacity = '0';
-        navEl.style.display = '';
-        document.body.style.overflow = '';
-        aboutPanel.classList.remove('about-open');
-        setTimeout(() => {
-            aboutPanel.style.display = 'none';
-        }, 600);
-    }
-
-    aboutToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        const isOpen = aboutPanel.style.display === 'block';
-        if (isOpen) closeAbout();
-        else openAbout();
-    });
-
-    aboutClose.addEventListener('click', closeAbout);
 
     let tickEls   = [];
     const allThumbs = Array.from(document.querySelectorAll('.thumb, #expr-wrap'));
