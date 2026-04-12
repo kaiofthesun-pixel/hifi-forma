@@ -54,9 +54,25 @@
             font-size: 14px;
             transition: transform 0.3s ease;
             transform-origin: bottom right;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .footer-links.scaled {
             transform: scale(2);
+        }
+        .footer-links .footer-circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: url('Assets/About/avatar.png?v=2') center/cover;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .footer-links.scaled .footer-circle {
+            opacity: 1;
+            transform: scale(1);
         }
         .footer-links a {
             color: #999;
@@ -768,7 +784,8 @@
 <div id="red-line"></div>
 
 <div class="footer-links">
-    <a href="https://www.linkedin.com/in/allen-k-lau-5a58218/">LinkedIn</a>&nbsp;&nbsp;<a href="#">CV</a>
+    <span class="footer-circle"></span>
+    <span><a href="https://www.linkedin.com/in/allen-k-lau-5a58218/">LinkedIn</a>&nbsp;&nbsp;<a href="#">CV</a></span>
 </div>
 
 <nav>
