@@ -7,6 +7,7 @@
     <title>Allen K Lau</title>
     <link rel="icon" type="image/png" href="Assets/About/A.png">
     <script>window._weatherP = fetch('https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&current=temperature_2m,weather_code&temperature_unit=fahrenheit').then(r=>r.json()).catch(()=>null);</script>
+    <script>if(sessionStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark-mode');</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Newsreader:ital,wght@0,400;1,400&display=swap');
 
@@ -23,6 +24,12 @@
             --ruler-extend: 500px;
         }
 
+        html.dark-mode {
+            --text: #ffffff;
+            --muted: #777;
+            --bg: #000000;
+        }
+
         html, body { height: 100%; }
 
         html {
@@ -35,6 +42,11 @@
             font-family: 'Inter', sans-serif;
             font-size: 13px;
             overflow-x: hidden;
+            transition: background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1), color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .company-name, .company-ghost, .date-marker, .entry-title, .entry-desc, nav a, .footer-links a {
+            transition: color 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* ─── Fixed red line ─── */
@@ -61,10 +73,10 @@
             transform-origin: bottom right;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
         }
         .footer-links.scaled {
-            transform: scale(2);
+            transform: scale(2.25);
         }
         .footer-links .footer-circle {
             width: 14px;
@@ -119,6 +131,14 @@
             display: inline-flex;
             align-items: center;
             line-height: 1;
+            transition: color 0s;
+        }
+        nav .play-link #bear-svg {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        nav .play-link:hover #bear-svg {
+            opacity: 1;
         }
 
         /* ─── PLAY letter animations ─── */
@@ -1032,6 +1052,7 @@
     <div class="row company-row" data-company="Google Allo">
         <div class="row-left">
             <div class="company-name">Google Allo</div>
+            <div class="date-marker" style="margin-top:-50px;">2019</div>
         </div>
         <div class="row-right"></div>
     </div>
@@ -1092,7 +1113,7 @@
     <div class="row company-row" data-company="Allen Lau Studio Inc">
         <div class="row-left">
             <div class="company-name">Allen Lau Studio Inc</div>
-            <div class="date-marker" style="margin-top:-90px;">2022</div>
+            <div class="date-marker" style="margin-top:-90px;">2013</div>
         </div>
         <div class="row-right">
             <div class="entry">
@@ -1350,6 +1371,11 @@
         if (newPinned !== pinnedCompany) {
             if (newPinned !== null) boop();
             pinnedCompany = newPinned;
+
+            // Toggle dark mode for Allen Lau Studio Inc section
+            const isDarkSection = pinnedCompany === 'Allen Lau Studio Inc';
+            document.documentElement.classList.toggle('dark-mode', isDarkSection);
+            sessionStorage.setItem('darkMode', isDarkSection);
         }
 
         // Fade dates when near the current timeline line or any product name/ghost
@@ -2084,6 +2110,5 @@
     }
 </script>
 
-<script src="text-editor.js"></script>
 </body>
 </html>
