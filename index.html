@@ -61,25 +61,11 @@
             pointer-events: none;
         }
 
-        /* ─── Weather note ─── */
-        #weather-note {
-            position: absolute;
-            top: 42px;
-            left: 44px;
-            z-index: 200;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
         /* ─── Footer links ─── */
         .footer-links {
             position: fixed;
             bottom: 28px;
-            right: 103px;
+            right: 44px;
             z-index: 200;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
@@ -122,7 +108,7 @@
         .up-button {
             position: fixed;
             bottom: 28px;
-            left: calc(var(--content-left) + 450px);
+            left: calc(var(--content-left) + 420px);
             z-index: 200;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
@@ -134,13 +120,7 @@
             align-items: center;
             gap: 2px;
             cursor: pointer;
-            transition: color 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .up-button.visible {
-            opacity: 1;
-            pointer-events: auto;
+            transition: color 0.3s ease;
         }
         .up-button:hover {
             color: var(--red);
@@ -853,11 +833,10 @@
 <body>
 
 <div id="red-line"></div>
-<div id="weather-note"></div>
 
 <div class="footer-links">
     <span class="footer-circle"></span>
-    <span><a href="https://www.linkedin.com/in/allen-k-lau-5a58218/" target="_blank">LinkedIn</a>&nbsp;&nbsp;<a href="https://drive.google.com/file/d/1xpwDCujmFJdi_ugvCns5NhHGsLDHRjL0/view" target="_blank">CV</a></span>
+    <span><a href="https://www.linkedin.com/in/allen-k-lau-5a58218/">LinkedIn</a>&nbsp;&nbsp;<a href="https://drive.google.com/file/d/1xpwDCujmFJdi_ugvCns5NhHGsLDHRjL0/view" target="_blank">CV</a></span>
 </div>
 
 <a href="#" class="up-button" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
@@ -974,8 +953,8 @@
     <div class="row company-row" data-company="Microsoft AI" style="margin-top:99px;">
         <div class="row-left">
             <div class="company-name">Microsoft AI</div>
-            <div class="date-marker" style="margin-top:-286px;">Career timeline</div>
-            <div class="date-marker" style="margin-top:-4px;">of selected works</div>
+            <div class="date-marker" style="margin-top:-274px;">Career timeline</div>
+            <div class="date-marker" style="margin-top:-6px;">of selected works</div>
         </div>
         <div class="row-right">
             <div class="entry">
@@ -1217,9 +1196,7 @@
     const redLine = document.getElementById('red-line');
     const bearSvg = document.getElementById('bear-svg');
     const motionReelThumb = document.querySelector('[data-transition-name="motion-reel"]');
-    const googleMessagesRow = document.querySelector('[data-company="Google Messages"]');
     const footerLinks = document.querySelector('.footer-links');
-    const upButton = document.querySelector('.up-button');
 
     let tickEls   = [];
     const allThumbs = Array.from(document.querySelectorAll('.thumb, #expr-wrap'));
@@ -1380,14 +1357,6 @@
             const isAtMiddle = redY >= thumbMiddle;
             const isScaled = footerLinks.classList.contains('scaled');
             if (isAtMiddle !== isScaled) footerLinks.classList.toggle('scaled', isAtMiddle);
-        }
-
-        // Show Up button when red line reaches Google Messages
-        if (googleMessagesRow && upButton) {
-            const rect = googleMessagesRow.getBoundingClientRect();
-            const shouldShow = redY >= rect.top;
-            const isVisible = upButton.classList.contains('visible');
-            if (shouldShow !== isVisible) upButton.classList.toggle('visible', shouldShow);
         }
 
         // Company label pinning
@@ -1950,17 +1919,194 @@
             const code = data.current.weather_code;
             const el = document.getElementById('weather-note');
 
-            let condition;
-            if ([0, 1].includes(code)) condition = 'Clear';
-            else if ([2, 3].includes(code)) condition = 'Cloudy';
-            else if ([45, 48].includes(code)) condition = 'Foggy';
-            else if ([51, 53, 55, 56, 57].includes(code)) condition = 'Drizzle';
-            else if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) condition = 'Rainy';
-            else if ([71, 73, 75, 77, 85, 86].includes(code)) condition = 'Snow';
-            else if ([95, 96, 99].includes(code)) condition = 'Stormy';
-            else condition = 'Overcast';
+            const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+            const hour = new Date().getHours();
+            const isEvening = hour >= 18 || hour < 6;
+            const isMorning = hour >= 6 && hour < 12;
 
-            el.textContent = `${temp}°F in Seattle. ${condition}.`;
+            let condition, activity;
+
+            if (isEvening) {
+                condition = code <= 3 ? 'Clear' : code <= 48 ? 'Foggy' : code <= 67 ? 'Rainy' : 'Overcast';
+                activity = pick([
+                    'I might be finding rest in quiet rooms, with music as the guide.',
+                    'I might be steeping in sound and stillness, the way tea steeps in water.',
+                    'I might be cooking, listening, being — the guest house of evening has opened.',
+                    'I might be with a book, a lamp, low music: what the heart requires, the night provides.',
+                    'I might be letting the needle find its groove while dinner simmers.',
+                    'I might be somewhere between a melody and a memory.',
+                    'I might be tending to the quiet hours, where the soul does its mending.',
+                    'I might be listening to the hifi hum its evening prayer.',
+                    'I might be in the company of old albums and warm light.',
+                    'I might be watching the day fold itself into night.',
+                    'I might be sketching by lamplight, letting the pencil wander.',
+                    'I might be writing letters I may never send.',
+                    'I might be on a video call with someone far away, close now.',
+                    'I might be organizing playlists like a librarian of moods.',
+                    'I might be doing dishes slowly, making ceremony of the ordinary.',
+                    'I might be folding laundry, each crease a small meditation.',
+                    'I might be watering the houseplants, checking on their quiet lives.',
+                    'I might be rewatching something familiar, a blanket of story.',
+                    'I might be journaling, asking the page what the day meant.',
+                    'I might be stretching on the floor, unwinding the hours.'
+                ]);
+            } else if ([0, 1].includes(code)) {
+                condition = 'Clear';
+                activity = pick(isMorning
+                    ? ['I might be walking out to meet the clear morning, hearing what the breeze carries.', 'I might be in the garden, meeting the clear light like a guest.', 'I might be turning with the wheel of the clear sky, on two wheels.', 'I might be greeting this sunny morning, which asks nothing but presence.', 'I might be out where the dew still holds its shine under clear skies.', 'I might be following the clear light as it wakes the neighborhood.', 'I might be pedaling into the clear morning, toward a horizon that keeps its promises.', 'I might be among the early risers on this clear morning — birds, gardeners, dreamers.', 'I might be running while the clear sky is still soft with dawn.', 'I might be at the farmers market, where the morning sun gilds everything.', 'I might be stretching on the porch, saluting this clear day.', 'I might be making breakfast with the windows open to the light.', 'I might be photographing the clear morning before it knows it is beautiful.', 'I might be biking to a café, chasing shadows under sunny skies.', 'I might be swimming laps, the water and sky both clear and blue.']
+                    : ['I might be sitting where the sun reaches, letting it do its golden work.', 'I might be outside, being fed by the clear afternoon light.', 'I might be mid-sentence in a long conversation with the self — a walk under clear skies.', 'I might be following warmth like a cat follows a sunbeam.', 'I might be out where the clear afternoon stretches long and kind.', 'I might be letting the clear sky hold me in its blue gaze.', 'I might be tracing the shadows as they lengthen under sunny skies.', 'I might be somewhere the light pools and lingers.', 'I might be reading on a bench, the sun my bookmark.', 'I might be at a rooftop, watching the city glow.', 'I might be playing basketball in this golden-hour light.', 'I might be sketching outdoors, the clear sky my ceiling.', 'I might be grilling, tending smoke and flame under open skies.', 'I might be on a long drive, windows down, sun on my arm.', 'I might be at the water, watching light scatter like coins.']);
+            } else if ([2, 3].includes(code)) {
+                condition = 'Cloudy';
+                activity = pick(isMorning
+                    ? ['I might be running under this quilted sky — the clouds keep pace.', 'I might be walking through the gray toward coffee, which waits at the end of every good path.', 'I might be out where the clouds soften everything.', 'I might be moving through this cloudy morning like a quiet thought.', 'I might be finding rhythm in footsteps and cloud-drift.', 'I might be on a path the clouds have blessed with shade.', 'I might be at yoga, bending beneath a sky that bends too.', 'I might be biking where the cloudy light asks nothing of me.', 'I might be reading the newspaper with the window cracked.', 'I might be at the bakery, where warmth rises to meet the cool gray.', 'I might be photographing textures the flat cloudy light reveals.', 'I might be walking the dog under this comfortable ceiling.', 'I might be browsing a bookshop, the clouds keeping time outside.', 'I might be at the gym, matching the sky\'s quiet energy.', 'I might be making soup, stirring something slow into being.']
+                    : ['I might be following the unfolding road on quiet wheels under cloudy skies.', 'I might be answering the call of new trails on this cloudy afternoon.', 'I might be exploring under this ceiling of soft gray.', 'I might be pedaling through the afternoon\'s gentle cloudy mood.', 'I might be wandering where the overcast invites reflection.', 'I might be out where the cloudy light is even and the mind is clear.', 'I might be visiting a museum, matching its hushed mood.', 'I might be in a café with a laptop and no deadline.', 'I might be thrifting, finding treasure under fluorescent suns.', 'I might be on a long phone call with someone who matters.', 'I might be at the library, surrounded by quiet company.', 'I might be cooking an elaborate meal, the afternoon my sous chef.', 'I might be doing laundry at the laundromat, watching life spin.', 'I might be organizing photos, revisiting sunnier days.', 'I might be napping without guilt; the clouds agree.']);
+            } else if ([45, 48].includes(code)) {
+                condition = 'Foggy';
+                activity = pick([
+                    'I might be running slowly as the world softens in fog.',
+                    'I might be walking along the water while the fog holds its breath.',
+                    'I might be lifting my camera to this veil between worlds.',
+                    'I might be wandering without aim; the fog approves.',
+                    'I might be disappearing into the mist, only to reappear.',
+                    'I might be out where edges blur and everything is possible.',
+                    'I might be moving through the foggy morning like a half-remembered dream.',
+                    'I might be following paths that the fog has made mysterious.',
+                    'I might be somewhere between here and elsewhere in the mist.',
+                    'I might be letting the fog teach me about patience.',
+                    'I might be at a café where the windows are haloed with mist.',
+                    'I might be on a bridge, watching the fog erase the far shore.',
+                    'I might be listening to jazz, which sounds like fog made audible.',
+                    'I might be driving slow roads where headlights find nothing.',
+                    'I might be writing, the fog a curtain between me and distraction.',
+                    'I might be making tea, steam joining the mist outside.',
+                    'I might be at the harbor, watching boats appear like ghosts.',
+                    'I might be taking a long bath, steaming like the foggy world.',
+                    'I might be meditating, thoughts drifting like this mist.',
+                    'I might be on a morning run, the path revealing itself step by step.'
+                ]);
+            } else if ([51, 53, 55, 56, 57].includes(code)) {
+                condition = 'Drizzle';
+                activity = pick([
+                    'I might be out listening to the sky whisper its light rain.',
+                    'I might be greeting the drizzle, hat and all.',
+                    'I might be jumping in puddles — mirrors for small philosophers.',
+                    'I might be gardening in the drizzle, being gardened by the sky.',
+                    'I might be walking where the rain is more suggestion than statement.',
+                    'I might be out where the drizzle makes the air soft and silver.',
+                    'I might be letting the drizzle bless my shoulders.',
+                    'I might be finding joy in this drizzly weather others avoid.',
+                    'I might be tracing the paths that glisten with drizzle.',
+                    'I might be out where the world smells of rain and possibility.',
+                    'I might be at a window seat, watching the drizzle bead and race.',
+                    'I might be in a bookshop, dry between worlds of wet and word.',
+                    'I might be cooking ramen, slurping against the drizzle outside.',
+                    'I might be on a covered patio, letting the drizzle be my ASMR.',
+                    'I might be photographing how rain makes the city impressionist.',
+                    'I might be at the record store, flipping through vinyl while drizzle taps the glass.',
+                    'I might be baking scones, the kitchen warm against the damp.',
+                    'I might be having a long brunch, letting the drizzle extend my stay.',
+                    'I might be cleaning, making order while the sky scatters water.',
+                    'I might be sketching indoors, the drizzle my ambient soundtrack.'
+                ]);
+            } else if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) {
+                condition = 'Rainy';
+                activity = pick([
+                    'I might be answering the rain with a slow pour of coffee.',
+                    'I might be watching the rain paint the window — a painting that changes.',
+                    'I might be cooking something ambitious; rain is the best company.',
+                    'I might be browsing the covered market as the rain browses the streets.',
+                    'I might be visiting the greenhouse, escaping the rain where summer is held hostage.',
+                    'I might be reading while the rain reads its own stories on the glass.',
+                    'I might be inside, warm, while the rainy world washes itself.',
+                    'I might be listening to the percussion of rain on the roof.',
+                    'I might be baking something this rainy weather demands.',
+                    'I might be steeping tea as the rainy sky steeps the earth.',
+                    'I might be at the movies, the rain my excuse for a double feature.',
+                    'I might be doing a puzzle, the rain filling in the edges of time.',
+                    'I might be calling an old friend, the rain tapping out our rhythm.',
+                    'I might be reorganizing my closet, finding lost things.',
+                    'I might be making bread, kneading while the rain kneads the garden.',
+                    'I might be at a ramen shop, steam rising to match the rain.',
+                    'I might be practicing piano, adding notes to the rain\'s composition.',
+                    'I might be in bed with a book, the ultimate rainy day permission.',
+                    'I might be at a cozy bar, nursing something warm.',
+                    'I might be writing, the rain a curtain around my small world.'
+                ]);
+            } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+                condition = 'Snow';
+                activity = pick([
+                    'I might be bundled like a secret, exploring the white quiet.',
+                    'I might be building in snow, collaborating with impermanence.',
+                    'I might be on the porch with cocoa, watching the world soften under snow.',
+                    'I might be sending small joys arcing through the snowy air — snowballs.',
+                    'I might be walking where each step writes a small story in snow.',
+                    'I might be out where the snowy silence has a texture.',
+                    'I might be catching flakes on my tongue like a child.',
+                    'I might be watching the snow erase and redraw the world.',
+                    'I might be somewhere the cold makes everything crisp and clear.',
+                    'I might be finding warmth in movement through the snow.',
+                    'I might be cross-country skiing, gliding through the hush.',
+                    'I might be making snow angels, leaving my outline behind.',
+                    'I might be at the window with soup, watching the snow accumulate.',
+                    'I might be shoveling, making paths for neighbors.',
+                    'I might be photographing how snow simplifies everything.',
+                    'I might be sledding, screaming joy into the cold.',
+                    'I might be by the fire, thawing hands around a mug.',
+                    'I might be tracking animal prints, reading the snow\'s stories.',
+                    'I might be making a snowman, giving it my scarf.',
+                    'I might be inside, watching the world become a snow globe.'
+                ]);
+            } else if ([95, 96, 99].includes(code)) {
+                condition = 'Stormy';
+                activity = pick([
+                    'I might be turning pages while the storm rages. We each do our work.',
+                    'I might be baking bread as thunder rolls — both are transformations.',
+                    'I might be watching the storm the way one watches a master at work.',
+                    'I might be reorganizing a shelf while the storm reorganizes the sky.',
+                    'I might be inside, grateful for walls and roof during the storm.',
+                    'I might be listening to the stormy sky tell its urgent stories.',
+                    'I might be cooking something warm against the wild storm outside.',
+                    'I might be finding peace in the contrast of stormy chaos and calm.',
+                    'I might be watching lightning write its brief poems.',
+                    'I might be counting the seconds between flash and thunder.',
+                    'I might be playing board games, the storm our dramatic backdrop.',
+                    'I might be on the phone, voices bridging the storm\'s divide.',
+                    'I might be making pasta from scratch, flour against the fury.',
+                    'I might be watching the trees bend and spring back.',
+                    'I might be writing, powered by the storm\'s electricity.',
+                    'I might be napping, the thunder a strange lullaby.',
+                    'I might be at the window, feeling small in the best way.',
+                    'I might be lighting candles, preparing for the power to choose darkness.',
+                    'I might be telling stories, each crack of thunder punctuation.',
+                    'I might be dancing in the kitchen, storm as my orchestra.'
+                ]);
+            } else {
+                condition = 'Overcast';
+                activity = pick([
+                    'I might be visiting the garden, which keeps its counsel under overcast skies.',
+                    'I might be jogging under gray skies — the clouds are patient witnesses.',
+                    'I might be walking toward the park, which waits like a letter to be read.',
+                    'I might be sketching the overcast world; the world sketches back.',
+                    'I might be out where the overcast light is soft and forgiving.',
+                    'I might be wandering in the gentle gray afternoon.',
+                    'I might be moving through this overcast day like a quiet thought.',
+                    'I might be finding beauty in the muted overcast palette.',
+                    'I might be exploring under an overcast sky that asks for nothing.',
+                    'I might be out where the overcast holds everything in soft focus.',
+                    'I might be at a flea market, hunting for stories in old objects.',
+                    'I might be on a long walk, the overcast sky my companion.',
+                    'I might be at the aquarium, watching fish ignore the weather.',
+                    'I might be making pottery, shaping clay under neutral light.',
+                    'I might be at a coffee shop, people-watching through gray windows.',
+                    'I might be cleaning out a drawer, finding what I forgot I had.',
+                    'I might be on a video call, the even light flattering everyone.',
+                    'I might be meal prepping for the week ahead.',
+                    'I might be at the botanical garden, the overcast making greens glow.',
+                    'I might be writing postcards to people who\'ll be surprised.'
+                ]);
+            }
+
+            el.innerHTML = `${temp}°F in Seattle. ${condition}.<br><span style="display:inline-block;margin-top:6px;">${activity}</span>`;
             el.style.opacity = '1';
         } catch(e) {}
     })();
