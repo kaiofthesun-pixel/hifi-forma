@@ -57,10 +57,10 @@
         nav .play-link svg text { fill: var(--red); }
 
         /* ─── Back button ─── */
+        .home-btn,
         .back-btn {
             position: fixed;
             top: 28px;
-            left: 144px;
             z-index: 200;
             display: inline-flex;
             align-items: center;
@@ -77,12 +77,21 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: color 0.2s ease;
         }
+        .home-btn {
+            left: 94px;
+        }
+        .back-btn {
+            left: 144px;
+        }
+        .home-btn:hover,
         .back-btn:hover {
             color: #000;
         }
+        .home-btn:hover svg,
         .back-btn:hover svg {
             stroke: #000;
         }
+        .home-btn svg,
         .back-btn svg {
             width: 16px;
             height: 16px;
@@ -1593,6 +1602,10 @@
     </style>
 </head>
 <body>
+
+<a href="index.html" class="home-btn">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+</a>
 
 <a href="play.html" class="back-btn">
     <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
