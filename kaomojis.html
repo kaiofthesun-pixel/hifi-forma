@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Shizuru&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Moirai+One&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -60,7 +60,7 @@
         .back-btn {
             position: fixed;
             top: 28px;
-            left: 64px;
+            left: calc(50vw - 700px);
             z-index: 200;
             display: inline-flex;
             align-items: center;
@@ -187,28 +187,22 @@
             100% { opacity: 1; transform: scale(1); }
         }
         .square.new-entry {
-            animation: squareEnter 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+            animation: squareEnter 0.8s ease-out 0.3s forwards;
             opacity: 0;
-            transform: scale(0);
+            transform: scale(0) rotate(-5deg);
         }
         @keyframes squareEnter {
             0% {
                 opacity: 0;
-                transform: scale(0);
+                transform: scale(0) rotate(-5deg);
             }
-            40% {
+            50% {
                 opacity: 1;
-                transform: scale(1.05);
-            }
-            65% {
-                transform: scale(0.99);
-            }
-            85% {
-                transform: scale(1.01);
+                transform: scale(1.15) rotate(-1.5deg);
             }
             100% {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) rotate(0deg);
             }
         }
         .square.deleting {
@@ -236,16 +230,41 @@
             justify-content: center;
             background: #2a2a2a;
             border-radius: 8px;
-            font-family: 'Shizuru', cursive;
+            font-family: 'Moirai One', cursive;
             font-style: normal;
             font-size: 64px;
             color: #fff;
-            animation: yayFade 2s cubic-bezier(0.22, 0.61, 0.36, 1) 1.5s forwards;
+            animation: yayFade 2s cubic-bezier(0.22, 0.61, 0.36, 1) 1s forwards;
             pointer-events: none;
         }
         @keyframes yayFade {
             0% { opacity: 1; }
             100% { opacity: 0; }
+        }
+
+        /* ─── Firework particles ─── */
+        .firework-particle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 32px;
+            pointer-events: none;
+            z-index: 20;
+            color: var(--text);
+            animation: fireworkBurst 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        @keyframes fireworkBurst {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy))) scale(1.2);
+            }
         }
 
         /* ─── Kaomoji animation ─── */
@@ -256,6 +275,35 @@
             color: var(--text);
             letter-spacing: -0.1em;
             font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
+        }
+        .kao-bubble,
+        .kao-fish,
+        .kao-sparkle {
+            display: inline-block;
+            transform-origin: center center;
+        }
+        .kao-bubble { animation: kaoBubble var(--kao-speed, 11s) ease-in-out infinite; }
+        .kao-fish { animation: kaoFish var(--kao-speed, 11s) ease-in-out infinite; }
+        .kao-sparkle { animation: kaoSparkle var(--kao-speed, 11s) ease-in-out infinite; }
+        @keyframes kaoBubble {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-3px) scale(1.1); }
+            50% { transform: translateY(-1px) scale(0.95); }
+            75% { transform: translateY(-4px) scale(1.05); }
+        }
+        @keyframes kaoFish {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            15% { transform: translateX(3px) rotate(5deg); }
+            30% { transform: translateX(-2px) rotate(-3deg); }
+            50% { transform: translateX(2px) rotate(2deg); }
+            70% { transform: translateX(-3px) rotate(-4deg); }
+            85% { transform: translateX(1px) rotate(3deg); }
+        }
+        @keyframes kaoSparkle {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(0.9); }
+            75% { transform: scale(1.15); }
         }
         .kao-tail {
             display: inline-block;
@@ -1465,6 +1513,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s ease, border-color 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
+            white-space: nowrap;
         }
         .suggestion-chip:hover,
         .suggestion-chip.selected {
@@ -1475,22 +1524,39 @@
             opacity: 0;
             transform: scale(0.8);
         }
+        .suggestion-chip.appearing {
+            animation: chipAppear 0.4s ease forwards;
+        }
+        @keyframes chipAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
         .suggestion-chip.chip-animating {
-            transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+            transition: transform 0.5s ease;
         }
 
         /* ─── Custom kaomoji square ─── */
         .kaomoji-custom {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -70%);
             font-size: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: calc(100% - 40px);
             color: var(--text);
             font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
             text-align: center;
             word-break: break-all;
-            padding: 0 20px;
         }
         .kao-part {
             display: inline-block;
@@ -1539,9 +1605,9 @@
         <div class="suggestion-row">
             <button class="suggestion-chip" data-kaomoji="⸜(｡˃ ᵕ ˂ )⸝♡">⸜(｡˃ ᵕ ˂ )⸝♡</button>
             <button class="suggestion-chip" data-kaomoji="(*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ">(*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ</button>
-            <button class="suggestion-chip" data-kaomoji="ᐠ( ᐛ )ᐟ">ᐠ( ᐛ )ᐟ</button>
+            <button class="suggestion-chip" data-kaomoji="( ˶°ㅁ°) !!">( ˶°ㅁ°) !!</button>
             <button class="suggestion-chip" data-kaomoji="≽^•⩊•^≼">≽^•⩊•^≼</button>
-            <a href="https://www.kaomoji.co/pages/emoji?srsltid=AfmBOopTtbfd8hDG9ETxSBA4_EiKvhF6joUoEb-ETppdj3cEIK93U-aG" target="_blank" class="inspiration-link">Find more</a>
+            <button class="suggestion-chip" data-kaomoji="૮₍ ˃ ⤙ ˂ ₎ა">૮₍ ˃ ⤙ ˂ ₎ა</button>
         </div>
     </div>
     <button class="create-btn" id="create-btn">Create</button>
@@ -1553,7 +1619,7 @@
             <button class="download-btn" id="download-gif"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> GIF</button>
         </div>
         <div class="kaomoji">
-            <span class="kao-tail">ᓚ</span>₍ <span class="kao-ear-left">^</span>. .<span class="kao-ear-right">^</span>₎
+            <span class="kao-bubble">🫧</span><span class="kao-sparkle">°:•.</span><span class="kao-fish">🐠</span><span class="kao-sparkle">*.•</span>
         </div>
         <div class="slider-controls">
             <div class="slider-row">
@@ -1828,7 +1894,21 @@
 <script>
     // ── Suggestion chips ──
     let selectedChip = null;
-    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    const kaomojiPool = [
+        'ᓚ₍ ^. .^₎',
+        'ᨳ𐔌՞҂ ˕ ֊՞𐦯ᜊ',
+        '˶ˊᜊˋ˶',
+        '◍⁰ᯅ⁰◍',
+        '૮₍ ˃ ⤙ ˂ ₎ა',
+        '( ˶°ㅁ°) !!',
+        '𖦹 ´ ᯅ ` 𖦹',
+        'ପ(๑•ᴗ•๑)ଓ ♡',
+        'ʚ(｡˃ ᵕ ˂ )ɞ',
+        '₍^. ‸ .^₎⟆'
+    ];
+    let poolIndex = 0;
+
+    function setupChipListener(chip) {
         chip.addEventListener('click', () => {
             const input = document.getElementById('kaomoji-input');
             input.value = chip.dataset.kaomoji;
@@ -1837,6 +1917,10 @@
             chip.classList.add('selected');
             selectedChip = chip;
         });
+    }
+
+    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        setupChipListener(chip);
     });
 
     // ── Constants ──
@@ -3149,6 +3233,28 @@
         square.classList.add('new-entry');
         grid.insertBefore(square, grid.firstChild);
 
+        // Create firework particles using DocumentFragment to batch DOM insertions
+        const fireworkChars = ['⊹', '✮', '⟡', '₊', '°', '❀', '⋆', '*', '･', '‧'];
+        const particleCount = 50;
+        const fragment = document.createDocumentFragment();
+        const particles = [];
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('span');
+            particle.className = 'firework-particle';
+            particle.textContent = fireworkChars[Math.floor(Math.random() * fireworkChars.length)];
+
+            const angle = (Math.PI * 2 * i / particleCount) + (Math.random() - 0.5) * 0.5;
+            const distance = 140 + Math.random() * 100;
+            particle.style.setProperty('--fx', `${Math.cos(angle) * distance}px`);
+            particle.style.setProperty('--fy', `${Math.sin(angle) * distance}px`);
+            particle.style.animationDelay = `${0.3 + Math.random() * 0.3}s`;
+
+            fragment.appendChild(particle);
+            particles.push(particle);
+        }
+        square.appendChild(fragment);
+        setTimeout(() => particles.forEach(p => p.remove()), 3500);
+
         // FLIP: animate existing squares to new positions
         requestAnimationFrame(() => {
             flipAnimate(firstPositions, 'animating');
@@ -3270,28 +3376,29 @@
         // Clear input
         createInput.value = '';
 
-        // Remove the selected suggestion chip if used
+        // Replace the selected suggestion chip with a new one from the pool
         if (selectedChip) {
-            // FLIP: capture positions of other chips before removal
-            const allChips = Array.from(document.querySelectorAll('.suggestion-chip'));
-            const chipPositions = new Map();
-            allChips.forEach(chip => {
-                if (chip !== selectedChip) {
-                    chipPositions.set(chip, { x: chip.getBoundingClientRect().left, y: 0 });
-                }
-            });
-
-            selectedChip.classList.add('removing');
-            const chipToRemove = selectedChip;
+            const chipToReplace = selectedChip;
             selectedChip = null;
 
-            setTimeout(() => {
-                chipToRemove.remove();
+            // Animate out
+            chipToReplace.classList.add('removing');
 
-                // FLIP: animate remaining chips to new positions
-                requestAnimationFrame(() => {
-                    flipAnimate(chipPositions, 'chip-animating', { horizontalOnly: true, stagger: false });
-                });
+            setTimeout(() => {
+                // Get next kaomoji from pool
+                const newKaomoji = kaomojiPool[poolIndex % kaomojiPool.length];
+                poolIndex++;
+
+                // Update chip content
+                chipToReplace.dataset.kaomoji = newKaomoji;
+                chipToReplace.textContent = newKaomoji;
+                chipToReplace.classList.remove('selected', 'removing');
+
+                // Animate in
+                chipToReplace.classList.add('appearing');
+                setTimeout(() => {
+                    chipToReplace.classList.remove('appearing');
+                }, 400);
             }, 300);
         }
     }
