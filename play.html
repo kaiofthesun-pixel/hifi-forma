@@ -380,10 +380,9 @@
 
         /* ─── Footer copyright ─── */
         .footer-copyright {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            padding: 40px 0;
             font-family: 'Inter', sans-serif;
             font-size: 11px;
             color: var(--muted);
@@ -407,6 +406,49 @@
             white-space: nowrap;
             opacity: 0;
             transition: opacity 0.5s ease;
+        }
+
+        /* ─── Responsive grid ─── */
+        @media (max-width: 1400px) {
+            .lofi-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .lofi-item:nth-child(5n) {
+                border-right: 1px solid #ccc;
+            }
+            .lofi-item:nth-child(4n) {
+                border-right: none;
+            }
+        }
+        @media (max-width: 1100px) {
+            .lofi-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .lofi-item:nth-child(4n) {
+                border-right: 1px solid #ccc;
+            }
+            .lofi-item:nth-child(3n) {
+                border-right: none;
+            }
+        }
+        @media (max-width: 800px) {
+            .lofi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .lofi-item:nth-child(3n) {
+                border-right: 1px solid #ccc;
+            }
+            .lofi-item:nth-child(2n) {
+                border-right: none;
+            }
+        }
+        @media (max-width: 500px) {
+            .lofi-grid {
+                grid-template-columns: 1fr;
+            }
+            .lofi-item {
+                border-right: none;
+            }
         }
 
     </style>
