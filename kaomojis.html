@@ -8,6 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Shizuru&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -166,19 +167,85 @@
             justify-content: center;
             position: relative;
             user-select: none;
+            will-change: transform;
+        }
+        .square.animating {
+            transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .square.wrap-fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: scale(1) translate(var(--tx), var(--ty)); }
+            100% { opacity: 0; transform: scale(0.9) translate(var(--tx), var(--ty)); }
+        }
+        .square.wrap-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
         }
         .square.new-entry {
-            animation: squareEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: squareEnter 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+            opacity: 0;
+            transform: scale(0);
         }
         @keyframes squareEnter {
             0% {
                 opacity: 0;
-                transform: scale(0.8) translateY(-20px);
+                transform: scale(0);
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            65% {
+                transform: scale(0.99);
+            }
+            85% {
+                transform: scale(1.01);
             }
             100% {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: scale(1);
             }
+        }
+        .square.deleting {
+            animation: squareExit 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        @keyframes squareExit {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+        .yay-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2a2a2a;
+            border-radius: 8px;
+            font-family: 'Shizuru', cursive;
+            font-style: normal;
+            font-size: 64px;
+            color: #fff;
+            animation: yayFade 2s cubic-bezier(0.22, 0.61, 0.36, 1) 1.5s forwards;
+            pointer-events: none;
+        }
+        @keyframes yayFade {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
         /* ─── Kaomoji animation ─── */
@@ -1397,12 +1464,20 @@
             border: 1px solid rgba(0,0,0,0.15);
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease;
+            transition: background 0.2s ease, border-color 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
         }
         .suggestion-chip:hover,
         .suggestion-chip.selected {
             background: rgba(0,0,0,0.06);
             border-color: rgba(0,0,0,0.25);
+        }
+        .suggestion-chip.removing {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .suggestion-chip.chip-animating {
+            transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
 
         /* ─── Custom kaomoji square ─── */
@@ -1770,6 +1845,72 @@
     const DEFAULT_SLIDER_VALUE = 8;
     const CUSTOM_SLIDER_BOOST = 12; // Boost applied to custom kaomoji slider values
     const COLOR_BLACK_POSITION = 8;
+
+    // ── FLIP animation constants ──
+    const WRAP_THRESHOLD_Y = 10;    // Minimum vertical delta to detect row wrap
+    const WRAP_THRESHOLD_X = 300;   // Minimum horizontal delta to detect row wrap
+    const STAGGER_DELAY_MS = 60;    // Delay between each tile's animation
+
+    /**
+     * Animates elements using FLIP technique after a DOM change.
+     * @param {Map<Element, {x: number, y: number}>} firstPositions - Map of elements to their pre-change positions
+     * @param {string} animatingClass - CSS class to apply during transition (e.g., 'animating', 'chip-animating')
+     * @param {Object} options - Optional configuration
+     * @param {boolean} options.horizontalOnly - If true, only animate horizontal movement (for chips)
+     * @param {boolean} options.stagger - If true, stagger animations by index (default: true)
+     */
+    function flipAnimate(firstPositions, animatingClass, options = {}) {
+        const { horizontalOnly = false, stagger = true } = options;
+        let index = 0;
+
+        firstPositions.forEach((first, el) => {
+            const rect = el.getBoundingClientRect();
+            const deltaX = first.x - rect.left;
+            const deltaY = horizontalOnly ? 0 : first.y - rect.top;
+
+            if (deltaX === 0 && deltaY === 0) return;
+
+            // For grid items: detect wrapping (large horizontal + vertical movement)
+            const isWrapping = !horizontalOnly && Math.abs(deltaY) > WRAP_THRESHOLD_Y && Math.abs(deltaX) > WRAP_THRESHOLD_X;
+
+            if (isWrapping) {
+                // Fade out at old position, then fade in at new position
+                el.style.setProperty('--tx', `${deltaX}px`);
+                el.style.setProperty('--ty', `${deltaY}px`);
+                el.classList.add('wrap-fade-out');
+
+                setTimeout(() => {
+                    el.style.transform = '';
+                    el.style.removeProperty('--tx');
+                    el.style.removeProperty('--ty');
+                    el.classList.remove('wrap-fade-out');
+                    el.classList.add('wrap-fade-in');
+
+                    setTimeout(() => {
+                        el.classList.remove('wrap-fade-in');
+                    }, 400);
+                }, 300);
+            } else {
+                // Standard FLIP: invert to old position, then animate to new
+                el.style.transform = horizontalOnly
+                    ? `translateX(${deltaX}px)`
+                    : `translate(${deltaX}px, ${deltaY}px)`;
+
+                const delay = stagger ? index * STAGGER_DELAY_MS : 0;
+                setTimeout(() => {
+                    requestAnimationFrame(() => {
+                        el.classList.add(animatingClass);
+                        el.style.transform = '';
+
+                        el.addEventListener('transitionend', () => {
+                            el.classList.remove(animatingClass);
+                        }, { once: true });
+                    });
+                }, delay);
+            }
+            index++;
+        });
+    }
 
     // ── Kaomoji configuration ──
     const kaomojiConfigs = [
@@ -2954,10 +3095,14 @@
         });
 
         // Create the square HTML
+        const celebrationWords = ['Yay!', 'Woohoo!', 'Nice!', 'Sweet!', 'Yes!', 'Woo!', 'Rad!', 'Cool!', 'Cute!', 'Love it!'];
+        const randomWord = celebrationWords[Math.floor(Math.random() * celebrationWords.length)];
+
         const square = document.createElement('div');
         square.className = 'square';
         square.id = squareId;
         square.innerHTML = `
+            <div class="yay-overlay">${randomWord}</div>
             <button class="trash-btn" id="trash-btn${customId}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"/>
@@ -2992,14 +3137,33 @@
             </div>
         `;
 
-        // Insert at the beginning of the grid with animation
+        // FLIP animation: capture positions before insertion
+        const existingSquares = Array.from(grid.querySelectorAll('.square'));
+        const firstPositions = new Map();
+        existingSquares.forEach(sq => {
+            const rect = sq.getBoundingClientRect();
+            firstPositions.set(sq, { x: rect.left, y: rect.top });
+        });
+
+        // Insert at the beginning of the grid
         square.classList.add('new-entry');
         grid.insertBefore(square, grid.firstChild);
+
+        // FLIP: animate existing squares to new positions
+        requestAnimationFrame(() => {
+            flipAnimate(firstPositions, 'animating');
+        });
 
         // Remove animation class after it completes
         setTimeout(() => {
             square.classList.remove('new-entry');
-        }, 500);
+        }, 1500);
+
+        // Remove yay overlay after it fades
+        setTimeout(() => {
+            const yayOverlay = square.querySelector('.yay-overlay');
+            if (yayOverlay) yayOverlay.remove();
+        }, 3500);
 
         // Initialize speed (custom kaomojis are faster at same slider position)
         square.style.setProperty('--kao-speed', calcSpeed(DEFAULT_SLIDER_VALUE + CUSTOM_SLIDER_BOOST) + 's');
@@ -3059,81 +3223,77 @@
             gifBtn, gifHandler
         };
 
-        // Trash button with password protection
+        // Trash button — delete with animation
         const trashBtn = document.getElementById(`trash-btn${customId}`);
         trashBtn.addEventListener('click', () => {
-            // Create delete modal
-            const modal = document.createElement('div');
-            modal.className = 'delete-modal';
-            modal.innerHTML = `
-                <div class="delete-modal-text">Enter password to delete</div>
-                <input type="password" class="delete-modal-input" placeholder="••••" maxlength="4">
-                <div class="delete-modal-btns">
-                    <button class="delete-modal-btn cancel">Cancel</button>
-                    <button class="delete-modal-btn confirm">Delete</button>
-                </div>
-            `;
-            square.appendChild(modal);
-
-            const input = modal.querySelector('.delete-modal-input');
-            const cancelBtn = modal.querySelector('.cancel');
-            const confirmBtn = modal.querySelector('.confirm');
-
-            input.focus();
-
-            // Define handlers for cleanup
-            const closeModal = () => {
-                // Clean up modal event listeners before removing
-                cancelBtn.removeEventListener('click', cancelHandler);
-                confirmBtn.removeEventListener('click', confirmHandler);
-                input.removeEventListener('keypress', keyHandler);
-                modal.remove();
-            };
-
-            const cancelHandler = () => {
-                closeModal();
-            };
-
-            const tryDelete = () => {
-                if (input.value === DELETE_PASSWORD) {
-                    // Clean up event listeners
-                    const listeners = customListeners[customId];
-                    if (listeners) {
-                        listeners.speedSlider.removeEventListener('input', listeners.speedHandler);
-                        listeners.wildSlider.removeEventListener('input', listeners.wildHandler);
-                        listeners.colorSlider.removeEventListener('input', listeners.colorHandler);
-                        listeners.gifBtn.removeEventListener('click', listeners.gifHandler);
-                        delete customListeners[customId];
-                    }
-                    // Remove dynamic style and cached wildness
-                    const style = document.getElementById(`dynamic-style${customId}`);
-                    if (style) style.remove();
-                    delete dynamicStyles[customId];
-                    delete keyframeTemplates[customId];
-                    delete lastFrenzyValues[customId];
-                    delete lastColorValues[customId];
-                    // Remove square
-                    square.remove();
-                } else {
-                    input.classList.add('error');
-                    input.value = '';
-                    setTimeout(() => input.classList.remove('error'), 300);
+            // FLIP animation: capture positions before removal
+            const allSquares = Array.from(grid.querySelectorAll('.square'));
+            const firstPositions = new Map();
+            allSquares.forEach(sq => {
+                if (sq !== square) {
+                    const rect = sq.getBoundingClientRect();
+                    firstPositions.set(sq, { x: rect.left, y: rect.top });
                 }
-            };
+            });
 
-            const confirmHandler = () => tryDelete();
+            // Add exit animation to the deleted square
+            square.classList.add('deleting');
 
-            const keyHandler = (e) => {
-                if (e.key === 'Enter') tryDelete();
-            };
+            // After delete animation, remove and animate others
+            setTimeout(() => {
+                // Clean up event listeners
+                const listeners = customListeners[customId];
+                if (listeners) {
+                    listeners.speedSlider.removeEventListener('input', listeners.speedHandler);
+                    listeners.wildSlider.removeEventListener('input', listeners.wildHandler);
+                    listeners.colorSlider.removeEventListener('input', listeners.colorHandler);
+                    listeners.gifBtn.removeEventListener('click', listeners.gifHandler);
+                    delete customListeners[customId];
+                }
+                // Remove dynamic style and cached wildness
+                const style = document.getElementById(`dynamic-style${customId}`);
+                if (style) style.remove();
+                delete dynamicStyles[customId];
+                delete keyframeTemplates[customId];
+                delete lastFrenzyValues[customId];
+                delete lastColorValues[customId];
+                // Remove square
+                square.remove();
 
-            cancelBtn.addEventListener('click', cancelHandler);
-            confirmBtn.addEventListener('click', confirmHandler);
-            input.addEventListener('keypress', keyHandler);
+                // FLIP: animate remaining squares to new positions
+                requestAnimationFrame(() => {
+                    flipAnimate(firstPositions, 'animating');
+                });
+            }, 400);
         });
 
         // Clear input
         createInput.value = '';
+
+        // Remove the selected suggestion chip if used
+        if (selectedChip) {
+            // FLIP: capture positions of other chips before removal
+            const allChips = Array.from(document.querySelectorAll('.suggestion-chip'));
+            const chipPositions = new Map();
+            allChips.forEach(chip => {
+                if (chip !== selectedChip) {
+                    chipPositions.set(chip, { x: chip.getBoundingClientRect().left, y: 0 });
+                }
+            });
+
+            selectedChip.classList.add('removing');
+            const chipToRemove = selectedChip;
+            selectedChip = null;
+
+            setTimeout(() => {
+                chipToRemove.remove();
+
+                // FLIP: animate remaining chips to new positions
+                requestAnimationFrame(() => {
+                    flipAnimate(chipPositions, 'chip-animating', { horizontalOnly: true, stagger: false });
+                });
+            }, 300);
+        }
     }
 
     createBtn.addEventListener('click', () => {
