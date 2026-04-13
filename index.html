@@ -120,7 +120,13 @@
             align-items: center;
             gap: 2px;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .up-button.visible {
+            opacity: 1;
+            pointer-events: auto;
         }
         .up-button:hover {
             color: var(--red);
@@ -1198,6 +1204,8 @@
     const bearSvg = document.getElementById('bear-svg');
     const motionReelThumb = document.querySelector('[data-transition-name="motion-reel"]');
     const footerLinks = document.querySelector('.footer-links');
+    const upButton = document.querySelector('.up-button');
+    const googleMessagesRow = document.querySelector('[data-company="Google Messages"]');
 
     let tickEls   = [];
     const allThumbs = Array.from(document.querySelectorAll('.thumb, #expr-wrap'));
@@ -1358,6 +1366,14 @@
             const isAtMiddle = redY >= thumbMiddle;
             const isScaled = footerLinks.classList.contains('scaled');
             if (isAtMiddle !== isScaled) footerLinks.classList.toggle('scaled', isAtMiddle);
+        }
+
+        // Show Up button when red line reaches Google Messages
+        if (googleMessagesRow && upButton) {
+            const rect = googleMessagesRow.getBoundingClientRect();
+            const shouldShow = redY >= rect.top;
+            const isVisible = upButton.classList.contains('visible');
+            if (shouldShow !== isVisible) upButton.classList.toggle('visible', shouldShow);
         }
 
         // Company label pinning
