@@ -83,6 +83,21 @@
         .back-btn:hover svg {
             stroke: #000;
         }
+
+        /* ─── Page title ─── */
+        .page-title {
+            position: fixed;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            padding: 10px 60px;
+            background: radial-gradient(ellipse at center, rgba(234, 232, 228, 1) 0%, rgba(234, 232, 228, 0) 70%);
+        }
         .back-btn svg {
             width: 16px;
             height: 16px;
@@ -1421,7 +1436,7 @@
         /* ─── Create kaomoji input bar ─── */
         .create-bar {
             position: relative;
-            margin: 140px auto 0;
+            margin: 200px auto 0;
             display: flex;
             align-items: flex-start;
             gap: 8px;
@@ -1598,6 +1613,8 @@
     <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
     Back
 </a>
+
+<div class="page-title">Kaomoji Animation Maker</div>
 
 <div class="create-bar">
     <div class="create-input-wrapper">
