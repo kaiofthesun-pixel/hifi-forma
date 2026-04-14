@@ -118,15 +118,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            gap: 0px;
             cursor: pointer;
-            transition: color 0.3s ease, opacity 0.3s ease;
+            transition: color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
             opacity: 0;
             pointer-events: none;
         }
         .up-button.visible {
             opacity: 1;
             pointer-events: auto;
+        }
+        .up-button.scaled {
+            transform: scale(1.3);
+            animation: up-bob 1.5s ease-in-out infinite;
+        }
+        @keyframes up-bob {
+            0%, 100% { transform: scale(1.3) translateY(0); }
+            50% { transform: scale(1.3) translateY(-6px); }
         }
         .up-button:hover {
             color: var(--red);
@@ -967,7 +975,7 @@
                 <div style="position:relative;">
                     <div class="thumb t-mai">
                         <div class="thumb-overlay-wip">
-                            <span class="wip-text" style="text-align:center; width:80%; display:inline-block; font-size:16px; line-height:1.5;">Currently driving monetization<br>across Microsoft AI<br><br><span style="font-size:18px; font-family:'EB Garamond',serif; font-style:italic;">Coming soon. Still evolving.</span></span>
+                            <span class="wip-text" style="text-align:center; width:80%; display:inline-block; font-size:16px; line-height:1.5;">Currently on Monetization<br>initiatives at Microsoft AI<br><br><span style="font-size:18px; font-family:'EB Garamond',serif; font-style:italic;">Coming soon. Still evolving.</span></span>
                         </div>
                     </div>
                     <div class="date-marker" style="position:absolute; left:calc(-60px - var(--ruler-left)); width:calc(var(--ruler-left) - 12px); text-align:right; top:50%; transform:translateY(-50%); margin:0; padding:0;">2026</div>
@@ -1359,13 +1367,16 @@
             if (isInRange !== isSaturated) thumb.classList.toggle('saturated', isInRange);
         });
 
-        // Scale footer links when red line reaches middle of Motion Reel thumbnail
+        // Scale footer links and Up button when red line reaches middle of Motion Reel thumbnail
         if (motionReelThumb && footerLinks) {
             const rect = motionReelThumb.getBoundingClientRect();
             const thumbMiddle = rect.top + rect.height / 2;
             const isAtMiddle = redY >= thumbMiddle;
             const isScaled = footerLinks.classList.contains('scaled');
-            if (isAtMiddle !== isScaled) footerLinks.classList.toggle('scaled', isAtMiddle);
+            if (isAtMiddle !== isScaled) {
+                footerLinks.classList.toggle('scaled', isAtMiddle);
+                if (upButton) upButton.classList.toggle('scaled', isAtMiddle);
+            }
         }
 
         // Show Up button when red line reaches Google Messages
