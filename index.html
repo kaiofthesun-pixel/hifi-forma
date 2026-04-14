@@ -118,7 +118,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0px;
+            gap: 2px;
             cursor: pointer;
             transition: color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
             opacity: 0;
@@ -129,12 +129,12 @@
             pointer-events: auto;
         }
         .up-button.scaled {
-            transform: scale(1.3);
+            transform: scale(1.5);
             animation: up-bob 1.5s ease-in-out infinite;
         }
         @keyframes up-bob {
-            0%, 100% { transform: scale(1.3) translateY(0); }
-            50% { transform: scale(1.3) translateY(-6px); }
+            0%, 100% { transform: scale(1.5) translateY(0); }
+            50% { transform: scale(1.5) translateY(-6px); }
         }
         .up-button:hover {
             color: var(--red);
@@ -980,7 +980,7 @@
                     </div>
                     <div class="date-marker" style="position:absolute; left:calc(-60px - var(--ruler-left)); width:calc(var(--ruler-left) - 12px); text-align:right; top:50%; transform:translateY(-50%); margin:0; padding:0;">2026</div>
                 </div>
-                <div class="entry-desc" style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://microsoft.ai/" style="color:var(--muted); text-decoration:underline;">Microsoft.ai</a></div>
+                <div class="entry-desc" style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://microsoft.ai/" target="_blank" style="color:var(--muted); text-decoration:underline;">Microsoft.ai</a></div>
             </div>
         </div>
     </div>
@@ -995,7 +995,7 @@
                 <div class="project-title" data-title>Extensions Framework</div>
                 <a href="extensions.html" class="thumb-link"><div class="thumb t-ext" data-transition-name="extensions" style="background-image:url('Assets/Extensions Framework/Extensions_thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">EXT</div></a>
                 <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
-                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://9to5google.com/2026/03/19/google-messages-real-time-location-sharing/" style="color:var(--muted); text-decoration:underline;">9to5 Google</a></div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://9to5google.com/2026/03/19/google-messages-real-time-location-sharing/" target="_blank" style="color:var(--muted); text-decoration:underline;">9to5 Google</a></div>
             </div>
         </div>
     </div>
@@ -1024,7 +1024,7 @@
                          style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;">
                 </div></a>
                 <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
-                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.zdnet.com/article/how-to-use-androids-photomoji-feature-in-google-messages-and-why-you-should/" style="color:var(--muted); text-decoration:underline;">ZD Net</a>, <a href="https://blog.google/products-and-platforms/platforms/android/7-new-messages-features/" style="color:var(--muted); text-decoration:underline;">Google Blog Post</a>, <a href="https://www.androidcentral.com/apps-software/google-messages-starts-rolling-out-screen-effects" style="color:var(--muted); text-decoration:underline;">Android Central</a></div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.zdnet.com/article/how-to-use-androids-photomoji-feature-in-google-messages-and-why-you-should/" target="_blank" style="color:var(--muted); text-decoration:underline;">ZD Net</a>, <a href="https://blog.google/products-and-platforms/platforms/android/7-new-messages-features/" target="_blank" style="color:var(--muted); text-decoration:underline;">Google Blog Post</a>, <a href="https://www.androidcentral.com/apps-software/google-messages-starts-rolling-out-screen-effects" target="_blank" style="color:var(--muted); text-decoration:underline;">Android Central</a></div>
             </div>
         </div>
     </div>
@@ -1056,7 +1056,7 @@
                 <div class="project-title" data-title>Compose Pill</div>
                 <a href="compose-pill.html" class="thumb-link"><div class="thumb t-gemini" data-transition-name="compose" style="background-image:url('Assets/Compose Pill/Compose Pill_Thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">CP</div></a>
                 <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
-                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.androidpolice.com/google-messages-beta-larger-compose-box-testing/" style="color:var(--muted); text-decoration:underline;">Android Police</a>, <a href="https://www.androidauthority.com/google-messages-compose-box-limit-apk-teardown-3541548/" style="color:var(--muted); text-decoration:underline;">Android Authority</a></div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.androidpolice.com/google-messages-beta-larger-compose-box-testing/" target="_blank" style="color:var(--muted); text-decoration:underline;">Android Police</a>, <a href="https://www.androidauthority.com/google-messages-compose-box-limit-apk-teardown-3541548/" target="_blank" style="color:var(--muted); text-decoration:underline;">Android Authority</a></div>
             </div>
         </div>
     </div>
@@ -1069,7 +1069,7 @@
                 <div class="project-title" data-title>Onboarding</div>
                 <a href="onboarding.html" class="thumb-link"><div class="thumb" data-transition-name="onboarding" style="background-image:url('Assets/Onboarding/Onboarding_thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">OB</div></a>
                 <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
-                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.androidpolice.com/google-messages-rolls-out-profile-discovery-privacy-features/" style="color:var(--muted); text-decoration:underline;">Android Police</a>, <a href="https://www.androidauthority.com/google-messages-profile-discovery-privacy-apk-teardown-3490456/" style="color:var(--muted); text-decoration:underline;">Android Authority</a></div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.androidpolice.com/google-messages-rolls-out-profile-discovery-privacy-features/" target="_blank" style="color:var(--muted); text-decoration:underline;">Android Police</a>, <a href="https://www.androidauthority.com/google-messages-profile-discovery-privacy-apk-teardown-3490456/" target="_blank" style="color:var(--muted); text-decoration:underline;">Android Authority</a></div>
             </div>
         </div>
     </div>
@@ -1090,7 +1090,7 @@
                 <div class="project-title" data-title>Token Color System for Theming</div>
                 <a href="color-system.html" class="thumb-link"><div class="thumb" data-transition-name="color-system" style="background-image:url('Assets/Color System/ColorSystem_Thumbnails.gif'); background-size:cover; background-position:center; color:transparent;">CS</div></a>
                 <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
-                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.cnet.com/tech/mobile/google-messages-now-lets-you-turn-blue-chat-bubbles-green-or-orange-or-purple/" style="color:var(--muted); text-decoration:underline;">CNET</a></div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.cnet.com/tech/mobile/google-messages-now-lets-you-turn-blue-chat-bubbles-green-or-orange-or-purple/" target="_blank" style="color:var(--muted); text-decoration:underline;">CNET</a></div>
             </div>
         </div>
     </div>
@@ -1112,7 +1112,7 @@
                 <div class="project-title" data-title>Google Minis</div>
                 <a href="google-minis.html" class="thumb-link"><div class="thumb" data-transition-name="google-minis" style="background-image:url('Assets/Google Minis/GoogleMinis_thumbnail.gif'); background-size:cover; background-position:center; color:transparent;">GM</div></a>
                 <div style="margin-top:4px; font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);">Press</div>
-                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.theverge.com/2017/5/11/15626690/google-allo-selfies-cartoon-stickers-emoji-neural-network-machine-learning" style="color:var(--muted); text-decoration:underline;">The Verge</a>, <a href="https://techcrunch.com/2018/10/30/googles-gboard-now-lets-you-create-a-set-of-emoji-that-look-like-you/" style="color:var(--muted); text-decoration:underline;">Techcrunch</a>, <a href="https://www.pcworld.com/article/402492/googles-gboard-mini-selfie-stickers.html" style="color:var(--muted); text-decoration:underline;">PC World</a></div>
+                <div class="entry-desc" style="margin-top:2px; font-family:'Inter',sans-serif; font-size:13px;"><a href="https://www.theverge.com/2017/5/11/15626690/google-allo-selfies-cartoon-stickers-emoji-neural-network-machine-learning" target="_blank" style="color:var(--muted); text-decoration:underline;">The Verge</a>, <a href="https://techcrunch.com/2018/10/30/googles-gboard-now-lets-you-create-a-set-of-emoji-that-look-like-you/" target="_blank" style="color:var(--muted); text-decoration:underline;">Techcrunch</a>, <a href="https://www.pcworld.com/article/402492/googles-gboard-mini-selfie-stickers.html" target="_blank" style="color:var(--muted); text-decoration:underline;">PC World</a></div>
             </div>
         </div>
     </div>

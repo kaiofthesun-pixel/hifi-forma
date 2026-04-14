@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Moirai+One&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oi&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -239,7 +239,7 @@
             justify-content: center;
             background: #2a2a2a;
             border-radius: 8px;
-            font-family: 'Moirai One', cursive;
+            font-family: 'Oi', cursive;
             font-style: normal;
             font-size: 64px;
             color: #fff;
@@ -259,13 +259,20 @@
             font-size: 32px;
             pointer-events: none;
             z-index: 20;
-            color: var(--text);
+            color: #fff;
             animation: fireworkBurst 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
         }
         @keyframes fireworkBurst {
             0% {
                 opacity: 1;
                 transform: translate(-50%, -50%) scale(0.3);
+                color: #fff;
+            }
+            40% {
+                color: #fff;
+            }
+            60% {
+                color: var(--text);
             }
             70% {
                 opacity: 1;
@@ -273,6 +280,7 @@
             100% {
                 opacity: 0;
                 transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy))) scale(1.2);
+                color: var(--text);
             }
         }
 
