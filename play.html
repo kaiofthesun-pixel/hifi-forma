@@ -286,98 +286,6 @@
             line-height: 1.4;
         }
 
-        /* ─── Kaomoji animation ─── */
-        .kaomoji-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-10deg);
-            font-size: 68px;
-            color: var(--text);
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            letter-spacing: -0.1em;
-            font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
-        }
-        .kao-arm-left {
-            display: inline-block;
-            transform-origin: right center;
-            animation: armWaveLeft 2s ease-in-out infinite;
-        }
-        .kao-arm-right {
-            display: inline-block;
-            transform-origin: left center;
-            animation: armWaveRight 2s ease-in-out infinite;
-        }
-        .kao-face {
-            display: inline-block;
-            animation: faceFloat 2s ease-in-out infinite;
-        }
-        .kao-eye-left, .kao-eye-right {
-            display: inline-block;
-            animation: eyeBlink 3s ease-in-out infinite;
-        }
-        .kao-eye-right {
-            animation-delay: 0.1s;
-        }
-        .kao-mouth {
-            display: inline-block;
-            animation: mouthWiggle 2s ease-in-out infinite;
-        }
-        .kao-cheek {
-            display: inline-block;
-            animation: cheekBounce 2s ease-in-out infinite;
-        }
-        .kao-paren-left {
-            display: inline-block;
-            transform-origin: right center;
-            animation: parenLeft 2s ease-in-out infinite;
-        }
-        .kao-paren-right {
-            display: inline-block;
-            transform-origin: left center;
-            animation: parenRight 2s ease-in-out infinite;
-        }
-        @keyframes armWaveLeft {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-15deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(-10deg); }
-        }
-        @keyframes armWaveRight {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(15deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(10deg); }
-        }
-        @keyframes faceFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        @keyframes eyeBlink {
-            0%, 45%, 55%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(0.1); }
-        }
-        @keyframes mouthWiggle {
-            0%, 100% { transform: translateY(0) scaleX(1); }
-            25% { transform: translateY(-1px) scaleX(1.05); }
-            50% { transform: translateY(0) scaleX(1); }
-            75% { transform: translateY(1px) scaleX(0.95); }
-        }
-        @keyframes cheekBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
-        }
-        @keyframes parenLeft {
-            0%, 100% { transform: rotate(0deg) translateX(0); }
-            50% { transform: rotate(-3deg) translateX(-1px); }
-        }
-        @keyframes parenRight {
-            0%, 100% { transform: rotate(0deg) translateX(0); }
-            50% { transform: rotate(3deg) translateX(1px); }
-        }
-
         /* ─── Footer copyright ─── */
         .footer-copyright {
             width: 100%;
@@ -538,9 +446,7 @@
                 <div class="lofi-desc">Create animated text emoticons</div>
             </div>
             <div class="lofi-thumb">
-                <div class="kaomoji-overlay">
-                    <span class="kao-arm-left">٩</span><span class="kao-paren-left">(</span><span class="kao-eye-left">´</span><span class="kao-mouth">ᗜ</span><span class="kao-eye-right">`</span><span class="kao-cheek">*</span><span class="kao-paren-right">)</span><span class="kao-arm-right">و</span>
-                </div>
+                <img src="Assets/Kaomoji/kaomoji_thumbnail.png" alt="Kaomoji Animation Maker">
             </div>
         </a>
     </div>

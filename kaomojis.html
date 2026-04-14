@@ -16,7 +16,7 @@
             --red: #c0392b;
             --text: #1c1c1c;
             --muted: #999;
-            --bg: #eae8e4;
+            --bg: #e6e1de;
         }
 
         html, body {
@@ -25,6 +25,7 @@
             overflow-x: hidden;
             overflow-y: scroll;
             font-family: 'Inter', sans-serif;
+            position: relative;
         }
 
         /* ─── Fixed nav ─── */
@@ -56,51 +57,38 @@
         }
         nav .play-link svg text { fill: var(--red); }
 
-        /* ─── Back button ─── */
-        .home-btn,
-        .back-btn {
-            position: fixed;
-            top: 28px;
-            z-index: 200;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 15px 10px 11px;
-            background: var(--bg);
-            border: none;
+        /* ─── Back button image ─── */
+        .back-image-link {
+            position: absolute;
+            top: 70px;
+            left: 120px;
+            z-index: 100;
+        }
+        .back-image {
+            height: 110px;
+            width: auto;
+            cursor: pointer;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .back-image.clicked {
+            transform: scale(0.75);
+        }
+
+        /* ─── Header image ─── */
+        .header-image {
+            width: 100%;
+            max-width: 700px;
+            margin: 140px auto -110px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            transform: rotate(-5deg);
+        }
+        .header-image img {
+            width: 100%;
+            height: auto;
+            display: block;
             border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text);
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transition: color 0.2s ease;
-        }
-        .home-btn {
-            left: 94px;
-        }
-        .back-btn {
-            left: 144px;
-        }
-        .home-btn:hover,
-        .back-btn:hover {
-            color: #000;
-        }
-        .home-btn:hover svg,
-        .back-btn:hover svg {
-            stroke: #000;
-        }
-        .home-btn svg,
-        .back-btn svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--text);
-            stroke-width: 2;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: stroke 0.2s ease;
         }
 
         /* ─── PLAY letter animations ─── */
@@ -177,6 +165,7 @@
             position: relative;
             user-select: none;
             will-change: transform;
+            container-type: inline-size;
         }
         .square.animating {
             transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -241,10 +230,13 @@
             border-radius: 8px;
             font-family: 'Oi', cursive;
             font-style: normal;
-            font-size: 64px;
+            font-size: clamp(32px, 18cqi, 64px);
             color: #fff;
             animation: yayFade 2s cubic-bezier(0.22, 0.61, 0.36, 1) 1s forwards;
             pointer-events: none;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
         @keyframes yayFade {
             0% { opacity: 1; }
@@ -1564,16 +1556,18 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -70%);
+            transform: translate(-50%, -50%);
             font-size: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: calc(100% - 40px);
+            max-width: calc(100% - 32px);
+            max-height: calc(100% - 120px);
             color: var(--text);
             font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
             text-align: center;
-            word-break: break-all;
+            white-space: nowrap;
+            overflow: hidden;
         }
         .kao-part {
             display: inline-block;
@@ -1611,14 +1605,11 @@
 </head>
 <body>
 
-<a href="index.html" class="home-btn">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-</a>
+<a href="#" class="back-image-link" onclick="handleBackClick(event)"><img src="Assets/Kaomoji/Back_button.png" alt="Back" class="back-image"></a>
 
-<a href="play.html" class="back-btn">
-    <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a4 4 0 0 1 0 8h-1"/></svg>
-    Back
-</a>
+<div class="header-image">
+    <img src="Assets/Kaomoji/kaomoji_header.png" alt="Kaomoji header">
+</div>
 
 <div class="create-bar">
     <div class="create-input-wrapper">
@@ -2015,6 +2006,35 @@
             }
             index++;
         });
+    }
+
+    // ── Back button click handler ──
+    function handleBackClick(e) {
+        e.preventDefault();
+        const img = e.currentTarget.querySelector('.back-image');
+        img.classList.add('clicked');
+        setTimeout(() => img.classList.remove('clicked'), 300);
+        setTimeout(() => history.back(), 600);
+    }
+
+    // ── Scale kaomoji text to fit ──
+    const KAOMOJI_PADDING = 32;
+    const KAOMOJI_CONTROLS_HEIGHT = 120;
+    const BASE_FONT_SIZE = 48;
+    const MIN_FONT_SIZE = 12;
+
+    function scaleKaomojiToFit(kaomojiEl) {
+        const container = kaomojiEl.parentElement;
+        const maxWidth = container.clientWidth - KAOMOJI_PADDING;
+        const maxHeight = container.clientHeight - KAOMOJI_CONTROLS_HEIGHT;
+
+        kaomojiEl.style.fontSize = BASE_FONT_SIZE + 'px';
+        const naturalWidth = kaomojiEl.scrollWidth;
+        const naturalHeight = kaomojiEl.scrollHeight;
+
+        const scale = Math.min(maxWidth / naturalWidth, maxHeight / naturalHeight, 1);
+        const newFontSize = Math.max(Math.floor(BASE_FONT_SIZE * scale), MIN_FONT_SIZE);
+        kaomojiEl.style.fontSize = newFontSize + 'px';
     }
 
     // ── Kaomoji configuration ──
@@ -3279,6 +3299,9 @@
         // FLIP: animate existing squares to new positions
         requestAnimationFrame(() => {
             flipAnimate(firstPositions, 'animating');
+            // Scale the kaomoji text to fit inside the thumbnail
+            const kaomojiEl = square.querySelector('.kaomoji-custom');
+            if (kaomojiEl) scaleKaomojiToFit(kaomojiEl);
         });
 
         // Remove animation class after it completes
