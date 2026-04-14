@@ -69,17 +69,17 @@
             width: auto;
             cursor: pointer;
             display: block;
-            transition: transform 0.3s ease;
+            transition: transform 0.15s ease;
         }
         .back-image.clicked {
-            transform: scale(0.75);
+            transform: scale(0.85);
         }
 
         /* ─── Header image ─── */
         .header-image {
             width: 100%;
             max-width: 700px;
-            margin: 140px auto -110px;
+            margin: 25px auto -125px;
             padding: 0 20px;
             box-sizing: border-box;
             transform: rotate(-5deg);
@@ -144,7 +144,7 @@
         /* ─── Grid of squares ─── */
         .squares-grid {
             position: relative;
-            margin: 60px auto 100px;
+            margin: 50px auto 100px;
             display: grid;
             grid-template-columns: repeat(4, 320px);
             gap: 40px;
@@ -1430,7 +1430,7 @@
         /* ─── Create kaomoji input bar ─── */
         .create-bar {
             position: relative;
-            margin: 140px auto 0;
+            margin: 185px auto 0;
             display: flex;
             align-items: flex-start;
             gap: 8px;
@@ -1444,7 +1444,7 @@
             font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
             border: none;
             border-radius: 25px;
-            background: rgba(0,0,0,0.06);
+            background: #fdf4f0;
             color: var(--text);
             outline: none;
             transition: background 0.2s ease, height 0.15s ease;
@@ -2013,8 +2013,8 @@
         e.preventDefault();
         const img = e.currentTarget.querySelector('.back-image');
         img.classList.add('clicked');
-        setTimeout(() => img.classList.remove('clicked'), 300);
-        setTimeout(() => history.back(), 600);
+        setTimeout(() => img.classList.remove('clicked'), 150);
+        setTimeout(() => history.back(), 400);
     }
 
     // ── Scale kaomoji text to fit ──
