@@ -179,10 +179,9 @@
         .square.visible {
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0.35s ease-out, transform 0.35s ease-out;
         }
         .square.animating {
-            transition: opacity 0.6s ease-out, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-in-out !important;
         }
         .square.wrap-fade-out {
             animation: fadeOut 0.3s ease-out forwards;
@@ -244,7 +243,7 @@
             border-radius: 8px;
             font-family: 'Oi', cursive;
             font-style: normal;
-            font-size: min(22cqi, 70px);
+            font-size: min(16cqi, 50px);
             color: #e88a75;
             animation: yayFade 2s cubic-bezier(0.22, 0.61, 0.36, 1) 1s forwards;
             pointer-events: none;
@@ -1480,7 +1479,7 @@
             font-size: 14px;
             font-family: 'Inter', sans-serif;
         }
-        .create-input:focus {
+        .create-input.has-shadow {
             box-shadow: 0 8px 20px rgba(0,0,0,0.07);
         }
         .create-btn {
@@ -1652,7 +1651,7 @@
 
 <div class="create-bar">
     <div class="create-input-wrapper">
-        <textarea class="create-input" id="kaomoji-input" placeholder="" rows="1"></textarea>
+        <textarea class="create-input has-shadow" id="kaomoji-input" placeholder="" rows="1"></textarea>
         <div class="suggestion-row">
             <button class="suggestion-chip" data-kaomoji="⸜(｡˃ ᵕ ˂ )⸝♡">⸜(｡˃ ᵕ ˂ )⸝♡</button>
             <button class="suggestion-chip" data-kaomoji="(*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ">(*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ</button>
@@ -1956,6 +1955,10 @@
             }
         }
         setTimeout(type, 500);
+
+        input.addEventListener('focus', () => {
+            input.placeholder = '';
+        });
     })();
 
     // ── Staggered chip entrance animation ──
