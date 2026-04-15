@@ -1599,13 +1599,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            max-width: calc(100% - 32px);
+            max-width: calc(100% - 16px);
             max-height: calc(100% - 120px);
             color: #000;
             font-family: 'Noto Sans JP', 'MS Gothic', sans-serif;
             text-align: center;
             white-space: nowrap;
-            overflow: hidden;
+            overflow: visible;
         }
         .kao-part {
             display: inline-block;
@@ -2102,7 +2102,7 @@
     }
 
     // ── Scale kaomoji text to fit ──
-    const KAOMOJI_PADDING = 32;
+    const KAOMOJI_PADDING = 16;
     const KAOMOJI_CONTROLS_HEIGHT = 120;
     const BASE_FONT_SIZE = 48;
     const MIN_FONT_SIZE = 12;
@@ -3309,7 +3309,7 @@
         });
 
         // Create the square HTML
-        const celebrationWords = ['Yay!', 'Woohoo!', 'Nice!', 'Sweet!', 'Yes!', 'Woo!', 'Rad!', 'Cool!', 'Cute!', 'Love it!'];
+        const celebrationWords = ['Yay!', 'Nice!', 'Sweet!', 'Yes!', 'Woo!', 'Rad!', 'Cool!', 'Cute!', 'Love it!'];
         const randomWord = celebrationWords[Math.floor(Math.random() * celebrationWords.length)];
 
         const square = document.createElement('div');
