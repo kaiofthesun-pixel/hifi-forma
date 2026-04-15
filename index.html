@@ -129,12 +129,13 @@
             pointer-events: auto;
         }
         .up-button.scaled {
-            transform: scale(1.5);
+            transform: scale(1.5) translateY(-5px);
             animation: up-bob 1.5s ease-in-out infinite;
+            color: #fff;
         }
         @keyframes up-bob {
-            0%, 100% { transform: scale(1.5) translateY(0); }
-            50% { transform: scale(1.5) translateY(-6px); }
+            0%, 100% { transform: scale(1.5) translateY(-5px); }
+            50% { transform: scale(1.5) translateY(-11px); }
         }
         .up-button:hover {
             color: var(--red);
