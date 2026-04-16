@@ -350,7 +350,7 @@
         }
         .kao-eye {
             display: inline-block;
-            animation: kaoBlink 4s ease-in-out infinite;
+            animation: kaoBlink var(--kao-speed, 4s) ease-in-out infinite;
             transform-origin: center center;
         }
         @keyframes kaoBlink {
@@ -437,12 +437,12 @@
         }
         .cat-eye-left {
             display: inline-block;
-            animation: catBlink 4s ease-in-out infinite, catLook 6s ease-in-out infinite;
+            animation: catBlink var(--kao-speed, 4s) ease-in-out infinite, catLook var(--kao-speed, 6s) ease-in-out infinite;
             transform-origin: center center;
         }
         .cat-eye-right {
             display: inline-block;
-            animation: catBlink 4s ease-in-out infinite, catLook 6s ease-in-out infinite;
+            animation: catBlink var(--kao-speed, 4s) ease-in-out infinite, catLook var(--kao-speed, 6s) ease-in-out infinite;
             transform-origin: center center;
             margin-left: -6px;
         }
@@ -548,12 +548,12 @@
         }
         .bear-eye-l, .bear-eye-r {
             display: inline-block;
-            animation: bearEyeBlink 2.5s ease-in-out infinite;
+            animation: bearEyeBlink var(--kao-speed, 2.5s) ease-in-out infinite;
             transform-origin: center center;
         }
         .bear-nose {
             display: inline-block;
-            animation: bearNoseTwitch 3s ease-in-out infinite;
+            animation: bearNoseTwitch var(--kao-speed, 3s) ease-in-out infinite;
             transform-origin: center center;
         }
         @keyframes bearEarL {
@@ -668,26 +668,26 @@
         .cheer-arm-left {
             display: inline-block;
             transform-origin: right center;
-            animation: cheerArmLeft 2s ease-in-out infinite;
+            animation: cheerArmLeft var(--kao-speed, 2s) ease-in-out infinite;
         }
         .cheer-arm-right {
             display: inline-block;
             transform-origin: left center;
-            animation: cheerArmRight 2s ease-in-out infinite;
+            animation: cheerArmRight var(--kao-speed, 2s) ease-in-out infinite;
         }
         .cheer-paren-left {
             display: inline-block;
             transform-origin: right center;
-            animation: cheerParenLeft 2s ease-in-out infinite;
+            animation: cheerParenLeft var(--kao-speed, 2s) ease-in-out infinite;
         }
         .cheer-paren-right {
             display: inline-block;
             transform-origin: left center;
-            animation: cheerParenRight 2s ease-in-out infinite;
+            animation: cheerParenRight var(--kao-speed, 2s) ease-in-out infinite;
         }
         .cheer-eye {
             display: inline-block;
-            animation: cheerBlink 3s ease-in-out infinite;
+            animation: cheerBlink var(--kao-speed, 3s) ease-in-out infinite;
             transform-origin: center center;
         }
         .cheer-eye-right {
@@ -695,11 +695,11 @@
         }
         .cheer-mouth {
             display: inline-block;
-            animation: cheerMouth 2s ease-in-out infinite;
+            animation: cheerMouth var(--kao-speed, 2s) ease-in-out infinite;
         }
         .cheer-cheek {
             display: inline-block;
-            animation: cheerCheek 2s ease-in-out infinite;
+            animation: cheerCheek var(--kao-speed, 2s) ease-in-out infinite;
         }
         @keyframes cheerArmLeft {
             0%, 100% { transform: rotate(0deg); }
@@ -768,7 +768,7 @@
         }
         .bunny-eye {
             display: inline-block;
-            animation: bunnyBlink 4s ease-in-out infinite;
+            animation: bunnyBlink var(--kao-speed, 4s) ease-in-out infinite;
             transform-origin: center center;
         }
         .bunny-body {
@@ -904,12 +904,12 @@
         }
         .excited-eye-left {
             display: inline-block;
-            animation: excitedEyeBlink 3s ease-in-out infinite;
+            animation: excitedEyeBlink var(--kao-speed, 3s) ease-in-out infinite;
             transform-origin: center center;
         }
         .excited-eye-right {
             display: inline-block;
-            animation: excitedEyeBlink 3s ease-in-out infinite;
+            animation: excitedEyeBlink var(--kao-speed, 3s) ease-in-out infinite;
             transform-origin: center center;
             animation-delay: 0.05s;
         }
@@ -987,12 +987,12 @@
         }
         .cute-eye-left {
             display: inline-block;
-            animation: cuteEyeBlink 4s ease-in-out infinite;
+            animation: cuteEyeBlink var(--kao-speed, 4s) ease-in-out infinite;
             transform-origin: center center;
         }
         .cute-eye-right {
             display: inline-block;
-            animation: cuteEyeBlink 4s ease-in-out infinite;
+            animation: cuteEyeBlink var(--kao-speed, 4s) ease-in-out infinite;
             transform-origin: center center;
             animation-delay: 0.05s;
         }
@@ -1051,7 +1051,7 @@
         }
         .ghost-eye-left, .ghost-eye-right {
             display: inline-block;
-            animation: ghostBlink 3.5s ease-in-out infinite;
+            animation: ghostBlink var(--kao-speed, 3.5s) ease-in-out infinite;
             transform-origin: center center;
         }
         .ghost-eye-right {
@@ -1112,7 +1112,7 @@
         }
         .magic-eye-left, .magic-eye-right {
             display: inline-block;
-            animation: magicBlink 4s ease-in-out infinite;
+            animation: magicBlink var(--kao-speed, 4s) ease-in-out infinite;
             transform-origin: center center;
         }
         .magic-eye-right {
@@ -1237,7 +1237,7 @@
         }
         .kiss-eye {
             display: inline-block;
-            animation: kissBlink 4s ease-in-out infinite;
+            animation: kissBlink var(--kao-speed, 4s) ease-in-out infinite;
             transform-origin: center center;
         }
         .kiss-mouth {
@@ -2198,6 +2198,29 @@
     // ── Keyframe definitions for each kaomoji ──
     const keyframeTemplates = {
         '': {
+            'kaoBubble': (w) => `
+                @keyframes kaoBubble {
+                    0%, 100% { transform: translateY(0) scale(1); }
+                    25% { transform: translateY(${-3*w}px) scale(${1 + 0.1*w}); }
+                    50% { transform: translateY(${-1*w}px) scale(${1 - 0.05*w}); }
+                    75% { transform: translateY(${-4*w}px) scale(${1 + 0.05*w}); }
+                }`,
+            'kaoFish': (w) => `
+                @keyframes kaoFish {
+                    0%, 100% { transform: translateX(0) rotate(0deg); }
+                    15% { transform: translateX(${3*w}px) rotate(${5*w}deg); }
+                    30% { transform: translateX(${-2*w}px) rotate(${-3*w}deg); }
+                    50% { transform: translateX(${2*w}px) rotate(${2*w}deg); }
+                    70% { transform: translateX(${-3*w}px) rotate(${-4*w}deg); }
+                    85% { transform: translateX(${1*w}px) rotate(${3*w}deg); }
+                }`,
+            'kaoSparkle': (w) => `
+                @keyframes kaoSparkle {
+                    0%, 100% { transform: scale(1); }
+                    25% { transform: scale(${1 + 0.2*w}); }
+                    50% { transform: scale(${1 - 0.1*w}); }
+                    75% { transform: scale(${1 + 0.15*w}); }
+                }`,
             'kaoTail': (w) => `
                 @keyframes kaoTail {
                     0% { transform: rotate(${-2*w}deg); }
