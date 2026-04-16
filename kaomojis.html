@@ -174,11 +174,14 @@
             will-change: transform, opacity;
             container-type: inline-size;
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px) scale(0.95);
+        }
+        .square.entering {
+            transition: opacity 0.6s ease-out, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .square.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
         .square.animating {
             transition: opacity 0.6s ease-out, transform 0.6s ease-in-out !important;
@@ -1945,7 +1948,7 @@
     // ── Typing placeholder animation ──
     (function() {
         const input = document.getElementById('kaomoji-input');
-        const text = 'Enter your favorite kaomoji';
+        const text = 'Enter a Kaomoji, and we\'ll animate it.';
         let i = 0;
         function type() {
             if (i <= text.length) {
@@ -1976,13 +1979,17 @@
     // ── Staggered square entrance animation ──
     (function() {
         const squares = document.querySelectorAll('.square');
+        squares.forEach(square => square.classList.add('entering'));
         setTimeout(() => {
             squares.forEach((square, index) => {
                 setTimeout(() => {
                     square.classList.add('visible');
-                }, index * 100);
+                    square.addEventListener('transitionend', () => {
+                        square.classList.remove('entering');
+                    }, { once: true });
+                }, index * 80);
             });
-        }, 50);
+        }, 200);
     })();
 
     // ── Suggestion chips ──
