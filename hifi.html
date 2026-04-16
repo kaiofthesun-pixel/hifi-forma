@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiFi — Allen K Lau</title>
+    <link rel="icon" type="image/png" href="Assets/About/A.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #c0392b;
+            --text: #1c1c1c;
+            --muted: #999;
+            --bg: #ffffff;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            overflow-x: hidden;
+            overflow-y: scroll;
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scrollbar-gutter: stable both-edges;
+        }
+
+        /* ─── Fixed nav ─── */
+        nav {
+            position: fixed;
+            top: 28px;
+            right: 44px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+        nav a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+        nav a:hover { color: var(--text); }
+        nav .play-link:hover { color: var(--red); }
+        nav .play-link {
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+            color: var(--muted);
+        }
+
+        /* ─── Back button ─── */
+        .back-image-link {
+            position: fixed;
+            top: 28px;
+            left: 44px;
+            z-index: 200;
+        }
+        .back-image {
+            height: 20px;
+            width: auto;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        .back-image:hover {
+            transform: scale(1.05);
+        }
+        .back-image.clicked {
+            transform: scale(0.95);
+        }
+
+        /* ─── Content area ─── */
+        .content {
+            padding: 120px 44px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ─── Compatibility button ─── */
+        .compat-btn {
+            padding: 16px 32px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: var(--text);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+        .compat-btn:hover {
+            background: #333;
+        }
+        .compat-btn:active {
+            transform: scale(0.98);
+        }
+        .compat-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* ─── Analysis result ─── */
+        .analysis-result {
+            margin-top: 32px;
+            padding: 24px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text);
+            display: none;
+        }
+        .analysis-result.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        .analysis-result h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        .analysis-result .rating {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #2ecc71;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .analysis-result p {
+            margin-bottom: 12px;
+        }
+        .analysis-result ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        .analysis-result li {
+            margin-bottom: 8px;
+        }
+        .analysis-result .spec-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .analysis-result .spec-box {
+            padding: 16px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .analysis-result .spec-box h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .analysis-result .spec-box p {
+            margin: 0;
+            font-size: 13px;
+        }
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+        .loading.visible {
+            display: flex;
+        }
+        .loading .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #eee;
+            border-top-color: var(--text);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+<a href="#" class="back-image-link" onclick="handleBackClick(event)"><img src="Assets/Kaomoji/Back_button.png" alt="Back" class="back-image"></a>
+
+<nav>
+    <a href="index.html">Work</a>
+    <a href="play.html" class="play-link">PLAY</a>
+</nav>
+
+<div class="content">
+    <button class="compat-btn" id="analyze-btn">Analyze Compatibility</button>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span>Analyzing compatibility...</span>
+    </div>
+
+    <div class="analysis-result" id="analysis-result">
+        <span class="rating">Excellent Match</span>
+        <h3>Luxman L-509Z + Pure Audio Project TRIO15 Classic</h3>
+
+        <div class="spec-compare">
+            <div class="spec-box">
+                <h4>Amplifier</h4>
+                <p><strong>Luxman L-509Z</strong></p>
+                <p>120W @ 8Ω / 220W @ 4Ω</p>
+                <p>Damping Factor: 330</p>
+                <p>S/N Ratio: 106dB</p>
+            </div>
+            <div class="spec-box">
+                <h4>Speaker</h4>
+                <p><strong>TRIO15 Classic</strong></p>
+                <p>Impedance: 8Ω nominal</p>
+                <p>Sensitivity: ~97dB</p>
+                <p>Open Baffle Design</p>
+            </div>
+        </div>
+
+        <p><strong>Power Match:</strong> The TRIO15 Classic's high sensitivity (97dB) means it requires very little power to achieve high SPLs. The Luxman's 120W into 8Ω provides massive headroom — you'll likely never use more than a few watts for normal listening.</p>
+
+        <p><strong>Impedance Compatibility:</strong> The TRIO15's 8Ω nominal impedance is ideal for the L-509Z. The amplifier's exceptional damping factor of 330 ensures tight bass control, which complements the open baffle's naturally extended low-end.</p>
+
+        <p><strong>Sonic Synergy:</strong></p>
+        <ul>
+            <li>The Luxman's refined, slightly warm character pairs beautifully with the TRIO15's transparent open baffle presentation</li>
+            <li>LECUA-EX volume control preserves micro-dynamics at low volumes — ideal for the TRIO15's revealing nature</li>
+            <li>The high damping factor helps control the 15" woofers without over-damping the natural open baffle sound</li>
+        </ul>
+
+        <p><strong>Verdict:</strong> This is an excellent pairing. The Luxman L-509Z has more than enough power and current delivery for the efficient TRIO15 Classic, while its refined amplification circuitry (LIFES 1.0) will extract maximum detail from these revealing speakers.</p>
+    </div>
+</div>
+
+<script>
+    function handleBackClick(e) {
+        e.preventDefault();
+        const img = document.querySelector('.back-image');
+        img.classList.add('clicked');
+        setTimeout(() => img.classList.remove('clicked'), 150);
+        setTimeout(() => history.back(), 400);
+    }
+
+    // Compatibility analysis
+    document.getElementById('analyze-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('analyze-btn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('analysis-result');
+
+        btn.disabled = true;
+        loading.classList.add('visible');
+        result.classList.remove('visible');
+
+        // Simulate LLM analysis delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        loading.classList.remove('visible');
+        result.classList.add('visible');
+        btn.disabled = false;
+    });
+</script>
+
+</body>
+</html>
