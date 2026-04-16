@@ -2955,13 +2955,13 @@
 
                 // Custom kaomoji: detect animation type from inline style animation name
                 if (cls.includes('kao-part')) {
-                    // Cache computed style to avoid multiple calls
-                    const computed = getComputedStyle(el);
-                    let animName = computed.animationName || '';
+                    // Try multiple ways to get animation name
+                    let animName = getComputedStyle(el).animationName || '';
                     if (!animName || animName === 'none') {
                         animName = el.style.animationName || '';
                     }
                     if (!animName || animName === 'none') {
+                        // Parse from style attribute directly
                         const styleAttr = el.getAttribute('style') || '';
                         const match = styleAttr.match(/animation:\s*([a-zA-Z0-9_-]+)/);
                         if (match) animName = match[1];
@@ -2977,6 +2977,7 @@
                     if (animName.startsWith('sparkle')) return 'customSparkle';
                     if (animName.startsWith('defaultBounce')) return 'customDefault';
                     if (animName.startsWith('default')) return 'customDefault';
+                    // Fallback: if it's a kao-part, always animate it
                     return 'customDefault';
                 }
 
@@ -3028,11 +3029,6 @@
             const startX = (w - totalWidth) / 2;
             const centerY = h / 2 + fontSize / 3;
 
-            // Pre-compute constants used in animation calculations
-            const DEG_TO_RAD = Math.PI / 180;
-            const PI_DIV_25 = Math.PI / 25;
-            const PI_DIV_50 = Math.PI / 50;
-
             // Function to draw a frame
             function drawFrame(timeSec) {
                 ctx.clearRect(0, 0, w, h);
@@ -3057,17 +3053,17 @@
                     ctx.save();
 
                     if (info.animType === 'tail') {
-                        const rot = getKaoTailRot(animPct, kaoWild) * DEG_TO_RAD;
+                        const rot = getKaoTailRot(animPct, kaoWild) * Math.PI / 180;
                         ctx.translate(cx, cy + fontSize/4);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -(cy + fontSize/4));
                     } else if (info.animType === 'earLeft') {
-                        const rot = getKaoEarLeftRot(animPct, kaoWild) * DEG_TO_RAD;
+                        const rot = getKaoEarLeftRot(animPct, kaoWild) * Math.PI / 180;
                         ctx.translate(cx, cy + fontSize/4);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -(cy + fontSize/4));
                     } else if (info.animType === 'earRight') {
-                        const rot = getKaoEarRightRot(animPct, kaoWild) * DEG_TO_RAD;
+                        const rot = getKaoEarRightRot(animPct, kaoWild) * Math.PI / 180;
                         ctx.translate(cx, cy + fontSize/4);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -(cy + fontSize/4));
@@ -3077,99 +3073,104 @@
                         ctx.scale(1, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'armLeft') {
-                        const rot = getKaoEarLeftRot(animPct, kaoWild * 0.8) * DEG_TO_RAD;
+                        const rot = getKaoEarLeftRot(animPct, kaoWild * 0.8) * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'armRight') {
-                        const rot = getKaoEarRightRot(animPct, kaoWild * 0.8) * DEG_TO_RAD;
+                        const rot = getKaoEarRightRot(animPct, kaoWild * 0.8) * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'face') {
-                        const ty = Math.sin(animPct * PI_DIV_50) * 2 * kaoWild;
+                        const ty = Math.sin(animPct * Math.PI / 50) * 2 * kaoWild;
                         ctx.translate(0, ty);
                     } else if (info.animType === 'heart') {
-                        const scale = 1 + Math.sin(animPct * PI_DIV_25) * 0.1 * kaoWild;
+                        const scale = 1 + Math.sin(animPct * Math.PI / 25) * 0.1 * kaoWild;
                         ctx.translate(cx, cy);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'whisker') {
-                        const rot = getKaoEarLeftRot(animPct, kaoWild * 0.3) * DEG_TO_RAD;
+                        const rot = getKaoEarLeftRot(animPct, kaoWild * 0.3) * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'paren') {
-                        const rot = Math.sin(animPct * PI_DIV_50) * 3 * kaoWild * DEG_TO_RAD;
+                        // Parentheses sway
+                        const rot = Math.sin(animPct * Math.PI / 50) * 3 * kaoWild * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     }
                     // First kaomoji special types
                     else if (info.animType === 'bubble') {
-                        const ty = Math.sin(animPct * PI_DIV_50) * -3 * kaoWild;
-                        const scale = 1 + Math.sin(animPct * PI_DIV_25) * 0.1 * kaoWild;
+                        const ty = Math.sin(animPct * Math.PI / 50) * -3 * kaoWild;
+                        const scale = 1 + Math.sin(animPct * Math.PI / 25) * 0.1 * kaoWild;
                         ctx.translate(cx, cy + ty);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'fish') {
-                        const tx = Math.sin(animPct * PI_DIV_50) * 3 * kaoWild;
-                        const rot = Math.sin(animPct * PI_DIV_25) * 10 * kaoWild * DEG_TO_RAD;
+                        const tx = Math.sin(animPct * Math.PI / 50) * 3 * kaoWild;
+                        const rot = Math.sin(animPct * Math.PI / 25) * 10 * kaoWild * Math.PI / 180;
                         ctx.translate(cx + tx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'sparkle') {
-                        const scale = 0.8 + Math.sin(animPct * PI_DIV_25) * 0.3 * kaoWild;
+                        const scale = 0.8 + Math.sin(animPct * Math.PI / 25) * 0.3 * kaoWild;
                         ctx.translate(cx, cy);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'ears') {
-                        const rot = Math.sin(animPct * PI_DIV_50) * 5 * kaoWild * DEG_TO_RAD;
+                        // Both ears together
+                        const rot = Math.sin(animPct * Math.PI / 50) * 5 * kaoWild * Math.PI / 180;
                         ctx.translate(cx, cy + fontSize/4);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -(cy + fontSize/4));
                     } else if (info.animType === 'nose') {
-                        const ty = Math.sin(animPct * PI_DIV_50) * 1 * kaoWild;
-                        const scale = 1 + Math.sin(animPct * PI_DIV_25) * 0.05 * kaoWild;
+                        const ty = Math.sin(animPct * Math.PI / 50) * 1 * kaoWild;
+                        const scale = 1 + Math.sin(animPct * Math.PI / 25) * 0.05 * kaoWild;
                         ctx.translate(cx, cy + ty);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'mouth') {
-                        const scale = 1 + Math.sin(animPct * PI_DIV_25) * 0.1 * kaoWild;
+                        const scale = 1 + Math.sin(animPct * Math.PI / 25) * 0.1 * kaoWild;
                         ctx.translate(cx, cy);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'bounce') {
-                        const ty = Math.sin(animPct * PI_DIV_25) * -3 * kaoWild;
+                        const ty = Math.sin(animPct * Math.PI / 25) * -3 * kaoWild;
                         ctx.translate(0, ty);
                     } else if (info.animType === 'sway') {
-                        const tx = Math.sin(animPct * PI_DIV_50) * 2 * kaoWild;
+                        const tx = Math.sin(animPct * Math.PI / 50) * 2 * kaoWild;
                         ctx.translate(tx, 0);
                     } else if (info.animType === 'bolt') {
-                        const rot = Math.sin(animPct * PI_DIV_25) * 15 * kaoWild * DEG_TO_RAD;
+                        const rot = Math.sin(animPct * Math.PI / 25) * 15 * kaoWild * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'star') {
-                        const scale = 0.9 + Math.sin(animPct * PI_DIV_25) * 0.2 * kaoWild;
-                        const rot = Math.sin(animPct * PI_DIV_50) * 10 * kaoWild * DEG_TO_RAD;
+                        const scale = 0.9 + Math.sin(animPct * Math.PI / 25) * 0.2 * kaoWild;
+                        const rot = Math.sin(animPct * Math.PI / 50) * 10 * kaoWild * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'genericAnim') {
-                        const ty = Math.sin(animPct * PI_DIV_50) * 2 * kaoWild;
+                        // Fallback for any animated element - subtle bounce
+                        const ty = Math.sin(animPct * Math.PI / 50) * 2 * kaoWild;
                         ctx.translate(0, ty);
                     }
                     // Custom kaomoji animation types
                     else if (info.animType === 'customArm') {
-                        const rot = Math.sin(animPct * PI_DIV_50) * 15 * kaoWild * DEG_TO_RAD;
-                        const ty = Math.sin(animPct * PI_DIV_25) * -3 * kaoWild;
+                        // Arm wave: rotate and translate Y
+                        const rot = Math.sin(animPct * Math.PI / 50) * 15 * kaoWild * Math.PI / 180;
+                        const ty = Math.sin(animPct * Math.PI / 25) * -3 * kaoWild;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(0, ty);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'customEye') {
+                        // Eye blink: scale Y with periodic blink
                         const blinkCycle = (animPct % 100) / 100;
                         let scale = 1;
                         if (blinkCycle > 0.85 && blinkCycle < 0.92) {
@@ -3179,33 +3180,39 @@
                         ctx.scale(1, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'customMouth') {
-                        const scale = 1 + Math.sin(animPct * PI_DIV_25) * 0.1 * kaoWild;
-                        const ty = Math.sin(animPct * PI_DIV_25) * -1 * kaoWild;
+                        // Mouth wiggle: scale and translate
+                        const scale = 1 + Math.sin(animPct * Math.PI / 25) * 0.1 * kaoWild;
+                        const ty = Math.sin(animPct * Math.PI / 25) * -1 * kaoWild;
                         ctx.translate(cx, cy + ty);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'customCheek') {
-                        const scale = 1 + Math.sin(animPct * PI_DIV_25) * 0.15 * kaoWild;
+                        // Cheek bounce: scale with bounce
+                        const scale = 1 + Math.sin(animPct * Math.PI / 25) * 0.15 * kaoWild;
                         ctx.translate(cx, cy);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'customEar') {
-                        const rot = Math.sin(animPct * PI_DIV_25) * 8 * kaoWild * DEG_TO_RAD;
+                        // Ear twitch: small rotation
+                        const rot = Math.sin(animPct * Math.PI / 25) * 8 * kaoWild * Math.PI / 180;
                         ctx.translate(cx, cy + fontSize/4);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -(cy + fontSize/4));
                     } else if (info.animType === 'customParen') {
-                        const rot = Math.sin(animPct * PI_DIV_50) * 5 * kaoWild * DEG_TO_RAD;
+                        // Paren sway: gentle rotation
+                        const rot = Math.sin(animPct * Math.PI / 50) * 5 * kaoWild * Math.PI / 180;
                         ctx.translate(cx, cy);
                         ctx.rotate(rot);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'customSparkle') {
-                        const scale = 0.8 + Math.sin(animPct * PI_DIV_25) * 0.3 * kaoWild;
+                        // Sparkle: scale pulse
+                        const scale = 0.8 + Math.sin(animPct * Math.PI / 25) * 0.3 * kaoWild;
                         ctx.translate(cx, cy);
                         ctx.scale(scale, scale);
                         ctx.translate(-cx, -cy);
                     } else if (info.animType === 'customDefault') {
-                        const ty = Math.sin(animPct * PI_DIV_50) * 2 * kaoWild;
+                        // Default: subtle bounce
+                        const ty = Math.sin(animPct * Math.PI / 50) * 2 * kaoWild;
                         ctx.translate(0, ty);
                     }
 
