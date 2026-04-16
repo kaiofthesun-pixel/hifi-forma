@@ -163,7 +163,7 @@
             --kao-wild: 1;
             width: 320px;
             height: 320px;
-            background: #fefaf8;
+            background: #FFF8F4;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
@@ -2144,18 +2144,18 @@
         { id: '-12' }
     ];
 
-    // ── Speed calculation: slowest = 8.25s, fastest = 2.0625s ──
+    // ── Speed calculation: slowest = 8.25s, fastest = 0.4s ──
     function calcSpeed(sliderVal) {
         const slowest = 8.25;
-        const fastest = 2.0625;
+        const fastest = 0.4;
         const t = (sliderVal - 1) / (SLIDER_MAX - 1);
         return slowest - t * (slowest - fastest);
     }
 
-    // ── Frenzy calculation: scales from 0.3 to 5.0 for crazier movement ──
+    // ── Frenzy calculation: scales from 0.3 to 9 for crazier movement ──
     function calcFrenzy(sliderVal) {
         const min = 0.3;
-        const max = 5.0;
+        const max = 9;
         const t = (sliderVal - 1) / (SLIDER_MAX - 1);
         return min + t * (max - min);
     }
