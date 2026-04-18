@@ -512,6 +512,28 @@
             white-space: nowrap;
         }
 
+        .arc-label {
+            position: absolute;
+            right: -224px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #FF6F00;
+            white-space: nowrap;
+        }
+
+        .arc-label.arc-label-left {
+            right: auto;
+            left: -202px;
+        }
+
+        .arc-label.arc-label-first {
+            right: -176px;
+        }
+
         .drop-zone-arrows .flow-arrow,
         .flow-arrow {
             font-size: 18px;
@@ -1202,7 +1224,7 @@
         <a href="play.html" class="back-button">Back</a>
         <div class="title">HiFi Component Match Analyzer</div>
 
-        <div class="step-label">Start here → Select component(s)</div>
+        <div class="step-label">↓ Start here. Select component(s) ↓</div>
         <div class="accordion">
             <div class="accordion-item">
                 <div class="accordion-header" data-category="source">
@@ -1358,6 +1380,7 @@
                 </div>
                 <div class="chain-connector" data-chain="0-1">
                     <span class="connector-arrow">↓</span>
+                    <span class="arc-label arc-label-first">GAIN STAGING</span>
                 </div>
             </div>
             <div class="drop-zone-wrapper">
@@ -1374,6 +1397,7 @@
                 </div>
                 <div class="chain-connector" data-chain="1-2">
                     <span class="connector-arrow">↓</span>
+                    <span class="arc-label arc-label-left">LINE-LEVEL SIGNAL</span>
                 </div>
             </div>
             <div class="drop-zone-wrapper">
@@ -1390,6 +1414,7 @@
                 </div>
                 <div class="chain-connector" data-chain="2-3">
                     <span class="connector-arrow">↓</span>
+                    <span class="arc-label">SPEAKER-LEVEL SIGNAL</span>
                 </div>
             </div>
             <div class="drop-zone-wrapper">
@@ -1961,6 +1986,42 @@
         html += `</div>`;
 
         analysisContent.innerHTML = html;
+
+        // Auto-scroll to analysis card when all components are selected
+        if (isComplete) {
+            setTimeout(() => {
+                const rightPanel = document.querySelector('.right-panel');
+                smoothScrollTo(rightPanel, analysisCard, 1200);
+            }, 800);
+        }
+    }
+
+    function smoothScrollTo(container, element, duration) {
+        const containerRect = container.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const targetPosition = container.scrollTop + elementRect.top - containerRect.top - 40;
+        const startPosition = container.scrollTop;
+        const distance = targetPosition - startPosition;
+        let startTime = null;
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function animation(currentTime) {
+            if (startTime === null) startTime = currentTime;
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = easeInOutCubic(progress);
+
+            container.scrollTop = startPosition + distance * easeProgress;
+
+            if (elapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        }
+
+        requestAnimationFrame(animation);
     }
 
     function setEligibleZones(category) {
@@ -2124,15 +2185,15 @@
     let animationProgress = 0;
     let animationDirection = 1;
     let pauseCounter = 0;
-    const PAUSE_FRAMES = 120; // ~2 seconds at 60fps
+    const PAUSE_FRAMES = 45; // ~0.75 seconds at 60fps
 
     // Rotation state
     let flowerRotation = 0;
     let spinProgress = 0;
     let isSpinning = false;
     let spinCooldown = 0;
-    const SPIN_COOLDOWN_MIN = 300; // ~5 seconds minimum between spins
-    const SPIN_COOLDOWN_MAX = 600; // ~10 seconds maximum
+    const SPIN_COOLDOWN_MIN = 120; // ~2 seconds minimum between spins
+    const SPIN_COOLDOWN_MAX = 240; // ~4 seconds maximum
 
     function easeOutCubic(t) {
         return 1 - Math.pow(1 - t, 3);
