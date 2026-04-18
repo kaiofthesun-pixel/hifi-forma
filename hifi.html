@@ -25,11 +25,25 @@
         .left-panel {
             width: 402px;
             min-width: 402px;
-            background: #fff;
+            background: #F1EFEB;
             padding: 28px 28px 14px 8px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+        }
+
+        .back-button {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #999;
+            text-decoration: none;
+            margin-bottom: 20px;
+            margin-top: -12px;
+            transition: color 0.2s ease;
+        }
+
+        .back-button:hover {
+            color: #1c1c1c;
         }
 
         .title {
@@ -49,12 +63,18 @@
             color: #999;
             letter-spacing: 0.03em;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         .right-panel .step-label {
             position: absolute;
-            top: 136px;
-            left: 34px;
+            top: 156px;
+            left: 84px;
+        }
+
+        .step-label.step-two,
+        .step-label.step-three {
+            color: #1c1c1c;
         }
 
         .step-label.step-three {
@@ -81,7 +101,7 @@
         }
 
         .results-card {
-            background: #fff;
+            background: #F1EFEB;
             border-radius: 24px;
             padding: 32px;
             min-height: 400px;
@@ -344,11 +364,23 @@
             aspect-ratio: 4 / 3;
             border-radius: 12px;
             margin-bottom: 12px;
-            overflow: hidden;
+            overflow: visible;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: box-shadow 0.3s ease;
+        }
+
+        .component-thumb img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .component-thumb:hover img {
+            transform: scale(1.05);
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
         }
 
         .component-card.selected .component-thumb {
@@ -357,12 +389,6 @@
 
         .component-thumb.has-image {
             background: transparent;
-        }
-
-        .component-thumb img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
         }
 
         .component-brand {
@@ -450,14 +476,6 @@
             height: 14px;
             background: #FF6F00;
             border-radius: 50%;
-        }
-
-        .flow-line-h {
-            display: none;
-        }
-
-        .flow-line-v {
-            display: none;
         }
 
         .flow-arrows {
@@ -832,7 +850,7 @@
 
         .right-panel.dragging .drop-zone.drag-over .drop-zone-label {
             color: #1c1c1c;
-            animation: labelFadeInRelease 0.4s ease-out;
+            animation: labelFadeIn 0.4s ease-out;
         }
 
         /* Dragging state - dim non-eligible elements */
@@ -865,17 +883,6 @@
         }
 
         @keyframes labelFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes labelFadeInRelease {
             0% {
                 opacity: 0;
                 transform: translateY(8px);
@@ -1033,7 +1040,7 @@
         .hifi-thumbnail-wrapper {
             position: absolute;
             bottom: 24px;
-            right: 44px;
+            right: 64px;
             width: 100px;
             border-radius: 12px;
             overflow: visible;
@@ -1174,6 +1181,7 @@
             transform: translateY(-10px);
             transition: opacity 0.4s ease, transform 0.4s ease;
             margin-top: -65px;
+            overflow: visible;
         }
 
         .drop-zone-arrows.flower-arrows.visible {
@@ -1191,9 +1199,10 @@
 
 <div class="container">
     <div class="left-panel">
+        <a href="play.html" class="back-button">Back</a>
         <div class="title">HiFi Component Match Analyzer</div>
 
-        <div class="step-label">Step one: Select</div>
+        <div class="step-label">Start here → Select component(s)</div>
         <div class="accordion">
             <div class="accordion-item">
                 <div class="accordion-header" data-category="source">
@@ -1320,7 +1329,7 @@
                 <img src="Assets/Hifi/HiFi_thumbnail.gif" alt="HiFi Animation" class="gif">
             </div>
         </div>
-        <div class="step-label">Step two: Analyze</div>
+        <div class="step-label step-two">SIGNAL CHAIN</div>
 
         <div class="right-panel-content">
         <div class="drop-zones">
@@ -1400,6 +1409,7 @@
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
+                <span class="signal-chain-label">AMPLIFIED SIGNAL</span>
             </div>
             <div class="flower-animation">
                 <canvas id="flowerCanvas" width="230" height="280"></canvas>
@@ -1409,7 +1419,7 @@
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
             </div>
-            <div class="step-label step-three">Step three: Results</div>
+            <div class="step-label step-three">SEE RESULTS</div>
 
             <div class="results-section">
                 <div class="results-card" id="analysisCard">

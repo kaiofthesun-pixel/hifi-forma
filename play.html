@@ -232,6 +232,26 @@
             margin-left: 8px;
             vertical-align: middle;
         }
+        .beta-badge {
+            display: inline-block;
+            background: #1c1c1c;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            padding: 3px 6px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .beta-badge.thumb-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            margin-left: 0;
+        }
         .lofi-item a {
             text-decoration: none;
             color: inherit;
@@ -452,16 +472,14 @@
         </a>
     </div>
     <div class="lofi-item">
-        <a href="#">
+        <a href="hifi.html">
             <div class="lofi-text-group">
-                <div class="lofi-title">HiFi Component Matcher</div>
+                <div class="lofi-title">HiFi Component Matcher<span class="new-badge">New</span></div>
                 <div class="lofi-desc">Calibrate component combinations for your ideal acoustic profile</div>
             </div>
             <div class="lofi-thumb">
                 <img src="Assets/Hifi/HiFi_thumbnail.gif" alt="Hifi" style="position: relative; top: 5px; transform: scale(0.8);">
-                <div class="lofi-overlay">
-                    <span class="lofi-overlay-text">In-progress. Coming soon.</span>
-                </div>
+                <span class="beta-badge thumb-badge">Beta</span>
             </div>
         </a>
     </div>
