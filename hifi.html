@@ -26,7 +26,7 @@
             width: 402px;
             min-width: 402px;
             background: #fff;
-            padding: 28px 28px 14px 28px;
+            padding: 28px 28px 14px 8px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -37,6 +37,7 @@
             font-size: 40px;
             font-weight: 400;
             letter-spacing: 0.02em;
+            line-height: 0.95;
             color: #1c1c1c;
             margin-bottom: 32px;
         }
@@ -52,7 +53,7 @@
 
         .right-panel .step-label {
             position: absolute;
-            top: 162px;
+            top: 136px;
             left: 34px;
         }
 
@@ -62,13 +63,21 @@
             left: auto;
             margin-top: 16px;
             text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .step-label.step-three.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Results Section */
         .results-section {
             width: 100%;
-            max-width: 340px;
-            margin: 40px 0 80px 0;
+            max-width: 680px;
+            margin: 16px 0 80px 0;
         }
 
         .results-card {
@@ -76,13 +85,25 @@
             border-radius: 24px;
             padding: 32px;
             min-height: 400px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        .results-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
 
         .results-card h2 {
             font-family: 'Manrope', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
             color: #1c1c1c;
+            text-transform: uppercase;
             margin-bottom: 16px;
         }
 
@@ -258,7 +279,7 @@
         .accordion-number {
             font-size: 10px;
             font-weight: 400;
-            color: #999;
+            color: #1c1c1c;
             min-width: 16px;
         }
 
@@ -321,7 +342,6 @@
         .component-thumb {
             width: 100%;
             aspect-ratio: 4 / 3;
-            background: #d4d4d4;
             border-radius: 12px;
             margin-bottom: 12px;
             overflow: hidden;
@@ -362,8 +382,10 @@
         /* Right Panel - Content */
         .right-panel {
             flex: 1;
+            min-width: 680px;
             background: #D6D1CB;
             padding: 28px;
+            padding-left: 20px;
             overflow-y: auto;
             position: relative;
             display: flex;
@@ -373,12 +395,12 @@
 
         /* Flow indicator decorative elements */
         .flow-indicator {
-            position: absolute;
-            top: 20px;
-            left: calc(50% - 25px);
-            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
             width: 289px;
             pointer-events: none;
+            margin-top: -60px;
+            margin-bottom: 8px;
         }
 
         .flow-circle {
@@ -390,8 +412,6 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            left: 30px;
-            top: 10px;
         }
 
         .flow-circle::before,
@@ -433,21 +453,11 @@
         }
 
         .flow-line-h {
-            position: absolute;
-            top: 24px;
-            left: 67px;
-            width: calc(50% - 67px);
-            height: 1px;
-            background: #1c1c1c;
+            display: none;
         }
 
         .flow-line-v {
-            position: absolute;
-            top: 24px;
-            left: 50%;
-            width: 1px;
-            height: 74px;
-            background: #1c1c1c;
+            display: none;
         }
 
         .flow-arrows {
@@ -468,6 +478,20 @@
             gap: 2px;
             margin: 8px 0;
             width: 289px;
+            position: relative;
+        }
+
+        .signal-chain-label {
+            position: absolute;
+            left: calc(50% + 22px);
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #FF6F00;
+            white-space: nowrap;
         }
 
         .drop-zone-arrows .flow-arrow,
@@ -612,7 +636,33 @@
             gap: 0;
             padding: 40px;
             padding-top: 96px;
-            margin-left: -50px;
+            margin-left: -75px;
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-height: 1000px) {
+            .drop-zones {
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-height: 900px) {
+            .drop-zones {
+                transform: scale(0.8);
+            }
+        }
+
+        @media (max-height: 800px) {
+            .drop-zones {
+                transform: scale(0.7);
+            }
+        }
+
+        @media (max-height: 700px) {
+            .drop-zones {
+                transform: scale(0.6);
+            }
         }
 
         .drop-zone-wrapper {
@@ -647,11 +697,11 @@
         }
 
         .right-panel.dragging .drop-zone.eligible::before {
-            display: none;
+            background-image: none;
+            border: 5px solid #FF6F00;
         }
 
         .right-panel.dragging .drop-zone.eligible {
-            border: 5px dotted #FF6F00;
             box-shadow: 0 0 20px rgba(255, 111, 0, 0.6);
         }
 
@@ -684,8 +734,8 @@
         }
 
         /* Right side arcs (1st and 3rd connectors) */
-        .drop-zone-wrapper:nth-of-type(2) .chain-connector::before,
-        .drop-zone-wrapper:nth-of-type(4) .chain-connector::before {
+        .drop-zone-wrapper:nth-of-type(3) .chain-connector::before,
+        .drop-zone-wrapper:nth-of-type(5) .chain-connector::before {
             right: -94px;
             left: auto;
             border-radius: 0 86px 86px 0;
@@ -693,7 +743,7 @@
         }
 
         /* Left side arc (2nd connector) */
-        .drop-zone-wrapper:nth-of-type(3) .chain-connector::before {
+        .drop-zone-wrapper:nth-of-type(4) .chain-connector::before {
             left: -94px;
             right: auto;
             border-radius: 86px 0 0 86px;
@@ -730,13 +780,13 @@
         }
 
         /* Move arcs to touch boxes when active */
-        .drop-zone-wrapper:nth-of-type(2) .chain-connector.active::before,
-        .drop-zone-wrapper:nth-of-type(4) .chain-connector.active::before {
+        .drop-zone-wrapper:nth-of-type(3) .chain-connector.active::before,
+        .drop-zone-wrapper:nth-of-type(5) .chain-connector.active::before {
             right: -86px;
             border-radius: 0 171px 171px 0;
         }
 
-        .drop-zone-wrapper:nth-of-type(3) .chain-connector.active::before {
+        .drop-zone-wrapper:nth-of-type(4) .chain-connector.active::before {
             left: -86px;
             border-radius: 171px 0 0 171px;
         }
@@ -961,18 +1011,29 @@
             transform: scale(0.98);
         }
 
+        .panel-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 12px 16px 12px;
+        }
+
+        .hifi-love {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #999;
+        }
+
         .copyright {
             font-family: 'Inter', sans-serif;
             font-size: 11px;
             color: #999;
-            text-align: center;
-            padding: 16px 0;
         }
 
         .hifi-thumbnail-wrapper {
-            position: fixed;
+            position: absolute;
             bottom: 24px;
-            right: 24px;
+            right: 44px;
             width: 100px;
             border-radius: 12px;
             overflow: visible;
@@ -981,21 +1042,26 @@
 
         .hifi-thumbnail-wrapper .hifi-label {
             position: absolute;
-            top: -24px;
-            left: 0;
-            right: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
             text-align: center;
             font-family: 'Inter', sans-serif;
             font-size: 11px;
             color: #666;
             opacity: 0;
-            transform: translateY(4px);
+            line-height: 1.4;
+            white-space: nowrap;
             transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .hifi-thumbnail-wrapper .hifi-label-top {
+            bottom: 100%;
+            margin-bottom: 8px;
         }
 
         .hifi-thumbnail-wrapper:hover .hifi-label {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
         }
 
         .hifi-thumbnail-wrapper .thumb-container {
@@ -1030,9 +1096,9 @@
         }
 
         .room-size-toggle {
-            position: fixed;
-            top: 24px;
-            right: 24px;
+            position: absolute;
+            top: 54px;
+            right: 54px;
             width: 115px;
             height: 115px;
             background: #DFFF00;
@@ -1041,21 +1107,23 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 0 20px rgba(223, 255, 0, 0.5);
+            gap: 2px;
+            box-shadow: 0 8px 24px rgba(223, 255, 0, 0.6);
             transform: rotate(25deg);
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             z-index: 100;
+            user-select: none;
         }
 
         .room-size-toggle:hover {
             transform: rotate(25deg) scale(1.1);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 20px rgba(223, 255, 0, 0.5);
+            box-shadow: 0 12px 32px rgba(223, 255, 0, 0.7);
         }
 
         .room-size-toggle:active {
-            transform: rotate(25deg) scale(0.95);
+            transform: rotate(25deg) scale(0.85);
+            transition: transform 0.1s ease;
         }
 
         .room-size-toggle .label {
@@ -1069,16 +1137,16 @@
 
         .room-size-toggle .sizes {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .room-size-toggle .size-option {
             font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-size: 18px;
             font-weight: 600;
             color: #1c1c1c;
             cursor: pointer;
-            opacity: 0.5;
+            opacity: 0.25;
             transition: opacity 0.2s ease;
         }
 
@@ -1088,18 +1156,29 @@
         }
 
         .flower-animation {
-            position: fixed;
-            top: 160px;
-            right: 24px;
-            width: 115px;
+            display: flex;
+            justify-content: center;
+            width: 289px;
             height: 140px;
-            border-radius: 8px;
+            margin: -42px 0 38px 0;
             overflow: hidden;
         }
 
         .flower-animation canvas {
-            width: 100%;
+            width: auto;
             height: 100%;
+        }
+
+        .drop-zone-arrows.flower-arrows {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            margin-top: -65px;
+        }
+
+        .drop-zone-arrows.flower-arrows.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .right-panel-content {
@@ -1125,12 +1204,12 @@
                 <div class="accordion-content">
                     <div class="accordion-inner">
                         <div class="component-card" draggable="true" data-category="source">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Luxman_D03X.png" alt="Luxman D-03X"></div>
                             <div class="component-brand">LUXMAN</div>
                             <div class="component-model">D-03X CD Transport/DAC Digital</div>
                         </div>
                         <div class="component-card" draggable="true" data-category="source">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Chromecast.png" alt="Google Chromecast"></div>
                             <div class="component-brand">GOOGLE</div>
                             <div class="component-model">Chromecast</div>
                         </div>
@@ -1147,17 +1226,17 @@
                 <div class="accordion-content">
                     <div class="accordion-inner">
                         <div class="component-card" draggable="true" data-category="preamp">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Thoress_FFPre.png" alt="Thoress FFPre"></div>
                             <div class="component-brand">THORESS</div>
                             <div class="component-model">FFPre</div>
                         </div>
                         <div class="component-card" draggable="true" data-category="preamp">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Luxman_C700U.png" alt="Luxman C-700u"></div>
                             <div class="component-brand">LUXMAN</div>
                             <div class="component-model">C-700u</div>
                         </div>
                         <div class="component-card" draggable="true" data-category="preamp">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Decware_preamp.png" alt="Decware CSP3 Preamp"></div>
                             <div class="component-brand">DECWARE</div>
                             <div class="component-model">CSP3 Preamp (Zen 25th Anniversary ed.)</div>
                         </div>
@@ -1179,7 +1258,7 @@
                             <div class="component-model">M700U</div>
                         </div>
                         <div class="component-card" draggable="true" data-category="poweramp">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Decware_zen_amp.png" alt="Decware Zen Mystery Amp"></div>
                             <div class="component-brand">DECWARE</div>
                             <div class="component-model">Zen Mystery Amp</div>
                         </div>
@@ -1196,7 +1275,7 @@
                 <div class="accordion-content">
                     <div class="accordion-inner">
                         <div class="component-card" draggable="true" data-category="speakers">
-                            <div class="component-thumb"></div>
+                            <div class="component-thumb"><img src="Assets/Hifi/Buchardt_E50.png" alt="Buchardt E50"></div>
                             <div class="component-brand">BUCHARDT</div>
                             <div class="component-model">E50</div>
                         </div>
@@ -1219,27 +1298,42 @@
                 </div>
             </div>
         </div>
-        <div class="copyright">© Allen K Lau</div>
+        <div class="panel-footer">
+            <span class="hifi-love">I ❤︎ HiFi</span>
+            <span class="copyright">© Allen K Lau</span>
+        </div>
     </div>
 
     <div class="right-panel">
-        <div class="step-label">Step two: Analyze</div>
-
-        <!-- Decorative elements -->
-        <div class="flow-indicator">
-            <div class="flow-circle">
-                <div class="flow-circle-inner"></div>
+        <div class="room-size-toggle" id="roomSizeToggle">
+            <span class="label">Room size</span>
+            <div class="sizes">
+                <span class="size-option" data-size="SM">SM</span>
+                <span class="size-option active" data-size="MD">MD</span>
+                <span class="size-option" data-size="LG">LG</span>
             </div>
-            <div class="flow-line-h"></div>
-            <div class="flow-line-v"></div>
         </div>
+        <div class="hifi-thumbnail-wrapper">
+            <span class="hifi-label hifi-label-top">Pardon the dust.<br>In beta.</span>
+            <div class="thumb-container">
+                <img src="Assets/Hifi/Hifi_thumbnail.png" alt="HiFi" class="static">
+                <img src="Assets/Hifi/HiFi_thumbnail.gif" alt="HiFi Animation" class="gif">
+            </div>
+        </div>
+        <div class="step-label">Step two: Analyze</div>
 
         <div class="right-panel-content">
         <div class="drop-zones">
+            <div class="flow-indicator">
+                <div class="flow-circle">
+                    <div class="flow-circle-inner"></div>
+                </div>
+            </div>
             <div class="drop-zone-arrows">
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
+                <span class="signal-chain-label">MAINS POWER</span>
             </div>
             <div class="drop-zone-wrapper">
                 <div class="drop-zone" data-accepts="source" data-index="0">
@@ -1307,46 +1401,24 @@
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
             </div>
+            <div class="flower-animation">
+                <canvas id="flowerCanvas" width="230" height="280"></canvas>
+            </div>
+            <div class="drop-zone-arrows flower-arrows" id="flowerArrows">
+                <span class="flow-arrow">↓</span>
+                <span class="flow-arrow">↓</span>
+                <span class="flow-arrow">↓</span>
+            </div>
             <div class="step-label step-three">Step three: Results</div>
 
             <div class="results-section">
-                <div class="results-card">
+                <div class="results-card" id="analysisCard">
                     <h2>Component Analysis</h2>
-                    <p>Drop your components above to see how well they match together. Our analysis will evaluate impedance matching, power requirements, and overall synergy.</p>
-
-                    <div class="results-placeholder">
-                        <div class="results-placeholder-line"></div>
-                        <div class="results-placeholder-line"></div>
-                        <div class="results-placeholder-line"></div>
-                        <div class="results-placeholder-line"></div>
-                    </div>
-
-                    <p style="margin-top: 24px;">Complete your signal chain to unlock detailed compatibility scores and recommendations.</p>
+                    <div id="analysisContent"></div>
                 </div>
             </div>
         </div>
         </div>
-    </div>
-</div>
-
-<div class="room-size-toggle" id="roomSizeToggle">
-    <span class="label">Room size</span>
-    <div class="sizes">
-        <span class="size-option" data-size="SM">SM</span>
-        <span class="size-option active" data-size="MD">MD</span>
-        <span class="size-option" data-size="LG">LG</span>
-    </div>
-</div>
-
-<div class="flower-animation">
-    <canvas id="flowerCanvas" width="230" height="280"></canvas>
-</div>
-
-<div class="hifi-thumbnail-wrapper">
-    <span class="hifi-label">I ❤︎ HiFi</span>
-    <div class="thumb-container">
-        <img src="Assets/Hifi/Hifi_thumbnail.png" alt="HiFi" class="static">
-        <img src="Assets/Hifi/HiFi_thumbnail.gif" alt="HiFi Animation" class="gif">
     </div>
 </div>
 
@@ -1357,11 +1429,155 @@
     const sizeOptions = document.querySelectorAll('.size-option');
     const sizes = ['SM', 'MD', 'LG'];
 
+    function toggleComponentDetails(id) {
+        const details = document.getElementById(id);
+        const chevron = document.getElementById(id + '-chevron');
+        if (details && chevron) {
+            const isHidden = details.style.display === 'none';
+            details.style.display = isHidden ? 'block' : 'none';
+            chevron.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
+        }
+    }
+
+    const CATEGORY_LABELS = { source: 'Source', preamp: 'Pre-Amplifier', poweramp: 'Power Amplifier', speakers: 'Speakers' };
+    const ROOM_SIZE_TEXT = { SM: 'small (~100–200 sq ft)', MD: 'medium (~200–400 sq ft)', LG: 'large (~400+ sq ft)' };
+
+    const COMPONENT_SPECS = {
+        'LUXMAN D-03X': {
+            type: 'CD Transport/DAC',
+            topology: 'Dual-mono PCM1795 DACs in monaural mode',
+            output: '2.4V unbalanced (300Ω), 2.4V balanced (600Ω)',
+            thd: '0.002% (USB/Coaxial), 0.003% (CD)',
+            snr: '113–114 dB',
+            frequency: '5 Hz – 47 kHz (+0, -3.0 dB)',
+            notes: 'MQA-CD capable. Low output impedance ensures excellent pre-amp driving capability. The dual-mono DAC configuration minimizes crosstalk and provides exceptional channel separation.',
+            considerations: 'Output voltage of 2.4V is slightly above standard 2V reference, providing healthy gain staging headroom.'
+        },
+        'LUXMAN C-700u': {
+            type: 'Preamplifier',
+            topology: 'ODNF 4.0 (Only Distortion Negative Feedback)',
+            inputImpedance: '46kΩ (unbalanced), 67kΩ (balanced)',
+            outputImpedance: '90Ω (unbalanced), 600Ω (balanced)',
+            gain: 'Unity to +20dB',
+            thd: '0.007% unbalanced, 0.010% balanced',
+            snr: '122–125 dB',
+            frequency: '5 Hz – 120 kHz (+0, -3.0 dB)',
+            volume: 'LECUA1000 electronic attenuator',
+            notes: 'The ODNF 4.0 circuit applies negative feedback only to distortion components, preserving musical detail. LECUA1000 provides 88 steps of precision attenuation with zero channel imbalance.',
+            considerations: 'High input impedance presents negligible load to sources. Low output impedance drives long cable runs and demanding power amp inputs without degradation.'
+        },
+        'LUXMAN M-700u': {
+            type: 'Power Amplifier',
+            topology: 'ODNF 4.0, Bipolar 4-parallel push-pull',
+            power: '120W × 2 (8Ω), 210W × 2 (4Ω), 420W bridged mono',
+            inputSensitivity: '1.1V for 120W',
+            inputImpedance: '51kΩ (unbalanced), 34kΩ (balanced)',
+            gain: '29.0 dB',
+            dampingFactor: '350',
+            thd: '0.009% (1kHz/8Ω)',
+            snr: '115 dB',
+            frequency: '1 Hz – 130 kHz (+0, -3.0 dB)',
+            notes: 'High damping factor of 350 indicates exceptional speaker control, particularly beneficial for dynamic bass response. The 4-parallel output stage delivers current headroom for demanding loads.',
+            considerations: 'Instantaneous peak output of 840W (1Ω) demonstrates robust power supply design for transient demands.'
+        },
+        'LUXMAN DA-06': {
+            type: 'DAC',
+            topology: 'Unknown high-end DAC architecture',
+            output: 'Balanced and unbalanced outputs',
+            thd: '0.0005%',
+            snr: '124 dB',
+            frequency: '2 Hz – 55 kHz (+0, -3.0 dB)',
+            notes: 'Exceptionally low THD of 0.0005% places this among the most transparent DACs available. Extended low-frequency response to 2 Hz ensures complete bass foundation.',
+            considerations: 'Multiple digital inputs (USB, Coaxial ×2, Optical ×2, AES/EBU) provide comprehensive source connectivity.'
+        },
+        'THORESS FFPre': {
+            type: 'Tube Preamplifier + Phono Stage',
+            topology: 'Single-ended zero-feedback, 12J5GT (line), PC86 + 12J5GT (phono)',
+            inputImpedance: '80kΩ (line), 30kΩ (digital inputs)',
+            outputImpedance: '300Ω',
+            phonoGain: '65 dB (MC), 45 dB (MM)',
+            lineGain: '18–26 dB configurable',
+            riaa: 'Passive de-emphasis implementation',
+            notes: 'Zero-feedback single-ended topology prioritizes harmonic coherence and micro-dynamics over measured specifications. Passive RIAA ensures phase accuracy across the audio band. Hand-built point-to-point wiring.',
+            considerations: 'Purely active MC gain stage (no step-up transformers) preserves cartridge voicing. Output impedance of 300Ω requires power amp input impedance of 10kΩ+ for optimal frequency response.'
+        },
+        'DECWARE CSP3': {
+            type: 'Tube Preamplifier/Headphone Amp',
+            topology: 'Single-ended Class A, zero-feedback',
+            tubes: '6N1P, 6922/6DJ8 family compatible',
+            outputImpedance: 'Low-Z solid-state buffered output',
+            notes: 'The Zen Triode design philosophy emphasizes harmonic richness and spatial imaging. 25th Anniversary edition features upgraded components and point-to-point silver wiring.',
+            considerations: 'Hand-built in Illinois with typical 12+ month lead time. Designed to synergize with high-efficiency speakers.'
+        },
+        'DECWARE Zen Mystery Amp': {
+            type: 'Tube Power Amplifier',
+            topology: 'Single-ended Class A, zero-feedback',
+            power: '6W (SE mode), configurable',
+            outputImpedance: 'Variable via impedance selector',
+            notes: 'Ultra-low power SET design optimized for high-efficiency speakers (94+ dB). The "mystery" refers to proprietary circuit techniques for extended bandwidth and dynamic range beyond typical SET limitations.',
+            considerations: 'Requires speakers with 94+ dB sensitivity for adequate SPL. Room size is critical—small to medium rooms only. Sublime midrange liquidity and holographic imaging when properly matched.'
+        },
+        'GOOGLE Chromecast': {
+            type: 'Digital Streaming Source',
+            output: 'Digital optical/HDMI, analog 3.5mm',
+            streaming: 'WiFi casting, Spotify Connect, Tidal Connect',
+            notes: 'Convenient wireless streaming source. Audio quality dependent on external DAC when using digital output. Built-in DAC is serviceable but not audiophile-grade.',
+            considerations: 'Best used as digital transport only, feeding a quality external DAC. Ensure network stability for uninterrupted streaming.'
+        },
+        'BUCHARDT E50': {
+            type: 'Active Bookshelf Speaker',
+            drivers: '6.5" woofer, 0.74" tweeter',
+            amplification: 'Built-in Class D, DSP-controlled',
+            frequency: '25 Hz – 40 kHz',
+            sensitivity: 'N/A (active)',
+            notes: 'Room-adaptive DSP with smartphone app calibration. Active design eliminates amp/speaker matching concerns but requires only a preamp or direct DAC connection.',
+            considerations: 'As an active speaker, it bypasses traditional power amplifier stage. Excellent measured performance with DSP room correction capabilities.'
+        },
+        'PURE AUDIO PROJECT Trio15': {
+            type: 'Open Baffle Speaker',
+            drivers: '15" woofer, compression driver or ribbon tweeter',
+            sensitivity: '97+ dB',
+            impedance: '8Ω nominal',
+            frequency: '30 Hz – 20 kHz+',
+            notes: 'Open baffle design eliminates box colorations for exceptional transparency. High 97 dB sensitivity ideal for low-power tube amplification. Dipole radiation pattern requires careful room placement.',
+            considerations: 'Needs 3+ feet from rear wall. Room treatment beneficial for dipole null management. Outstanding with SET amplifiers in medium-large rooms.'
+        },
+        'MAGNEPAN LRS+': {
+            type: 'Planar Magnetic Speaker',
+            drivers: 'Quasi-ribbon tweeter, planar magnetic bass/midrange',
+            sensitivity: '86 dB',
+            impedance: '4Ω',
+            frequency: '50 Hz – 20 kHz',
+            notes: 'Dipole planar design offers electrostatic-like transparency at accessible price. Requires substantial amplifier current due to 4Ω load and 86 dB sensitivity.',
+            considerations: 'Demands high-current amplification (100W+ recommended). Needs room placement 3+ feet from rear wall. Not suitable for low-power tube amps. Exceptional value for the coherent, fast sound.'
+        },
+        'ZU AUDIO Dirty Weekend': {
+            type: 'High-Efficiency Floor Speaker',
+            drivers: '10" full-range, supertweeter',
+            sensitivity: '97 dB',
+            impedance: '8Ω (benign load)',
+            frequency: '38 Hz – 25 kHz',
+            notes: 'High-efficiency design optimized for tube amplification. Full-range driver provides exceptional coherence. No crossover in critical midrange for immediacy and dynamics.',
+            considerations: 'Ideal partner for SET amps (2–10W). Benign 8Ω impedance never dips below 6Ω. Forward presentation may require toe-out or room treatment.'
+        }
+    };
+
+    function getComponentSpecs(brand, model) {
+        const key = `${brand} ${model}`.replace(/\s+/g, ' ').trim();
+        for (const [specKey, specs] of Object.entries(COMPONENT_SPECS)) {
+            if (key.toUpperCase().includes(specKey.toUpperCase()) || specKey.toUpperCase().includes(key.toUpperCase())) {
+                return specs;
+            }
+        }
+        return null;
+    }
+
     function setRoomSize(size) {
         currentRoomSize = size;
         sizeOptions.forEach(opt => {
             opt.classList.toggle('active', opt.dataset.size === size);
         });
+        updateComponentAnalysis();
     }
 
     // Click on individual size options
@@ -1441,6 +1657,302 @@
         });
     }
 
+    function updateComponentAnalysis() {
+        const zones = document.querySelectorAll('.drop-zone');
+        const analysisContent = document.getElementById('analysisContent');
+        const analysisCard = document.getElementById('analysisCard');
+        const flowerArrows = document.getElementById('flowerArrows');
+        const components = [];
+
+        zones.forEach(zone => {
+            if (zone.classList.contains('filled')) {
+                const brand = zone.querySelector('.dropped-brand').textContent;
+                const model = zone.querySelector('.dropped-model').textContent;
+                const category = zone.dataset.accepts;
+                components.push({ brand, model, category, label: CATEGORY_LABELS[category] });
+            }
+        });
+
+        if (components.length === 0) {
+            analysisCard.classList.remove('visible');
+            document.querySelector('.step-label.step-three').classList.remove('visible');
+            flowerArrows.classList.remove('visible');
+            return;
+        }
+
+        analysisCard.classList.add('visible');
+        document.querySelector('.step-label.step-three').classList.add('visible');
+        flowerArrows.classList.add('visible');
+
+        const filledCount = components.length;
+        const isComplete = filledCount === 4;
+
+        let html = '';
+
+        // Room context header
+        html += `<div style="background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%); padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;">`;
+        html += `<div style="font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.08em;">Analyzing for</div>`;
+        html += `<div style="font-size: 14px; font-weight: 600; color: #1c1c1c;">${ROOM_SIZE_TEXT[currentRoomSize]} room</div>`;
+        html += `</div>`;
+
+        // Individual component analysis
+        components.forEach((comp, i) => {
+            const specs = getComponentSpecs(comp.brand, comp.model);
+            const isCollapsible = filledCount >= 2;
+            const uniqueId = `comp-details-${i}-${Date.now()}`;
+
+            html += `<div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e5e5e5;">`;
+
+            // Header row with chevron
+            html += `<div style="display: flex; justify-content: space-between; align-items: flex-start; ${isCollapsible ? 'cursor: pointer;' : ''}" ${isCollapsible ? `onclick="toggleComponentDetails('${uniqueId}')"` : ''}>`;
+            html += `<div style="flex: 1;">`;
+            html += `<div style="font-size: 9px; color: #999; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">${comp.label}</div>`;
+            html += `<div style="font-size: 15px; font-weight: 700; color: #1c1c1c; margin-bottom: 2px;">${comp.brand}</div>`;
+            html += `<div style="font-size: 13px; color: #555;">${comp.model}</div>`;
+            html += `</div>`;
+
+            if (isCollapsible) {
+                html += `<div id="${uniqueId}-chevron" style="color: #999; font-size: 18px; transition: transform 0.2s ease; margin-left: 12px; margin-top: 16px;">›</div>`;
+            }
+            html += `</div>`;
+
+            // Collapsible details
+            if (specs) {
+                const displayStyle = isCollapsible ? 'none' : 'block';
+                html += `<div id="${uniqueId}" style="display: ${displayStyle}; margin-top: 12px;">`;
+                html += `<div style="font-size: 11px; color: #666; line-height: 1.6;">`;
+                html += `<div style="color: #999; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">${specs.type}</div>`;
+
+                if (specs.topology) html += `<div><span style="color: #999;">Topology:</span> ${specs.topology}</div>`;
+                if (specs.output) html += `<div><span style="color: #999;">Output:</span> ${specs.output}</div>`;
+                if (specs.power) html += `<div><span style="color: #999;">Power:</span> ${specs.power}</div>`;
+                if (specs.inputImpedance) html += `<div><span style="color: #999;">Input Z:</span> ${specs.inputImpedance}</div>`;
+                if (specs.outputImpedance) html += `<div><span style="color: #999;">Output Z:</span> ${specs.outputImpedance}</div>`;
+                if (specs.sensitivity) html += `<div><span style="color: #999;">Sensitivity:</span> ${specs.sensitivity}</div>`;
+                if (specs.impedance) html += `<div><span style="color: #999;">Impedance:</span> ${specs.impedance}</div>`;
+                if (specs.thd) html += `<div><span style="color: #999;">THD:</span> ${specs.thd}</div>`;
+                if (specs.snr) html += `<div><span style="color: #999;">S/N Ratio:</span> ${specs.snr}</div>`;
+                if (specs.dampingFactor) html += `<div><span style="color: #999;">Damping Factor:</span> ${specs.dampingFactor}</div>`;
+                if (specs.frequency) html += `<div><span style="color: #999;">Frequency:</span> ${specs.frequency}</div>`;
+
+                html += `<div style="margin-top: 10px; padding: 10px; background: #fafafa; border-radius: 6px; font-size: 11px; line-height: 1.5;">`;
+                html += `<div style="color: #333; margin-bottom: 6px;">${specs.notes}</div>`;
+                html += `<div style="color: #888; font-style: italic;">${specs.considerations}</div>`;
+                html += `</div>`;
+                html += `</div>`;
+                html += `</div>`;
+            } else if (!isCollapsible) {
+                html += `<div style="font-size: 11px; color: #888; font-style: italic; margin-top: 12px;">Detailed specifications not yet in database.</div>`;
+            }
+            html += `</div>`;
+        });
+
+        // System Synergy section (when 2+ components)
+        if (filledCount >= 2) {
+            const source = components.find(c => c.category === 'source');
+            const preamp = components.find(c => c.category === 'preamp');
+            const poweramp = components.find(c => c.category === 'poweramp');
+            const speakers = components.find(c => c.category === 'speakers');
+
+            const sourceSpecs = source ? getComponentSpecs(source.brand, source.model) : null;
+            const preampSpecs = preamp ? getComponentSpecs(preamp.brand, preamp.model) : null;
+            const powerampSpecs = poweramp ? getComponentSpecs(poweramp.brand, poweramp.model) : null;
+            const speakerSpecs = speakers ? getComponentSpecs(speakers.brand, speakers.model) : null;
+
+            html += `<div style="background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%); padding: 20px; border-radius: 14px; margin-bottom: 20px; color: #fff;">`;
+            html += `<div style="font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px;">System Synergy</div>`;
+            html += `<div style="font-size: 13px; color: #e0e0e0; line-height: 1.7;">`;
+
+            // Build a cohesive narrative based on what's selected
+            let narrative = '';
+
+            // Determine system character
+            const hasTubes = (preamp && (preamp.brand.includes('THORESS') || preamp.brand.includes('DECWARE'))) ||
+                            (poweramp && (poweramp.brand.includes('DECWARE')));
+            const isAllLuxman = components.every(c => c.brand === 'LUXMAN');
+            const hasHighEffSpeakers = speakerSpecs && speakerSpecs.sensitivity && parseInt(speakerSpecs.sensitivity) >= 94;
+            const hasLowEffSpeakers = speakerSpecs && speakerSpecs.sensitivity && parseInt(speakerSpecs.sensitivity) < 90;
+            const isLowPowerAmp = poweramp && (poweramp.model.toLowerCase().includes('mystery') || poweramp.model.toLowerCase().includes('zen'));
+            const isHighPowerAmp = powerampSpecs && powerampSpecs.power && parseInt(powerampSpecs.power) >= 100;
+            const isOpenBaffle = speakerSpecs && speakerSpecs.type && speakerSpecs.type.includes('Open Baffle');
+            const isPlanar = speakerSpecs && speakerSpecs.type && speakerSpecs.type.includes('Planar');
+            const isActiveSpeaker = speakerSpecs && speakerSpecs.type && speakerSpecs.type.includes('Active');
+            const isZuSpeaker = speakers && speakers.brand.includes('ZU');
+            const isTrio15 = speakers && speakers.model.includes('Trio15');
+
+            // Opening based on component combination
+            if (isAllLuxman && filledCount >= 3) {
+                narrative += `This all-Luxman system delivers a signature sound: refined, unhurried, and effortlessly transparent. Luxman's ODNF topology provides vanishingly low distortion while preserving the natural texture and bloom of acoustic instruments. Expect a wide, deep soundstage with precise image placement, excellent tonal neutrality with a subtle warmth in the midrange, and bass that's articulate rather than overblown. The presentation leans toward elegance over excitement—music unfolds with poise and dimensional realism. `;
+            } else if (hasTubes && poweramp && poweramp.brand.includes('LUXMAN')) {
+                narrative += `This hybrid topology marries the best of both worlds: tube magic up front, solid-state muscle at the output. The triode preamplifier contributes that ineffable sense of bloom and air—vocals float free of the speakers with palpable presence, and harmonic overtones shimmer with natural decay. Meanwhile, the Luxman power amp delivers iron-fisted bass control, deep extension into the sub-bass, and the current reserves to handle dynamic swings without compression. The result is a sound that's simultaneously romantic and authoritative—holographic imaging with visceral impact. `;
+            } else if (hasTubes && isLowPowerAmp) {
+                narrative += `This is a system for the devoted listener—one who values intimacy over sheer scale. Low-power SET amplification, when properly matched, delivers an immediacy and presence that high-powered designs rarely approach. Expect a luminous, liquid midrange where vocals and solo instruments exist in three-dimensional space. Micro-dynamics are exquisite: the gentle decay of a piano note, the breath before a phrase, the texture of bow on string—all rendered with startling clarity. The soundstage may not be the widest, but within its boundaries, imaging is holographic and utterly convincing. `;
+            }
+
+            // Source to preamp relationship
+            if (source && preamp) {
+                if (source.brand.includes('GOOGLE')) {
+                    narrative += `The Chromecast serves purely as a digital transport in this context—sonic character will be determined entirely by the downstream DAC and analog stages. For serious listening, ensure bit-perfect output to an external converter. The convenience of wireless streaming need not compromise fidelity when properly implemented. `;
+                } else if (sourceSpecs && sourceSpecs.thd && parseFloat(sourceSpecs.thd) < 0.005) {
+                    narrative += `The source establishes an exceptionally black background—with THD at ${sourceSpecs.thd}, noise and distortion artifacts are well below audibility. This transparency allows the music's natural dynamics and spatial cues to emerge uncolored. What you hear is the recording, not the player. `;
+                }
+
+                if (preampSpecs && preampSpecs.topology && preampSpecs.topology.includes('zero-feedback')) {
+                    narrative += `The zero-feedback preamplifier acts as a purist's window into the recording: it won't flatter poor sources, but exceptional material rewards with breathtaking realism. Transients emerge with startling speed and decay naturally into the acoustic space. The presentation is immediate and unvarnished—a direct connection to the musical event. `;
+                }
+            }
+
+            // Preamp to power amp relationship
+            if (preamp && poweramp) {
+                const isTubeToSS = (preamp.brand.includes('THORESS') || preamp.brand.includes('DECWARE')) && poweramp.brand.includes('LUXMAN');
+                const isTubeToTube = (preamp.brand.includes('THORESS') || preamp.brand.includes('DECWARE')) && poweramp.brand.includes('DECWARE');
+
+                if (isTubeToSS) {
+                    narrative += `The tube preamp imparts its signature dimensionality—instruments occupy specific locations in a deep, layered soundstage, with air between performers and a sense of the recording venue's acoustic envelope. The solid-state power section preserves this spatial information while adding weight and slam in the bottom octaves. Bass lines have definition and pitch accuracy; kick drums have genuine chest-thump impact. The tonal balance trends slightly warm without sacrificing detail retrieval or high-frequency sparkle. `;
+                } else if (isTubeToTube) {
+                    narrative += `With tubes throughout the signal path, expect a presentation rich in harmonic complexity. The midrange glows with inner light—voices possess an almost tactile presence, and the decay of notes trails off naturally into a dimensional acoustic space. This topology excels at conveying the emotional content of music: the yearning in a jazz vocal, the tension before a crescendo, the subtle rubato of a master pianist. Detail is present but never clinical; resolution serves musicality rather than analysis. `;
+                } else if (preamp.brand.includes('LUXMAN') && poweramp.brand.includes('LUXMAN')) {
+                    narrative += `The matched Luxman pairing delivers seamless coherence from input to output. Expect crystalline highs that extend without grain or fatigue, a midrange of exceptional purity with natural timbral accuracy, and bass that's both powerful and precisely controlled. The soundstage is wide and deep, with stable imaging that remains rock-solid even during complex orchestral passages. The overall character is refined and uncolored—a faithful window rather than an editorial lens. `;
+                }
+            }
+
+            // Power amp to speaker relationship
+            if (poweramp && speakers) {
+                if (isActiveSpeaker) {
+                    narrative += `<span style="color: #f39c12;">Note:</span> The ${speakers.brand} ${speakers.model} contains its own amplification—the power amp stage is bypassed entirely. Connect the preamplifier directly to the speakers for optimal signal path. The active design ensures perfect amp-driver matching and often includes DSP for room correction—a modern approach that trades traditional audiophile aesthetics for measured performance. `;
+                } else if (isLowPowerAmp && hasHighEffSpeakers) {
+                    if (isZuSpeaker) {
+                        narrative += `The Zu's full-range driver paired with SET amplification is a classic audiophile combination—expect immediacy, presence, and dynamic contrast that multi-way speakers struggle to match. The lack of crossover in the crucial midrange frequencies yields stunning coherence: vocals snap into focus with startling directness, and the leading edge of transients arrives with realistic speed. The presentation is forward and engaging—music leaps from the speakers rather than sitting politely behind them. Bass won't plumb the deepest depths, but what's there has texture and pace. `;
+                    } else if (isTrio15) {
+                        narrative += `The open baffle design eliminates box colorations entirely—expect a sense of openness and freedom in the presentation that enclosed speakers cannot replicate. With proper room placement, the soundstage extends well beyond the speaker boundaries, creating a panoramic canvas for the music. The combination with low-power tubes is synergistic: the amplifier's natural warmth complements the speaker's transparent midrange, while the high sensitivity ensures dynamic headroom to spare. Expect holographic imaging, natural timbres, and the kind of "disappearing act" that audiophiles chase. `;
+                    } else {
+                        narrative += `This pairing unlocks the magic of the first watt. With ${speakerSpecs.sensitivity} sensitivity, the amplifier operates in its most linear region, where single-ended triode topology shines brightest. Expect a midrange of remarkable liquidity and presence—voices and acoustic instruments rendered with dimensional realism that seems to transcend the speakers entirely. Dynamic shadings from whisper to forte unfold naturally, without the compression that plagues power-limited systems. The soundstage is intimate but holographic, with precise image placement and palpable air between performers. `;
+                    }
+                } else if (isLowPowerAmp && hasLowEffSpeakers) {
+                    narrative += `<span style="color: #e74c3c;">Critical mismatch:</span> This pairing fundamentally undermines both components. The ${speakerSpecs.sensitivity} sensitivity speakers will starve for current, causing the amplifier to clip on transients and compress dynamics. You'll hear a thin, strained presentation lacking in bass weight and dynamic impact—a pale shadow of what either component can achieve with appropriate partners. The amplifier needs speakers of 94dB+ sensitivity to breathe; the speakers need amplifiers delivering 50W+ to truly come alive. Reconsider this pairing before proceeding. `;
+                } else if (isHighPowerAmp && hasLowEffSpeakers) {
+                    narrative += `The amplifier's generous power reserves ensure these speakers operate in their comfort zone. Expect authoritative bass with genuine weight and impact—the low frequencies have substance and visceral presence. The high damping factor keeps the woofer under tight control, preventing bass bloat and maintaining pitch definition even at elevated volumes. Dynamic peaks arrive with effortless headroom; the system never sounds strained or compressed. `;
+                } else if (isHighPowerAmp && isPlanar) {
+                    narrative += `Planar speakers reward high-current amplification with their signature virtues: electrostatic-like transparency, coherent point-source imaging, and transient speed that cone speakers struggle to match. This amplifier should drive the ${speakerSpecs.impedance} load without stress, allowing the panels to reveal their full resolution. Expect a fast, detailed presentation with outstanding clarity through the midrange and treble—cymbals shimmer with natural decay, and vocal sibilants are smooth rather than spitty. Bass extension depends on room placement, but what's there has impressive articulation. `;
+                } else if (poweramp && speakers) {
+                    narrative += `The amplifier-speaker pairing appears viable, though not optimized for a specific sonic goal. The components should function together without obvious issues—audition to assess whether their combined character suits your preferences. `;
+                }
+
+                if (isOpenBaffle && currentRoomSize === 'SM') {
+                    narrative += `<span style="color: #e67e22;">Placement concern:</span> Open baffle speakers radiate equally front and rear, requiring substantial distance from the back wall (3+ feet minimum) to develop their signature spacious presentation. A small room may not accommodate this geometry—you risk cancellation effects and a confused soundstage. Consider whether your space can provide the breathing room these speakers demand. `;
+                }
+            }
+
+            // Room size integration with sonic implications
+            if (currentRoomSize === 'SM') {
+                if (isLowPowerAmp && hasHighEffSpeakers) {
+                    narrative += `The small room amplifies this system's strengths: nearfield listening distances minimize room interactions, allowing the direct sound to dominate. You'll experience the full measure of the system's micro-dynamic abilities and holographic imaging without needing to push volume levels. The intimate scale suits acoustic music, jazz, and vocal recordings beautifully. `;
+                } else if (hasLowEffSpeakers) {
+                    narrative += `Room gain from nearby boundaries will reinforce the bass, partially compensating for the speakers' lower sensitivity. Position yourself in the nearfield (6-8 feet) to maximize direct sound and minimize room reflections. `;
+                }
+            } else if (currentRoomSize === 'LG') {
+                if (isLowPowerAmp) {
+                    narrative += `Large room acoustics present a challenge for low-power amplification—whether you'll achieve satisfying volume levels depends on listening distance and musical preferences. If you favor intimate acoustic material at moderate levels, this can work beautifully. For orchestral climaxes or rock at concert levels, consider whether the system has sufficient headroom. The magic happens in the first watt; make sure you don't need the watts that aren't there. `;
+                }
+                if (isOpenBaffle) {
+                    narrative += `The generous room dimensions favor open baffle speakers—their figure-8 radiation pattern can develop fully, creating an expansive soundstage that extends well beyond the physical speaker positions. With proper placement (5+ feet from the rear wall), expect a sense of scale and dimensionality that smaller rooms cannot support. The presentation becomes genuinely holographic: performers exist in three-dimensional space with realistic proportions and natural acoustic cues. `;
+                }
+            }
+
+            // Closing sonic assessment
+            if (filledCount === 4) {
+                if (isLowPowerAmp && !hasHighEffSpeakers) {
+                    narrative += `<br><br><strong>Sonic outlook:</strong> This system cannot realize its potential due to the amplifier-speaker mismatch. Resolve this fundamental incompatibility before evaluating the chain's sonic character.`;
+                } else if (hasTubes && hasHighEffSpeakers) {
+                    narrative += `<br><br><strong>Sonic outlook:</strong> This system is optimized for midrange magic, spatial holography, and emotional engagement. Expect a presentation that draws you into the music rather than impressing with technical fireworks. Acoustic recordings, jazz, classical, and vocals will shine; dense electronic or heavily compressed material may expose the system's dynamic limitations. For listeners who value presence, texture, and musical flow over bass slam and ultimate SPL, this is an audiophile destination system.`;
+                } else if (isAllLuxman) {
+                    narrative += `<br><br><strong>Sonic outlook:</strong> This system prioritizes refinement, neutrality, and effortless transparency. Expect a sophisticated presentation that reveals recordings honestly—great material sounds sublime, while poor recordings have nowhere to hide. The tonal balance is natural, the soundstage is wide and deep, and dynamics unfold with ease. A versatile system that handles all genres with composure and grace.`;
+                } else {
+                    narrative += `<br><br><strong>Sonic outlook:</strong> The selected components form a functional system. Individual voices are competent, but the combined character depends on specific synergies that can only be confirmed through audition. Listen before committing—paper specifications reveal compatibility, but only your ears can assess musical chemistry.`;
+                }
+            }
+
+            html += narrative || 'Select additional components to see how they interact sonically.';
+            html += `</div></div>`;
+        }
+
+        // Room-specific recommendations (reuse variables from above or find fresh)
+        const roomSpeakers = components.find(c => c.category === 'speakers');
+        const roomPoweramp = components.find(c => c.category === 'poweramp');
+        const roomSpeakerSpecs = roomSpeakers ? getComponentSpecs(roomSpeakers.brand, roomSpeakers.model) : null;
+
+        html += `<div style="background: #fffbf0; padding: 14px; border-radius: 10px; margin-bottom: 20px;">`;
+        html += `<div style="font-size: 10px; color: #b8860b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">Room Considerations</div>`;
+        html += `<div style="font-size: 11px; color: #666; line-height: 1.5;">`;
+
+        if (currentRoomSize === 'SM') {
+            html += `Small room acoustics favor nearfield placement. `;
+            if (roomSpeakerSpecs && roomSpeakerSpecs.type && roomSpeakerSpecs.type.includes('Open Baffle')) {
+                html += `<span style="color: #e74c3c;">Open baffle speakers typically need more space—consider room treatment or different speakers.</span>`;
+            } else {
+                html += `Bookshelf or smaller floorstanding speakers recommended. Room gain will reinforce bass.`;
+            }
+        } else if (currentRoomSize === 'MD') {
+            html += `Medium room offers flexibility for most speaker types. Standard placement rules apply—start with speakers 3ft from rear wall.`;
+        } else {
+            html += `Large room demands either high-sensitivity speakers or substantial amplifier power for adequate SPL. Room treatment becomes increasingly important.`;
+            if (roomPoweramp) {
+                const roomPowerampSpecs = getComponentSpecs(roomPoweramp.brand, roomPoweramp.model);
+                if (roomPowerampSpecs && roomPowerampSpecs.power && parseInt(roomPowerampSpecs.power) < 30) {
+                    html += ` <span style="color: #e67e22;">Current amplifier power may be marginal for large room—pair with 95+ dB speakers.</span>`;
+                }
+            }
+        }
+        html += `</div></div>`;
+
+        // Compatibility score (always shown, but partial if not complete)
+        html += `<div style="background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%); padding: 20px; border-radius: 14px; text-align: center;">`;
+        html += `<div style="font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">Compatibility Score</div>`;
+
+        if (isComplete) {
+            let score = 75;
+
+            if (components.every(c => c.brand === 'LUXMAN')) score += 10;
+
+            const scorePreamp = components.find(c => c.category === 'preamp');
+            const scorePower = components.find(c => c.category === 'poweramp');
+            if (scorePreamp && scorePower) {
+                const isTubePre = scorePreamp.brand.includes('THORESS') || scorePreamp.brand.includes('DECWARE');
+                const isSS = scorePower.brand.includes('LUXMAN');
+                if (isTubePre && isSS) score += 8;
+            }
+
+            if (roomSpeakerSpecs && scorePower) {
+                const isHighEff = roomSpeakerSpecs.sensitivity && parseInt(roomSpeakerSpecs.sensitivity) >= 94;
+                const isLowPower = scorePower.model.toLowerCase().includes('mystery') || scorePower.model.toLowerCase().includes('zen');
+
+                if (isLowPower && isHighEff) score += 10;
+                if (isLowPower && !isHighEff) score -= 15;
+            }
+
+            score = Math.min(98, Math.max(45, score));
+
+            const scoreColor = score >= 80 ? '#27ae60' : score >= 65 ? '#f39c12' : '#e74c3c';
+            html += `<div style="font-size: 48px; font-weight: 800; color: ${scoreColor}; line-height: 1;">${score}%</div>`;
+            html += `<div style="font-size: 12px; color: #666; margin-top: 10px;">`;
+            if (score >= 85) {
+                html += `Exceptional system synergy. Components complement each other beautifully.`;
+            } else if (score >= 70) {
+                html += `Good compatibility with room for optimization. Review interface notes above.`;
+            } else {
+                html += `Some concerns identified. Review warnings in chain analysis.`;
+            }
+            html += `</div>`;
+        } else {
+            const remaining = 4 - filledCount;
+            html += `<div style="font-size: 32px; font-weight: 700; color: #ccc;">—</div>`;
+            html += `<div style="font-size: 12px; color: #999; margin-top: 8px;">Add ${remaining} more component${remaining > 1 ? 's' : ''} for full scoring</div>`;
+        }
+        html += `</div>`;
+
+        analysisContent.innerHTML = html;
+    }
+
     function setEligibleZones(category) {
         dropZones.forEach(zone => {
             if (zone.dataset.accepts === category && !zone.classList.contains('filled')) {
@@ -1456,8 +1968,7 @@
             if (!zone.classList.contains('filled') && !zone.classList.contains('drag-over')) {
                 const label = zone.querySelector('.drop-zone-label');
                 const accepts = zone.dataset.accepts;
-                const labelMap = { source: 'Source', preamp: 'Pre-Amplifier', poweramp: 'Power Amplifier', speakers: 'Speakers' };
-                label.textContent = labelMap[accepts] || accepts;
+                label.textContent = CATEGORY_LABELS[accepts] || accepts;
             }
         });
     }
@@ -1562,6 +2073,7 @@
                 zone.classList.add('filled');
                 updateChainConnectors();
                 updateCheckmarks();
+                updateComponentAnalysis();
 
                 // Collapse the accordion
                 document.querySelectorAll('.accordion-item').forEach(i => {
@@ -1584,6 +2096,7 @@
             droppedThumb.innerHTML = '';
             updateChainConnectors();
             updateCheckmarks();
+            updateComponentAnalysis();
         });
     });
 
@@ -1595,19 +2108,35 @@
     const centerX = width / 2;
     const centerY = height / 2 + 10;
     const petalCount = 9;
-    const petalLength = 70;
-    const petalWidth = 22;
+    const petalLength = 40;
+    const petalWidth = 13;
 
     let animationProgress = 0;
     let animationDirection = 1;
+    let pauseCounter = 0;
+    const PAUSE_FRAMES = 120; // ~2 seconds at 60fps
 
-    function drawBlurryFlower(blur) {
-        ctx.fillStyle = '#FF5F1F';
-        ctx.fillRect(0, 0, width, height);
+    // Rotation state
+    let flowerRotation = 0;
+    let spinProgress = 0;
+    let isSpinning = false;
+    let spinCooldown = 0;
+    const SPIN_COOLDOWN_MIN = 300; // ~5 seconds minimum between spins
+    const SPIN_COOLDOWN_MAX = 600; // ~10 seconds maximum
+
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    function drawBlurryFlower(blur, rotation) {
+        ctx.clearRect(0, 0, width, height);
 
         ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(rotation);
+        ctx.translate(-centerX, -centerY);
         ctx.filter = `blur(${blur}px)`;
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#FF5F1F';
 
         for (let i = 0; i < petalCount; i++) {
             const angle = (i / petalCount) * Math.PI * 2 - Math.PI / 2;
@@ -1615,25 +2144,27 @@
             ctx.translate(centerX, centerY);
             ctx.rotate(angle);
             ctx.beginPath();
-            ctx.ellipse(0, -petalLength / 2 - 10, petalWidth, petalLength, 0, 0, Math.PI * 2);
+            ctx.ellipse(0, -petalLength / 2 - 8, petalWidth, petalLength, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
         }
         ctx.restore();
     }
 
-    function drawPixelFlower(pixelSize) {
-        ctx.fillStyle = '#FF5F1F';
-        ctx.fillRect(0, 0, width, height);
+    function drawPixelFlower(pixelSize, rotation) {
+        ctx.clearRect(0, 0, width, height);
 
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = width;
         tempCanvas.height = height;
         const tempCtx = tempCanvas.getContext('2d');
 
+        tempCtx.clearRect(0, 0, width, height);
+        tempCtx.save();
+        tempCtx.translate(centerX, centerY);
+        tempCtx.rotate(rotation);
+        tempCtx.translate(-centerX, -centerY);
         tempCtx.fillStyle = '#FF5F1F';
-        tempCtx.fillRect(0, 0, width, height);
-        tempCtx.fillStyle = '#fff';
 
         for (let i = 0; i < petalCount; i++) {
             const angle = (i / petalCount) * Math.PI * 2 - Math.PI / 2;
@@ -1641,10 +2172,11 @@
             tempCtx.translate(centerX, centerY);
             tempCtx.rotate(angle);
             tempCtx.beginPath();
-            tempCtx.ellipse(0, -petalLength / 2 - 10, petalWidth, petalLength, 0, 0, Math.PI * 2);
+            tempCtx.ellipse(0, -petalLength / 2 - 8, petalWidth, petalLength, 0, 0, Math.PI * 2);
             tempCtx.fill();
             tempCtx.restore();
         }
+        tempCtx.restore();
 
         if (pixelSize > 1) {
             ctx.imageSmoothingEnabled = false;
@@ -1665,26 +2197,58 @@
     }
 
     function animateFlower() {
-        animationProgress += 0.008 * animationDirection;
-
-        if (animationProgress >= 1) {
-            animationProgress = 1;
-            animationDirection = -1;
-        } else if (animationProgress <= 0) {
-            animationProgress = 0;
-            animationDirection = 1;
+        // Handle spin animation
+        if (isSpinning) {
+            spinProgress += 0.012;
+            if (spinProgress >= 1) {
+                spinProgress = 0;
+                isSpinning = false;
+                flowerRotation = 0;
+                spinCooldown = SPIN_COOLDOWN_MIN + Math.random() * (SPIN_COOLDOWN_MAX - SPIN_COOLDOWN_MIN);
+            } else {
+                flowerRotation = easeOutCubic(spinProgress) * Math.PI * 2;
+            }
+        } else {
+            spinCooldown--;
+            if (spinCooldown <= 0) {
+                isSpinning = true;
+                spinProgress = 0;
+            }
         }
 
         const eased = animationProgress < 0.5
             ? 2 * animationProgress * animationProgress
             : 1 - Math.pow(-2 * animationProgress + 2, 2) / 2;
 
-        if (eased < 0.5) {
-            const blur = 15 * (1 - eased * 2);
-            drawBlurryFlower(blur);
+        // Check if in clear state (eased ~0.5, neither blurry nor pixelated)
+        const isClear = eased >= 0.48 && eased <= 0.52;
+
+        if (isClear && pauseCounter < PAUSE_FRAMES) {
+            // Draw clear flower and pause
+            drawPixelFlower(1, flowerRotation);
+            pauseCounter++;
         } else {
-            const pixelSize = 1 + (eased - 0.5) * 2 * 12;
-            drawPixelFlower(pixelSize);
+            if (isClear) {
+                pauseCounter = 0; // Reset for next cycle
+            }
+
+            animationProgress += 0.008 * animationDirection;
+
+            if (animationProgress >= 1) {
+                animationProgress = 1;
+                animationDirection = -1;
+            } else if (animationProgress <= 0) {
+                animationProgress = 0;
+                animationDirection = 1;
+            }
+
+            if (eased < 0.5) {
+                const blur = 15 * (1 - eased * 2);
+                drawBlurryFlower(blur, flowerRotation);
+            } else {
+                const pixelSize = 1 + (eased - 0.5) * 2 * 12;
+                drawPixelFlower(pixelSize, flowerRotation);
+            }
         }
 
         requestAnimationFrame(animateFlower);
