@@ -6,7 +6,7 @@
     <title>HiFi Component Match Analysis</title>
     <link rel="icon" type="image/png" href="Assets/About/A.png">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@400;500;600&family=Pirata+One&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -33,9 +33,10 @@
         }
 
         .title {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
+            font-family: 'Pirata One', cursive;
+            font-size: 40px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
             color: #1c1c1c;
             margin-bottom: 32px;
         }
@@ -222,6 +223,20 @@
             background: #d4d4d4;
             border-radius: 12px;
             margin-bottom: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component-thumb.has-image {
+            background: transparent;
+        }
+
+        .component-thumb img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
         }
 
         .component-brand {
@@ -372,13 +387,220 @@
             color: #999;
             font-style: italic;
         }
+
+        /* Drop zones */
+        .drop-zones {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            gap: 0;
+            padding: 40px;
+        }
+
+        .drop-zone-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .drop-zone {
+            width: 100%;
+            min-height: 143px;
+            border: none;
+            border-radius: 27px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            position: relative;
+        }
+
+        .drop-zone::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 27px;
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='27' ry='27' stroke='%23333' stroke-width='2' stroke-dasharray='4%2c 4' stroke-linecap='square'/%3e%3c/svg%3e");
+            pointer-events: none;
+        }
+
+        .chain-connector {
+            width: 100%;
+            max-width: 340px;
+            height: 27px;
+            background: transparent;
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+            overflow: visible;
+        }
+
+        .chain-connector::before {
+            content: '';
+            position: absolute;
+            width: 86px;
+            height: 171px;
+            border: 1px solid #333;
+            top: -72px;
+            clip-path: inset(0 0 0 0);
+            transition: border-color 0.4s ease,
+                        border-width 0.4s ease,
+                        border-radius 0.4s ease,
+                        right 0.4s ease,
+                        left 0.4s ease;
+        }
+
+        /* Right side arcs (1st and 3rd connectors) */
+        .drop-zone-wrapper:nth-child(1) .chain-connector::before,
+        .drop-zone-wrapper:nth-child(3) .chain-connector::before {
+            right: -94px;
+            left: auto;
+            border-radius: 0 86px 86px 0;
+            border-left: none;
+        }
+
+        /* Left side arc (2nd connector) */
+        .drop-zone-wrapper:nth-child(2) .chain-connector::before {
+            left: -94px;
+            right: auto;
+            border-radius: 86px 0 0 86px;
+            border-right: none;
+        }
+
+        .chain-connector.active {
+            background: transparent;
+        }
+
+        .chain-connector.active::before {
+            border-color: #FF6F00;
+            border-width: 6px;
+            animation: drawArc 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes drawArc {
+            0% {
+                clip-path: inset(0 0 100% 0);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        /* Move arcs to touch boxes when active */
+        .drop-zone-wrapper:nth-child(1) .chain-connector.active::before,
+        .drop-zone-wrapper:nth-child(3) .chain-connector.active::before {
+            right: -86px;
+            border-radius: 0 171px 171px 0;
+        }
+
+        .drop-zone-wrapper:nth-child(2) .chain-connector.active::before {
+            left: -86px;
+            border-radius: 171px 0 0 171px;
+        }
+
+        .chain-connector.active::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -4px;
+            width: 50px;
+            height: 35px;
+            background: #FF6F00;
+            -webkit-mask:
+                radial-gradient(circle 14px at left center, transparent 100%, black 100%),
+                radial-gradient(circle 14px at right center, transparent 100%, black 100%);
+            -webkit-mask-composite: source-in;
+            mask:
+                radial-gradient(circle 14px at left center, transparent 100%, black 100%),
+                radial-gradient(circle 14px at right center, transparent 100%, black 100%);
+            mask-composite: intersect;
+        }
+
+        .drop-zone-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 29px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #FF6F00;
+            background: rgba(255, 111, 0, 0.1);
+        }
+
+        .drop-zone.filled {
+            border: none;
+            background: #FF6F00;
+            padding: 16px 20px;
+            align-items: flex-start;
+        }
+
+        .drop-zone.filled::before {
+            display: none;
+        }
+
+        .drop-zone.filled .drop-zone-label {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .drop-zone.filled .dropped-item {
+            color: #fff;
+        }
+
+        .dropped-item {
+            display: none;
+        }
+
+        .drop-zone.filled .dropped-item {
+            display: block;
+        }
+
+        .dropped-brand {
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .dropped-model {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Draggable cards */
+        .component-card {
+            margin-bottom: 16px;
+            cursor: grab;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .component-card:active {
+            cursor: grabbing;
+        }
+
+        .component-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="left-panel">
-        <div class="title">HIFI COMPONENT MATCH ANALYSIS</div>
+        <div class="title">HiFi Component Match Analyzer</div>
 
         <div class="accordion">
             <div class="accordion-item">
@@ -388,17 +610,17 @@
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-inner">
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="source">
                             <div class="component-thumb"></div>
                             <div class="component-brand">LUXMAN</div>
                             <div class="component-model">D-03X CD Transport/DAC Digital</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="source">
                             <div class="component-thumb"></div>
                             <div class="component-brand">TECHNICS</div>
                             <div class="component-model">SL-1200G Direct Drive Turntable</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="source">
                             <div class="component-thumb"></div>
                             <div class="component-brand">CHORD</div>
                             <div class="component-model">Hugo TT2 DAC/Headphone Amp</div>
@@ -414,22 +636,22 @@
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-inner">
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="preamp">
                             <div class="component-thumb"></div>
                             <div class="component-brand">AUDIO RESEARCH</div>
                             <div class="component-model">LS28 Tube Preamplifier</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="preamp">
                             <div class="component-thumb"></div>
                             <div class="component-brand">MCINTOSH</div>
                             <div class="component-model">C2700 Vacuum Tube Preamp</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="preamp">
                             <div class="component-thumb"></div>
                             <div class="component-brand">PASS LABS</div>
                             <div class="component-model">XP-12 Line Stage Preamp</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="preamp">
                             <div class="component-thumb"></div>
                             <div class="component-brand">ACCUPHASE</div>
                             <div class="component-model">C-2900 Precision Preamp</div>
@@ -445,17 +667,17 @@
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-inner">
-                        <div class="component-card">
-                            <div class="component-thumb"></div>
+                        <div class="component-card" draggable="true" data-category="poweramp">
+                            <div class="component-thumb has-image"><img src="Assets/Hifi/Luxman_m700u.png" alt="Luxman M700U"></div>
                             <div class="component-brand">LUXMAN</div>
-                            <div class="component-model">L-509Z Integrated Amplifier</div>
+                            <div class="component-model">M700U</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="poweramp">
                             <div class="component-thumb"></div>
                             <div class="component-brand">PASS LABS</div>
                             <div class="component-model">XA25 Class A Stereo Amp</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="poweramp">
                             <div class="component-thumb"></div>
                             <div class="component-brand">MCINTOSH</div>
                             <div class="component-model">MC462 Quad Balanced Amp</div>
@@ -471,22 +693,22 @@
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-inner">
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="speakers">
                             <div class="component-thumb"></div>
                             <div class="component-brand">DEVORE FIDELITY</div>
                             <div class="component-model">O/96 High-Efficiency Speakers</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="speakers">
                             <div class="component-thumb"></div>
                             <div class="component-brand">HARBETH</div>
                             <div class="component-model">Super HL5 Plus XD Monitor</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="speakers">
                             <div class="component-thumb"></div>
                             <div class="component-brand">KLIPSCH</div>
                             <div class="component-model">Cornwall IV Heritage Series</div>
                         </div>
-                        <div class="component-card">
+                        <div class="component-card" draggable="true" data-category="speakers">
                             <div class="component-thumb"></div>
                             <div class="component-brand">SONUS FABER</div>
                             <div class="component-model">Olympica Nova III Floorstander</div>
@@ -498,30 +720,45 @@
     </div>
 
     <div class="right-panel">
-        <div class="empty-state" id="empty-state">
-            Select your components and analyze compatibility
-        </div>
-
-        <div class="result-container" id="result-container" style="display: none;">
-            <div class="result-title" id="result-title">ANALYSIS RESULT</div>
-            <div class="result-card" id="result-card">
-                <span class="rating-badge">Excellent Match</span>
-                <h3>System Compatibility Report</h3>
-                <div class="spec-grid">
-                    <div class="spec-box">
-                        <h4>Amplifier</h4>
-                        <p><strong id="amp-display">—</strong></p>
-                        <p>120W @ 8Ω</p>
-                    </div>
-                    <div class="spec-box">
-                        <h4>Speaker</h4>
-                        <p><strong id="speaker-display">—</strong></p>
-                        <p>8Ω nominal</p>
+        <div class="drop-zones">
+            <div class="drop-zone-wrapper">
+                <div class="drop-zone" data-accepts="source" data-index="0">
+                    <span class="drop-zone-label">Source</span>
+                    <div class="dropped-item">
+                        <div class="dropped-brand"></div>
+                        <div class="dropped-model"></div>
                     </div>
                 </div>
-                <p><strong>Power Match:</strong> High sensitivity speakers require minimal power. Your amplifier provides excellent headroom for dynamic peaks.</p>
-                <p><strong>Impedance:</strong> Stable impedance curve ensures optimal amplifier performance across the frequency range.</p>
-                <p><strong>Verdict:</strong> This is an excellent pairing with complementary characteristics for refined, dynamic sound.</p>
+                <div class="chain-connector" data-chain="0-1"></div>
+            </div>
+            <div class="drop-zone-wrapper">
+                <div class="drop-zone" data-accepts="preamp" data-index="1">
+                    <span class="drop-zone-label">Pre-Amplifier</span>
+                    <div class="dropped-item">
+                        <div class="dropped-brand"></div>
+                        <div class="dropped-model"></div>
+                    </div>
+                </div>
+                <div class="chain-connector" data-chain="1-2"></div>
+            </div>
+            <div class="drop-zone-wrapper">
+                <div class="drop-zone" data-accepts="poweramp" data-index="2">
+                    <span class="drop-zone-label">Power Amplifier</span>
+                    <div class="dropped-item">
+                        <div class="dropped-brand"></div>
+                        <div class="dropped-model"></div>
+                    </div>
+                </div>
+                <div class="chain-connector" data-chain="2-3"></div>
+            </div>
+            <div class="drop-zone-wrapper">
+                <div class="drop-zone" data-accepts="speakers" data-index="3">
+                    <span class="drop-zone-label">Speakers</span>
+                    <div class="dropped-item">
+                        <div class="dropped-brand"></div>
+                        <div class="dropped-model"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -548,40 +785,74 @@
         });
     });
 
-    // Analyze button
-    document.getElementById('analyze-btn').addEventListener('click', async () => {
-        const btn = document.getElementById('analyze-btn');
-        const emptyState = document.getElementById('empty-state');
-        const resultContainer = document.getElementById('result-container');
-        const resultTitle = document.getElementById('result-title');
-        const resultCard = document.getElementById('result-card');
+    // Drag and Drop functionality
+    const componentCards = document.querySelectorAll('.component-card');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    let draggedItem = null;
+    let draggedCategory = null;
 
-        // Get values
-        const ampModel = document.getElementById('poweramp-model').value || 'Luxman L-509Z';
-        const speakerModel = document.getElementById('speaker-model').value || 'TRIO15 Classic';
+    function updateChainConnectors() {
+        const zones = document.querySelectorAll('.drop-zone');
+        const connectors = document.querySelectorAll('.chain-connector');
 
-        document.getElementById('amp-display').textContent = ampModel;
-        document.getElementById('speaker-display').textContent = speakerModel;
+        connectors.forEach(connector => {
+            const [idx1, idx2] = connector.dataset.chain.split('-').map(Number);
+            const zone1 = zones[idx1];
+            const zone2 = zones[idx2];
 
-        btn.disabled = true;
-        btn.textContent = 'Analyzing...';
+            if (zone1.classList.contains('filled') && zone2.classList.contains('filled')) {
+                connector.classList.add('active');
+            } else {
+                connector.classList.remove('active');
+            }
+        });
+    }
 
-        // Hide empty state, show result container
-        emptyState.style.display = 'none';
-        resultContainer.style.display = 'block';
+    componentCards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+            draggedItem = card;
+            draggedCategory = card.dataset.category;
+            card.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
 
-        // Reset animations
-        resultTitle.classList.remove('visible');
-        resultCard.classList.remove('visible');
+        card.addEventListener('dragend', () => {
+            draggedItem.classList.remove('dragging');
+            draggedItem = null;
+            draggedCategory = null;
+        });
+    });
 
-        await new Promise(r => setTimeout(r, 300));
-        resultTitle.classList.add('visible');
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (zone.dataset.accepts === draggedCategory) {
+                e.dataTransfer.dropEffect = 'move';
+                zone.classList.add('drag-over');
+            } else {
+                e.dataTransfer.dropEffect = 'none';
+            }
+        });
 
-        await new Promise(r => setTimeout(r, 400));
-        resultCard.classList.add('visible');
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+        });
 
-        btn.disabled = false;
-        btn.textContent = 'Analyze Compatibility';
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+
+            if (zone.dataset.accepts === draggedCategory && draggedItem) {
+                const brand = draggedItem.querySelector('.component-brand').textContent;
+                const model = draggedItem.querySelector('.component-model').textContent;
+
+                zone.querySelector('.dropped-brand').textContent = brand;
+                zone.querySelector('.dropped-model').textContent = model;
+                zone.classList.add('filled');
+
+                updateChainConnectors();
+            }
+        });
     });
 </script>
 
