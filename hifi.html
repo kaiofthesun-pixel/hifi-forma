@@ -3,284 +3,585 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HiFi — Allen K Lau</title>
+    <title>HiFi Component Match Analysis</title>
     <link rel="icon" type="image/png" href="Assets/About/A.png">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@400;500;600&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --red: #c0392b;
-            --text: #1c1c1c;
-            --muted: #999;
-            --bg: #ffffff;
-        }
-
         html, body {
             height: 100%;
-            background: var(--bg);
-            overflow-x: hidden;
-            overflow-y: scroll;
+            overflow: hidden;
             font-family: 'Inter', sans-serif;
         }
 
-        html {
-            scrollbar-gutter: stable both-edges;
+        .container {
+            display: flex;
+            height: 100vh;
         }
 
-        /* ─── Fixed nav ─── */
-        nav {
-            position: fixed;
-            top: 28px;
-            right: 44px;
-            z-index: 200;
+        /* Left Panel - Menu */
+        .left-panel {
+            width: 362px;
+            min-width: 362px;
+            background: #f5f3ef;
+            padding: 28px 28px 14px 28px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .title {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #1c1c1c;
+            margin-bottom: 32px;
+        }
+
+        /* Accordion Menu */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            flex: 1;
+            min-height: 0;
+            padding-bottom: 16px;
+        }
+
+        .accordion-item:not(.active) {
+            flex-shrink: 0;
+            transition: transform 0.5s ease-out, flex 0.5s ease-out;
+        }
+
+        .accordion-item {
+            position: relative;
+            padding-top: 12px;
+            transition: transform 0.5s ease-out, margin 0.5s ease-out;
+        }
+
+        .accordion-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            border: 1px solid #1c1c1c;
+            border-bottom: none;
+            border-radius: 14px 14px 0 0;
+            transition: height 0.5s ease-out, border-color 0.3s ease;
+        }
+
+        .accordion-item.active {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .accordion-item.active::before {
+            height: calc(100% - 14px);
+            border-bottom: none;
+        }
+
+        .accordion-item:last-child.active {
+            margin-bottom: 0;
+        }
+
+        .accordion-item:last-child.active::before {
+            height: calc(100% - 14px);
+            border: 1px solid #1c1c1c;
+            border-radius: 14px;
+        }
+
+        .accordion-item.active::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: calc(100% - 32px);
+            border-left: 1px solid #1c1c1c;
+            border-right: 1px solid #1c1c1c;
+            pointer-events: none;
+            animation: drawLines 0.5s ease-out forwards;
+        }
+
+        .accordion-item:last-child.active::after {
+            display: none;
+        }
+
+        @keyframes drawLines {
+            0% {
+                clip-path: inset(0 0 100% 0);
+            }
+            100% {
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        @keyframes drawLinesAndClose {
+            0% {
+                clip-path: inset(0 0 100% 0);
+                border-bottom-color: transparent;
+            }
+            80% {
+                clip-path: inset(0 0 0% 0);
+                border-bottom-color: transparent;
+            }
+            100% {
+                clip-path: inset(0 0 0% 0);
+                border-bottom-color: #1c1c1c;
+            }
+        }
+
+        .accordion-header {
             display: flex;
             align-items: center;
-            gap: 22px;
-        }
-        nav a {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--muted);
-            text-decoration: none;
-            letter-spacing: 0.02em;
-        }
-        nav a:hover { color: var(--text); }
-        nav .play-link:hover { color: var(--red); }
-        nav .play-link {
-            font-weight: 500;
-            letter-spacing: -0.02em;
-            display: inline-flex;
-            align-items: center;
-            line-height: 1;
-            color: var(--muted);
-        }
-
-        /* ─── Back button ─── */
-        .back-image-link {
-            position: fixed;
-            top: 28px;
-            left: 44px;
-            z-index: 200;
-        }
-        .back-image {
-            height: 20px;
-            width: auto;
+            gap: 12px;
+            padding: 0 0 12px 12px;
             cursor: pointer;
-            transition: transform 0.15s ease;
-        }
-        .back-image:hover {
-            transform: scale(1.05);
-        }
-        .back-image.clicked {
-            transform: scale(0.95);
+            transition: opacity 0.2s ease;
+            position: relative;
+            z-index: 1;
         }
 
-        /* ─── Content area ─── */
-        .content {
-            padding: 120px 44px 60px;
-            max-width: 800px;
-            margin: 0 auto;
+        .accordion-header:hover {
+            opacity: 0.7;
         }
 
-        /* ─── Compatibility button ─── */
-        .compat-btn {
-            padding: 16px 32px;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
+        .accordion-number {
+            font-size: 10px;
+            font-weight: 400;
+            color: #999;
+            min-width: 16px;
+        }
+
+        .accordion-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
             font-weight: 500;
-            background: var(--text);
+            letter-spacing: 0.05em;
+            color: #1c1c1c;
+            text-transform: uppercase;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: max-height 0.5s ease-out,
+                        flex 0.5s ease-out,
+                        opacity 0.4s ease 0.1s,
+                        transform 0.4s ease 0.1s;
+        }
+
+        .accordion-item.active .accordion-content {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: none;
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .accordion-item:last-child.active .accordion-content {
+            margin-bottom: 14px;
+        }
+
+        .accordion-inner {
+            padding: 8px 12px 14px 12px;
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .accordion-item:last-child .accordion-inner {
+            padding-bottom: 28px;
+        }
+
+        .accordion-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .component-card {
+            margin-bottom: 16px;
+        }
+
+        .component-thumb {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: #d4d4d4;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .component-brand {
+            font-family: 'Manrope', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 2px;
+        }
+
+        .component-model {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Right Panel - Content */
+        .right-panel {
+            flex: 1;
+            background: #ccc9c0;
+            padding: 28px;
+            overflow-y: auto;
+        }
+
+        .result-container {
+            max-width: 600px;
+        }
+
+        .result-title {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #1c1c1c;
+            margin-bottom: 24px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-title.visible {
+            opacity: 1;
+        }
+
+        .result-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .result-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 16px;
+        }
+
+        .result-card p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .rating-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #2ecc71;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .spec-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 14px;
+        }
+
+        .spec-box h4 {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .spec-box p {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #1c1c1c;
+        }
+
+        /* Analyze Button */
+        .analyze-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            background: #1c1c1c;
             color: #fff;
             border: none;
-            border-radius: 50px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s ease, transform 0.1s ease;
         }
-        .compat-btn:hover {
+
+        .analyze-btn:hover {
             background: #333;
         }
-        .compat-btn:active {
+
+        .analyze-btn:active {
             transform: scale(0.98);
         }
-        .compat-btn:disabled {
-            background: #ccc;
+
+        .analyze-btn:disabled {
+            background: #999;
             cursor: not-allowed;
         }
 
-        /* ─── Analysis result ─── */
-        .analysis-result {
-            margin-top: 32px;
-            padding: 24px;
-            background: #f9f9f9;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--text);
-            display: none;
-        }
-        .analysis-result.visible {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        .analysis-result h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text);
-        }
-        .analysis-result .rating {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #2ecc71;
-            color: #fff;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-        .analysis-result p {
-            margin-bottom: 12px;
-        }
-        .analysis-result ul {
-            margin: 12px 0;
-            padding-left: 20px;
-        }
-        .analysis-result li {
-            margin-bottom: 8px;
-        }
-        .analysis-result .spec-compare {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 20px 0;
-        }
-        .analysis-result .spec-box {
-            padding: 16px;
-            background: #fff;
-            border-radius: 8px;
-            border: 1px solid #eee;
-        }
-        .analysis-result .spec-box h4 {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-        .analysis-result .spec-box p {
-            margin: 0;
-            font-size: 13px;
-        }
-        .loading {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            margin-top: 20px;
-            font-size: 14px;
-            color: var(--muted);
-        }
-        .loading.visible {
+        /* Empty state */
+        .empty-state {
             display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
         }
-        .loading .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #eee;
-            border-top-color: var(--text);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
     </style>
 </head>
 <body>
 
-<a href="#" class="back-image-link" onclick="handleBackClick(event)"><img src="Assets/Kaomoji/Back_button.png" alt="Back" class="back-image"></a>
+<div class="container">
+    <div class="left-panel">
+        <div class="title">HIFI COMPONENT MATCH ANALYSIS</div>
 
-<nav>
-    <a href="index.html">Work</a>
-    <a href="play.html" class="play-link">PLAY</a>
-</nav>
-
-<div class="content">
-    <button class="compat-btn" id="analyze-btn">Analyze Compatibility</button>
-
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <span>Analyzing compatibility...</span>
-    </div>
-
-    <div class="analysis-result" id="analysis-result">
-        <span class="rating">Excellent Match</span>
-        <h3>Luxman L-509Z + Pure Audio Project TRIO15 Classic</h3>
-
-        <div class="spec-compare">
-            <div class="spec-box">
-                <h4>Amplifier</h4>
-                <p><strong>Luxman L-509Z</strong></p>
-                <p>120W @ 8Ω / 220W @ 4Ω</p>
-                <p>Damping Factor: 330</p>
-                <p>S/N Ratio: 106dB</p>
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span class="accordion-number">01</span>
+                    <span class="accordion-label">Source</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-inner">
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">LUXMAN</div>
+                            <div class="component-model">D-03X CD Transport/DAC Digital</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">TECHNICS</div>
+                            <div class="component-model">SL-1200G Direct Drive Turntable</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">CHORD</div>
+                            <div class="component-model">Hugo TT2 DAC/Headphone Amp</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="spec-box">
-                <h4>Speaker</h4>
-                <p><strong>TRIO15 Classic</strong></p>
-                <p>Impedance: 8Ω nominal</p>
-                <p>Sensitivity: ~97dB</p>
-                <p>Open Baffle Design</p>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span class="accordion-number">02</span>
+                    <span class="accordion-label">Pre-Amplifier</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-inner">
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">AUDIO RESEARCH</div>
+                            <div class="component-model">LS28 Tube Preamplifier</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">MCINTOSH</div>
+                            <div class="component-model">C2700 Vacuum Tube Preamp</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">PASS LABS</div>
+                            <div class="component-model">XP-12 Line Stage Preamp</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">ACCUPHASE</div>
+                            <div class="component-model">C-2900 Precision Preamp</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span class="accordion-number">03</span>
+                    <span class="accordion-label">Power Amplifier</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-inner">
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">LUXMAN</div>
+                            <div class="component-model">L-509Z Integrated Amplifier</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">PASS LABS</div>
+                            <div class="component-model">XA25 Class A Stereo Amp</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">MCINTOSH</div>
+                            <div class="component-model">MC462 Quad Balanced Amp</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span class="accordion-number">04</span>
+                    <span class="accordion-label">Speakers</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-inner">
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">DEVORE FIDELITY</div>
+                            <div class="component-model">O/96 High-Efficiency Speakers</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">HARBETH</div>
+                            <div class="component-model">Super HL5 Plus XD Monitor</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">KLIPSCH</div>
+                            <div class="component-model">Cornwall IV Heritage Series</div>
+                        </div>
+                        <div class="component-card">
+                            <div class="component-thumb"></div>
+                            <div class="component-brand">SONUS FABER</div>
+                            <div class="component-model">Olympica Nova III Floorstander</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <p><strong>Power Match:</strong> The TRIO15 Classic's high sensitivity (97dB) means it requires very little power to achieve high SPLs. The Luxman's 120W into 8Ω provides massive headroom — you'll likely never use more than a few watts for normal listening.</p>
+    <div class="right-panel">
+        <div class="empty-state" id="empty-state">
+            Select your components and analyze compatibility
+        </div>
 
-        <p><strong>Impedance Compatibility:</strong> The TRIO15's 8Ω nominal impedance is ideal for the L-509Z. The amplifier's exceptional damping factor of 330 ensures tight bass control, which complements the open baffle's naturally extended low-end.</p>
-
-        <p><strong>Sonic Synergy:</strong></p>
-        <ul>
-            <li>The Luxman's refined, slightly warm character pairs beautifully with the TRIO15's transparent open baffle presentation</li>
-            <li>LECUA-EX volume control preserves micro-dynamics at low volumes — ideal for the TRIO15's revealing nature</li>
-            <li>The high damping factor helps control the 15" woofers without over-damping the natural open baffle sound</li>
-        </ul>
-
-        <p><strong>Verdict:</strong> This is an excellent pairing. The Luxman L-509Z has more than enough power and current delivery for the efficient TRIO15 Classic, while its refined amplification circuitry (LIFES 1.0) will extract maximum detail from these revealing speakers.</p>
+        <div class="result-container" id="result-container" style="display: none;">
+            <div class="result-title" id="result-title">ANALYSIS RESULT</div>
+            <div class="result-card" id="result-card">
+                <span class="rating-badge">Excellent Match</span>
+                <h3>System Compatibility Report</h3>
+                <div class="spec-grid">
+                    <div class="spec-box">
+                        <h4>Amplifier</h4>
+                        <p><strong id="amp-display">—</strong></p>
+                        <p>120W @ 8Ω</p>
+                    </div>
+                    <div class="spec-box">
+                        <h4>Speaker</h4>
+                        <p><strong id="speaker-display">—</strong></p>
+                        <p>8Ω nominal</p>
+                    </div>
+                </div>
+                <p><strong>Power Match:</strong> High sensitivity speakers require minimal power. Your amplifier provides excellent headroom for dynamic peaks.</p>
+                <p><strong>Impedance:</strong> Stable impedance curve ensures optimal amplifier performance across the frequency range.</p>
+                <p><strong>Verdict:</strong> This is an excellent pairing with complementary characteristics for refined, dynamic sound.</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    function handleBackClick(e) {
-        e.preventDefault();
-        const img = document.querySelector('.back-image');
-        img.classList.add('clicked');
-        setTimeout(() => img.classList.remove('clicked'), 150);
-        setTimeout(() => history.back(), 400);
-    }
+    // Accordion functionality
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-    // Compatibility analysis
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const item = header.parentElement;
+            const isActive = item.classList.contains('active');
+
+            // Close all items
+            document.querySelectorAll('.accordion-item').forEach(i => {
+                i.classList.remove('active');
+            });
+
+            // Open clicked item if it wasn't already open
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // Analyze button
     document.getElementById('analyze-btn').addEventListener('click', async () => {
         const btn = document.getElementById('analyze-btn');
-        const loading = document.getElementById('loading');
-        const result = document.getElementById('analysis-result');
+        const emptyState = document.getElementById('empty-state');
+        const resultContainer = document.getElementById('result-container');
+        const resultTitle = document.getElementById('result-title');
+        const resultCard = document.getElementById('result-card');
+
+        // Get values
+        const ampModel = document.getElementById('poweramp-model').value || 'Luxman L-509Z';
+        const speakerModel = document.getElementById('speaker-model').value || 'TRIO15 Classic';
+
+        document.getElementById('amp-display').textContent = ampModel;
+        document.getElementById('speaker-display').textContent = speakerModel;
 
         btn.disabled = true;
-        loading.classList.add('visible');
-        result.classList.remove('visible');
+        btn.textContent = 'Analyzing...';
 
-        // Simulate LLM analysis delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Hide empty state, show result container
+        emptyState.style.display = 'none';
+        resultContainer.style.display = 'block';
 
-        loading.classList.remove('visible');
-        result.classList.add('visible');
+        // Reset animations
+        resultTitle.classList.remove('visible');
+        resultCard.classList.remove('visible');
+
+        await new Promise(r => setTimeout(r, 300));
+        resultTitle.classList.add('visible');
+
+        await new Promise(r => setTimeout(r, 400));
+        resultCard.classList.add('visible');
+
         btn.disabled = false;
+        btn.textContent = 'Analyze Compatibility';
     });
 </script>
 
