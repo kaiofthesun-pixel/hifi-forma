@@ -26,7 +26,7 @@
             width: 402px;
             min-width: 402px;
             background: #F1EFEB;
-            padding: 28px 28px 14px 8px;
+            padding: 28px 20px 14px 20px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -35,17 +35,20 @@
         .back-button {
             font-family: 'Inter', sans-serif;
             font-size: 11px;
-            color: #999;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: #1c1c1c;
             text-decoration: none;
+            text-transform: uppercase;
             margin-bottom: 20px;
             margin-top: -12px;
-            transition: color 0.2s ease;
+            transition: opacity 0.2s ease;
             opacity: 0;
             animation: fadeInUp 0.6s ease-out 0.1s forwards;
         }
 
         .back-button:hover {
-            color: #1c1c1c;
+            opacity: 0.6;
         }
 
         .title {
@@ -64,7 +67,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 11px;
             font-weight: 400;
-            color: #999;
+            color: #1c1c1c;
             letter-spacing: 0.03em;
             margin-bottom: 20px;
             text-align: center;
@@ -121,7 +124,7 @@
         .results-section {
             width: 100%;
             max-width: 680px;
-            margin: 16px 0 80px 0;
+            margin: 20px 0 80px 0;
         }
 
         .results-card {
@@ -558,6 +561,10 @@
             right: -176px;
         }
 
+        .arc-label.arc-label-third {
+            right: -186px;
+        }
+
         .drop-zone-arrows .flow-arrow,
         .flow-arrow {
             font-size: 18px;
@@ -706,37 +713,37 @@
         }
 
         /* Staggered entrance animations for analyzer elements */
-        .flow-indicator {
+        .drop-zones > :nth-child(1) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 0.2s forwards;
         }
 
-        .drop-zones > .drop-zone-arrows:first-of-type {
+        .drop-zones > :nth-child(2) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 0.3s forwards;
         }
 
-        .drop-zone-wrapper:nth-child(3) {
+        .drop-zones > :nth-child(3) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 0.4s forwards;
         }
 
-        .drop-zone-wrapper:nth-child(4) {
+        .drop-zones > :nth-child(4) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 0.55s forwards;
         }
 
-        .drop-zone-wrapper:nth-child(5) {
+        .drop-zones > :nth-child(5) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 0.7s forwards;
         }
 
-        .drop-zone-wrapper:nth-child(6) {
+        .drop-zones > :nth-child(6) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 0.85s forwards;
         }
 
-        .drop-zones > .drop-zone-arrows:nth-of-type(2) {
+        .drop-zones > :nth-child(7):not(.flower-arrows) {
             opacity: 0;
             animation: fadeInDown 0.5s ease-out 1s forwards;
         }
@@ -1132,17 +1139,17 @@
         .hifi-love {
             font-family: 'Inter', sans-serif;
             font-size: 11px;
-            color: #999;
+            color: #1c1c1c;
         }
 
         .copyright {
             font-family: 'Inter', sans-serif;
             font-size: 11px;
-            color: #999;
+            color: #1c1c1c;
         }
 
         .hifi-thumbnail-wrapper {
-            position: absolute;
+            position: fixed;
             bottom: 24px;
             right: 64px;
             width: 100px;
@@ -1216,7 +1223,8 @@
             height: 115px;
             background: #DFFF00;
             opacity: 0;
-            animation: fadeInUp 0.8s ease-out 0.7s forwards;
+            transform: rotate(30deg) scale(1);
+            animation: fadeInUpRotate 0.8s ease-out 0.7s forwards;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -1224,26 +1232,41 @@
             justify-content: center;
             gap: 2px;
             box-shadow: 0 8px 24px rgba(223, 255, 0, 0.6);
-            transform: rotate(25deg);
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             z-index: 100;
             user-select: none;
         }
 
-        .room-size-toggle:hover {
-            transform: rotate(25deg) scale(1.1);
+        @keyframes fadeInUpRotate {
+            from {
+                opacity: 0;
+                transform: translateY(20px) rotate(30deg) scale(1);
+            }
+            to {
+                opacity: 1;
+                transform: rotate(30deg) scale(1);
+            }
+        }
+
+        .room-size-toggle.animated {
+            animation: none;
+            opacity: 1;
+        }
+
+        .room-size-toggle.animated:hover {
+            transform: rotate(30deg) scale(1.1);
             box-shadow: 0 12px 32px rgba(223, 255, 0, 0.7);
         }
 
-        .room-size-toggle:active {
-            transform: rotate(25deg) scale(0.85);
+        .room-size-toggle.animated:active {
+            transform: rotate(30deg) scale(0.85);
             transition: transform 0.1s ease;
         }
 
         .room-size-toggle .label {
             font-family: 'Inter', sans-serif;
-            font-size: 10px;
+            font-size: 8px;
             font-weight: 500;
             color: #1c1c1c;
             text-transform: uppercase;
@@ -1299,6 +1322,27 @@
             transform: translateY(0);
         }
 
+        .drop-zone-arrows.flower-arrows.visible .flow-arrow {
+            animation: bounceDown 1.5s ease-in-out infinite;
+        }
+
+        .drop-zone-arrows.flower-arrows.visible .flow-arrow:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .drop-zone-arrows.flower-arrows.visible .flow-arrow:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .drop-zone-arrows.flower-arrows.visible .flow-arrow:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
         .right-panel-content {
             display: flex;
             align-items: flex-start;
@@ -1309,10 +1353,10 @@
 
 <div class="container">
     <div class="left-panel">
-        <a href="play.html" class="back-button">Back</a>
+        <a href="play.html" class="back-button">← Back</a>
         <div class="title">HiFi Component Match Analyzer</div>
 
-        <div class="step-label">↓ Start here. Select component(s) ↓</div>
+        <div class="step-label">↓ START HERE. SELECT COMPONENT(S) ↓</div>
         <div class="accordion">
             <div class="accordion-item">
                 <div class="accordion-header" data-category="source">
@@ -1502,7 +1546,7 @@
                 </div>
                 <div class="chain-connector" data-chain="2-3">
                     <span class="connector-arrow">↓</span>
-                    <span class="arc-label">SPEAKER-LEVEL SIGNAL</span>
+                    <span class="arc-label arc-label-third">SPEAKER-LEVEL<br>SIGNAL</span>
                 </div>
             </div>
             <div class="drop-zone-wrapper">
@@ -1532,7 +1576,6 @@
                 <span class="flow-arrow">↓</span>
                 <span class="flow-arrow">↓</span>
             </div>
-            <div class="step-label step-three">SEE RESULTS</div>
 
             <div class="results-section">
                 <div class="results-card" id="analysisCard">
@@ -1551,6 +1594,11 @@
     const roomSizeToggle = document.getElementById('roomSizeToggle');
     const sizeOptions = document.querySelectorAll('.size-option');
     const sizes = ['SM', 'MD', 'LG'];
+
+    // Add animated class after entrance animation completes
+    roomSizeToggle.addEventListener('animationend', () => {
+        roomSizeToggle.classList.add('animated');
+    });
 
     function toggleComponentDetails(id) {
         const details = document.getElementById(id);
@@ -1798,13 +1846,11 @@
 
         if (components.length === 0) {
             analysisCard.classList.remove('visible');
-            document.querySelector('.step-label.step-three').classList.remove('visible');
             flowerArrows.classList.remove('visible');
             return;
         }
 
         analysisCard.classList.add('visible');
-        document.querySelector('.step-label.step-three').classList.add('visible');
         flowerArrows.classList.add('visible');
 
         const filledCount = components.length;
