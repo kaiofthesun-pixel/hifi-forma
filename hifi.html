@@ -122,6 +122,15 @@
             transform: translateY(0);
         }
 
+        .empty-state-message {
+            font-family: 'Inter', sans-serif;
+            font-size: 32px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.12);
+            text-align: center;
+            margin-top: 120px;
+        }
+
         /* Results Section */
         .results-section {
             width: 100%;
@@ -1619,6 +1628,8 @@
                 <span class="flow-arrow">↓</span>
             </div>
 
+            <div class="empty-state-message">Fill in your signal chain for sound signature analysis</div>
+
             <div class="results-section">
                 <div class="results-card" id="analysisCard">
                     <h2>Component Analysis</h2>
@@ -1878,6 +1889,7 @@
         const analysisContent = document.getElementById('analysisContent');
         const analysisCard = document.getElementById('analysisCard');
         const flowerArrows = document.getElementById('flowerArrows');
+        const emptyStateMessage = document.querySelector('.empty-state-message');
         const components = [];
 
         zones.forEach(zone => {
@@ -1892,11 +1904,13 @@
         if (components.length === 0) {
             analysisCard.classList.remove('visible');
             flowerArrows.classList.remove('visible');
+            emptyStateMessage.style.display = 'block';
             return;
         }
 
         analysisCard.classList.add('visible');
         flowerArrows.classList.add('visible');
+        emptyStateMessage.style.display = 'none';
 
         const filledCount = components.length;
         const isComplete = filledCount === 4;
