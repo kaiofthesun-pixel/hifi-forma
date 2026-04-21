@@ -23,8 +23,8 @@
 
         /* Left Panel - Menu */
         .left-panel {
-            width: 402px;
-            min-width: 402px;
+            flex: 0 1 340px;
+            min-width: 240px;
             background: #F1EFEB;
             padding: 28px 20px 14px 20px;
             display: flex;
@@ -139,10 +139,9 @@
         }
 
         .results-card {
-            background: #F1EFEB;
-            border-radius: 24px;
-            padding: 32px;
-            min-height: 400px;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -463,7 +462,7 @@
         /* Right Panel - Content */
         .right-panel {
             flex: 1;
-            min-width: 680px;
+            min-width: 580px;
             background: #D6D1CB;
             padding: 24px;
             overflow: hidden;
@@ -484,11 +483,66 @@
 
         .right-panel-scroll {
             flex: 1;
-            overflow-y: auto;
+            overflow: hidden;
             padding: 28px 28px 28px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .right-panel-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Third Panel */
+        .third-panel {
+            width: 0;
+            min-width: 0;
+            background: #D6D1CB;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: width 0.4s ease, min-width 0.4s ease, padding 0.4s ease, opacity 0.4s ease;
+        }
+
+        .third-panel.visible {
+            width: 460px;
+            min-width: 460px;
+            max-width: 460px;
+            padding: 24px 24px 24px 0;
+            opacity: 1;
+        }
+
+        .third-panel-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .third-panel-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 20px 28px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .third-panel-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: #1c1c1c;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            text-align: center;
         }
 
         /* Flow indicator decorative elements */
@@ -1194,9 +1248,9 @@
         }
 
         .hifi-thumbnail-wrapper {
-            position: fixed;
-            bottom: 54px;
-            right: 64px;
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
             width: 100px;
             border-radius: 12px;
             overflow: visible;
@@ -1263,10 +1317,10 @@
 
         .room-size-toggle {
             position: absolute;
-            top: 54px;
-            right: 54px;
-            width: 115px;
-            height: 115px;
+            top: -20px;
+            right: -70px;
+            width: clamp(64px, 6.4vw, 92px);
+            height: clamp(64px, 6.4vw, 92px);
             background: #DFFF00;
             opacity: 0;
             transform: rotate(30deg) scale(1);
@@ -1279,7 +1333,7 @@
             gap: 2px;
             box-shadow: 0 8px 24px rgba(223, 255, 0, 0.6);
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, width 0.3s ease, height 0.3s ease;
             z-index: 100;
             user-select: none;
         }
@@ -1312,7 +1366,7 @@
 
         .room-size-toggle .label {
             font-family: 'Inter', sans-serif;
-            font-size: 8px;
+            font-size: clamp(6px, 0.55vw, 8px);
             font-weight: 500;
             color: #1c1c1c;
             text-transform: uppercase;
@@ -1321,12 +1375,12 @@
 
         .room-size-toggle .sizes {
             display: flex;
-            gap: 6px;
+            gap: clamp(4px, 0.4vw, 6px);
         }
 
         .room-size-toggle .size-option {
             font-family: 'Inter', sans-serif;
-            font-size: 18px;
+            font-size: clamp(10px, 1vw, 14px);
             font-weight: 600;
             color: #1c1c1c;
             cursor: pointer;
@@ -1392,6 +1446,7 @@
         .right-panel-content {
             display: flex;
             align-items: flex-start;
+            position: relative;
         }
     </style>
 </head>
@@ -1518,14 +1573,6 @@
     </div>
 
     <div class="right-panel">
-        <div class="room-size-toggle" id="roomSizeToggle">
-            <span class="label">Room size</span>
-            <div class="sizes">
-                <span class="size-option" data-size="SM">SM</span>
-                <span class="size-option active" data-size="MD">MD</span>
-                <span class="size-option" data-size="LG">LG</span>
-            </div>
-        </div>
         <div class="hifi-thumbnail-wrapper">
             <span class="hifi-label hifi-label-top">Pardon the dust.<br>In beta.</span>
             <div class="thumb-container">
@@ -1538,6 +1585,14 @@
         <div class="step-label step-two">SIGNAL CHAIN</div>
 
         <div class="right-panel-content">
+        <div class="room-size-toggle" id="roomSizeToggle">
+            <span class="label">Room size</span>
+            <div class="sizes">
+                <span class="size-option" data-size="SM">SM</span>
+                <span class="size-option active" data-size="MD">MD</span>
+                <span class="size-option" data-size="LG">LG</span>
+            </div>
+        </div>
         <div class="drop-zones">
             <div class="flow-indicator">
                 <div class="flow-circle">
@@ -1623,23 +1678,21 @@
             <div class="flower-animation">
                 <canvas id="flowerCanvas" width="230" height="280"></canvas>
             </div>
-            <div class="drop-zone-arrows flower-arrows" id="flowerArrows">
-                <span class="flow-arrow">↓</span>
-                <span class="flow-arrow">↓</span>
-                <span class="flow-arrow">↓</span>
-            </div>
 
-            <div class="empty-state-message">Fill in your signal chain for sound signature analysis</div>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
 
-            <div class="results-section">
+    <div class="third-panel" id="thirdPanel">
+        <div class="third-panel-container">
+            <div class="third-panel-scroll">
                 <div class="results-card" id="analysisCard">
                     <h2>Sound Signature Analysis</h2>
                     <div id="analysisContent"></div>
                 </div>
             </div>
-        </div>
-        </div>
-        </div>
         </div>
     </div>
 </div>
@@ -1889,8 +1942,7 @@
         const zones = document.querySelectorAll('.drop-zone');
         const analysisContent = document.getElementById('analysisContent');
         const analysisCard = document.getElementById('analysisCard');
-        const flowerArrows = document.getElementById('flowerArrows');
-        const emptyStateMessage = document.querySelector('.empty-state-message');
+        const thirdPanel = document.getElementById('thirdPanel');
         const components = [];
 
         zones.forEach(zone => {
@@ -1904,14 +1956,12 @@
 
         if (components.length === 0) {
             analysisCard.classList.remove('visible');
-            flowerArrows.classList.remove('visible');
-            emptyStateMessage.style.display = 'block';
+            thirdPanel.classList.remove('visible');
             return;
         }
 
         analysisCard.classList.add('visible');
-        flowerArrows.classList.add('visible');
-        emptyStateMessage.style.display = 'none';
+        thirdPanel.classList.add('visible');
 
         const filledCount = components.length;
         const isComplete = filledCount === 4;
@@ -2183,8 +2233,9 @@
 
         // Auto-scroll to analysis card when all components are selected
         if (isComplete) {
+            const thirdPanelScroll = document.querySelector('.third-panel-scroll');
             setTimeout(() => {
-                smoothScrollTo(rightPanelScroll, analysisCard, 1200);
+                smoothScrollTo(thirdPanelScroll, analysisCard, 1200);
             }, 800);
         }
     }
@@ -2242,6 +2293,64 @@
             draggedCategory = card.dataset.category;
             rightPanel.classList.add('dragging');
             setEligibleZones(draggedCategory);
+        });
+
+        card.addEventListener('click', (e) => {
+            const category = card.dataset.category;
+            const targetZone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
+            if (!targetZone) return;
+
+            // If this card is already selected, deselect it
+            if (card.classList.contains('selected')) {
+                card.classList.remove('selected');
+                targetZone.classList.remove('filled');
+                delete targetZone.dataset.selectedCard;
+
+                const droppedThumb = targetZone.querySelector('.dropped-thumb');
+                const droppedBrand = targetZone.querySelector('.dropped-brand');
+                const droppedModel = targetZone.querySelector('.dropped-model');
+                droppedBrand.textContent = '';
+                droppedModel.textContent = '';
+                droppedThumb.innerHTML = '';
+
+                updateChainConnectors();
+                updateCheckmarks();
+                updateComponentAnalysis();
+                return;
+            }
+
+            // If zone is already filled, unmark the previous card
+            if (targetZone.classList.contains('filled') && targetZone.dataset.selectedCard !== undefined) {
+                const prevCardIndex = parseInt(targetZone.dataset.selectedCard);
+                componentCards[prevCardIndex].classList.remove('selected');
+            }
+
+            const droppedThumb = targetZone.querySelector('.dropped-thumb');
+            const droppedBrand = targetZone.querySelector('.dropped-brand');
+            const droppedModel = targetZone.querySelector('.dropped-model');
+
+            const brand = card.querySelector('.component-brand').textContent;
+            const model = card.querySelector('.component-model').textContent;
+            const thumbImg = card.querySelector('.component-thumb img');
+
+            droppedBrand.textContent = brand;
+            droppedModel.textContent = model;
+
+            if (thumbImg) {
+                droppedThumb.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = thumbImg.src;
+                img.alt = thumbImg.alt;
+                droppedThumb.appendChild(img);
+            }
+
+            card.classList.add('selected');
+            targetZone.dataset.selectedCard = Array.from(componentCards).indexOf(card);
+            targetZone.classList.add('filled');
+
+            updateChainConnectors();
+            updateCheckmarks();
+            updateComponentAnalysis();
         });
 
         card.addEventListener('dragstart', (e) => {
@@ -2338,11 +2447,6 @@
                 updateChainConnectors();
                 updateCheckmarks();
                 updateComponentAnalysis();
-
-                // Collapse the accordion
-                document.querySelectorAll('.accordion-item').forEach(i => {
-                    i.classList.remove('active');
-                });
             }
         });
 
