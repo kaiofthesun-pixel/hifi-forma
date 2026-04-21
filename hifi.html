@@ -462,7 +462,7 @@
         /* Right Panel - Content */
         .right-panel {
             flex: 1;
-            min-width: 580px;
+            min-width: 400px;
             background: #D6D1CB;
             padding: 24px;
             overflow: hidden;
@@ -496,24 +496,22 @@
 
         /* Third Panel */
         .third-panel {
-            width: 0;
-            min-width: 0;
+            flex: 1;
+            min-width: 400px;
+            max-width: 0;
             background: #D6D1CB;
-            padding: 0;
+            padding: 24px 24px 24px 0;
             overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
-            opacity: 0;
-            transition: width 0.4s ease, min-width 0.4s ease, padding 0.4s ease, opacity 0.4s ease;
+            margin-right: -424px;
+            transition: margin-right 0.8s cubic-bezier(0.32, 0.72, 0, 1), max-width 0.8s cubic-bezier(0.32, 0.72, 0, 1);
         }
 
         .third-panel.visible {
-            width: 460px;
-            min-width: 460px;
-            max-width: 460px;
-            padding: 24px 24px 24px 0;
-            opacity: 1;
+            margin-right: 0;
+            max-width: none;
         }
 
         .third-panel-container {
@@ -524,6 +522,14 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.6s ease 0.15s, transform 0.8s cubic-bezier(0.32, 0.72, 0, 1) 0.15s;
+        }
+
+        .third-panel.visible .third-panel-container {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .third-panel-scroll {
@@ -662,6 +668,17 @@
 
         .arc-label.arc-label-third {
             right: -186px;
+        }
+
+        .drop-zones.has-selection .signal-chain-label,
+        .drop-zones.has-selection .arc-label {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .signal-chain-label,
+        .arc-label {
+            transition: opacity 0.3s ease;
         }
 
         .drop-zone-arrows .flow-arrow,
@@ -806,7 +823,7 @@
             gap: 0;
             padding: 40px;
             padding-top: 96px;
-            margin-left: -75px;
+            margin-left: 25px;
             transform-origin: top center;
             transition: transform 0.3s ease;
         }
@@ -1940,6 +1957,7 @@
 
     function updateComponentAnalysis() {
         const zones = document.querySelectorAll('.drop-zone');
+        const dropZonesContainer = document.querySelector('.drop-zones');
         const analysisContent = document.getElementById('analysisContent');
         const analysisCard = document.getElementById('analysisCard');
         const thirdPanel = document.getElementById('thirdPanel');
@@ -1957,8 +1975,11 @@
         if (components.length === 0) {
             analysisCard.classList.remove('visible');
             thirdPanel.classList.remove('visible');
+            dropZonesContainer.classList.remove('has-selection');
             return;
         }
+
+        dropZonesContainer.classList.add('has-selection');
 
         analysisCard.classList.add('visible');
         thirdPanel.classList.add('visible');
