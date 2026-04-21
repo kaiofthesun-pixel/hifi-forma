@@ -6,7 +6,8 @@
       "WebFetch(domain:www.pureaudioproject.com)",
       "Bash(open /Users/allenlau/Documents/GitHub/Portfolio/index.html)",
       "Bash(python3 -m http.server 8080)",
-      "Bash(node -e \"const fs = require\\('fs'\\); const html = fs.readFileSync\\('hifi.html', 'utf8'\\); const scriptMatch = html.match\\(/<script[^>]*>\\([\\\\s\\\\S]*?\\)<\\\\/script>/g\\); if\\(scriptMatch\\) { scriptMatch.forEach\\(\\(s, i\\) => { const code = s.replace\\(/<\\\\/?script[^>]*>/g, ''\\); try { new Function\\(code\\); console.log\\('Script block', i+1, ': OK'\\); } catch\\(e\\) { console.log\\('Script block', i+1, ': ERROR -', e.message\\); } }\\); }\")"
+      "Bash(node -e \"const fs = require\\('fs'\\); const html = fs.readFileSync\\('hifi.html', 'utf8'\\); const scriptMatch = html.match\\(/<script[^>]*>\\([\\\\s\\\\S]*?\\)<\\\\/script>/g\\); if\\(scriptMatch\\) { scriptMatch.forEach\\(\\(s, i\\) => { const code = s.replace\\(/<\\\\/?script[^>]*>/g, ''\\); try { new Function\\(code\\); console.log\\('Script block', i+1, ': OK'\\); } catch\\(e\\) { console.log\\('Script block', i+1, ': ERROR -', e.message\\); } }\\); }\")",
+      "Bash(git checkout *)"
     ]
   }
 }
