@@ -1069,7 +1069,6 @@
             }
         }
 
-        /* When third panel is visible, arcs get cut off sooner */
         @media (max-width: 1350px) {
             .drop-zones.has-selection .arc-label {
                 opacity: 0;
@@ -3353,19 +3352,10 @@
         searchSuggestions.classList.remove('visible');
         leftPanel.classList.remove('search-active');
 
-        // Map database category to drop zone accepts
-        const categoryMap = {
-            'source': 'source',
-            'dac': 'dac',
-            'preamp': 'preamp',
-            'poweramp': 'poweramp',
-            'speakers': 'speakers'
-        };
+        const validCategories = ['source', 'dac', 'preamp', 'poweramp', 'speakers'];
+        if (!validCategories.includes(category)) return;
 
-        const zoneCategory = categoryMap[category];
-        if (!zoneCategory) return;
-
-        const targetZone = document.querySelector(`.drop-zone[data-accepts="${zoneCategory}"]`);
+        const targetZone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
         if (!targetZone) return;
 
         // Clear any previously selected card for this zone
@@ -3396,9 +3386,9 @@
         }
 
         // Update chain connectors and analysis
-        if (typeof updateChainConnectors === 'function') updateChainConnectors();
-        if (typeof updateCheckmarks === 'function') updateCheckmarks();
-        if (typeof updateComponentAnalysis === 'function') updateComponentAnalysis();
+        updateChainConnectors();
+        updateCheckmarks();
+        updateComponentAnalysis();
 
         // Add has-selection class to drop-zones
         const dropZonesContainer = document.querySelector('.drop-zones');
