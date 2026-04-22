@@ -3664,7 +3664,7 @@
     let highlightedIndex = -1;
 
     function searchComponents(query) {
-        if (!query || query.length < 2) return [];
+        if (!query || query.length < 1) return [];
         const lowerQuery = query.toLowerCase();
         return COMPONENT_DATABASE.filter(comp =>
             comp.brand.toLowerCase().includes(lowerQuery) ||
@@ -3815,7 +3815,7 @@
         } else {
             accordionSearchHint.classList.remove('has-input');
         }
-        if (query.length < 2) {
+        if (query.length < 1) {
             searchSuggestions.classList.remove('visible');
             return;
         }
@@ -4069,27 +4069,7 @@
                 const category = header.dataset.category;
                 const zone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
                 if (zone && zone.classList.contains('filled')) {
-                    // Deselect card in accordion
-                    const accordionItem = header.closest('.accordion-item');
-                    if (accordionItem) {
-                        accordionItem.querySelectorAll('.component-card.selected').forEach(card => {
-                            card.classList.remove('selected');
-                        });
-                    }
-                    delete zone.dataset.selectedCard;
-
-                    // Clear drop zone
-                    zone.classList.remove('filled');
-                    zone.querySelector('.dropped-brand').textContent = '';
-                    zone.querySelector('.dropped-model').textContent = '';
-                    zone.querySelector('.dropped-thumb').innerHTML = '';
-
-                    // Hide checkmark
-                    e.target.classList.remove('visible');
-
-                    updateChainConnectors();
-                    updateCheckmarks();
-                    updateComponentAnalysis();
+                    clearDropZone(zone);
                 }
                 return;
             }
@@ -4701,23 +4681,7 @@
         });
 
         removeBtn.addEventListener('click', () => {
-            // Unmark the previously selected card (re-query to include dynamic cards)
-            const category = zone.dataset.accepts;
-            const accordionItem = document.querySelector(`.accordion-header[data-category="${category}"]`)?.closest('.accordion-item');
-            if (accordionItem) {
-                accordionItem.querySelectorAll('.component-card.selected').forEach(card => {
-                    card.classList.remove('selected');
-                });
-            }
-            delete zone.dataset.selectedCard;
-
-            zone.classList.remove('filled');
-            droppedBrand.textContent = '';
-            droppedModel.textContent = '';
-            droppedThumb.innerHTML = '';
-            updateChainConnectors();
-            updateCheckmarks();
-            updateComponentAnalysis();
+            clearDropZone(zone);
         });
     });
 
