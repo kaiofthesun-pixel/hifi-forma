@@ -69,7 +69,7 @@
 
         .title {
             font-family: 'Pirata One', cursive;
-            font-size: 40px;
+            font-size: 28px;
             font-weight: 400;
             letter-spacing: 0.02em;
             line-height: 0.95;
@@ -392,23 +392,123 @@
         .accordion-search-hint {
             display: flex;
             align-items: center;
-            padding: 0 12px 16px 40px;
+            padding: 0 0 12px 12px;
+            margin-top: 10px;
             gap: 12px;
+            position: relative;
         }
 
         .accordion-search-icon {
             width: 14px;
             height: 14px;
-            stroke: #999;
+            stroke: #1c1c1c;
             flex-shrink: 0;
         }
 
         .accordion-search-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
             font-weight: 500;
-            color: #1c1c1c;
             letter-spacing: 0.05em;
+            color: #1c1c1c;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .accordion-search-label:hover {
+            opacity: 0.6;
+        }
+
+        .accordion-search-hint.search-active .accordion-search-label {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .accordion-search-icon {
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .accordion-search-icon:hover {
+            opacity: 0.6;
+        }
+
+        .inline-search-container {
+            display: none;
+            align-items: center;
+            flex: 1;
+            gap: 8px;
+        }
+
+        .accordion-search-hint.search-active .inline-search-container {
+            display: flex;
+        }
+
+        .inline-search-input {
+            flex: 1;
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: #1c1c1c;
+            background: transparent;
+            border: none;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        .inline-search-input::placeholder {
+            color: #999;
+            text-transform: none;
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+
+        .inline-search-close {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: #999;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .inline-search-close:hover {
+            background: #666;
+        }
+
+        .accordion-search-hint .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            margin-top: 8px;
+        }
+
+        .accordion-search-hint .search-suggestions.visible {
+            display: block;
+        }
+
+        .accordion-search-hint.has-input ~ .accordion-item {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .accordion-item:not(.active) {
@@ -419,7 +519,8 @@
         .accordion-item {
             position: relative;
             padding-top: 12px;
-            transition: transform 0.25s ease-out, margin 0.25s ease-out;
+            transition: transform 0.3s ease, margin 0.25s ease-out, opacity 0.3s ease;
+            opacity: 1;
         }
 
         .accordion-item::before {
@@ -539,6 +640,11 @@
             opacity: 0;
             transform: scale(0.5);
             transition: opacity 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .accordion-header .checkmark:hover {
+            background: #e06200;
         }
 
         .accordion-header .checkmark::after {
@@ -1883,21 +1989,20 @@
 <div class="container">
     <div class="left-panel">
         <div class="supertitle">HIFI FORMA</div>
-        <div class="title">HiFi Component Match Analyzer</div>
-
-        <div class="search-container">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input type="text" class="search-input" id="componentSearch" placeholder="Search components" autocomplete="off">
-            <button class="search-clear" id="searchClear">×</button>
-            <div class="search-suggestions" id="searchSuggestions"></div>
-        </div>
+        <div class="title">Component Match Analyzer</div>
 
         <div class="accordion">
-            <div class="accordion-search-hint">
-                <span class="accordion-search-label">SELECTED COMPONENTS</span>
+            <div class="accordion-search-hint" id="accordionSearchHint">
+                <svg class="accordion-search-icon" id="accordionSearchIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <span class="accordion-search-label" id="accordionSearchLabel">SEARCH</span>
+                <div class="inline-search-container" id="inlineSearchContainer">
+                    <input type="text" class="inline-search-input" id="componentSearch" placeholder="Search components" autocomplete="off">
+                    <button class="inline-search-close" id="inlineSearchClose">×</button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" data-category="source">
@@ -3550,7 +3655,9 @@
     // Search functionality
     const searchInput = document.getElementById('componentSearch');
     const searchSuggestions = document.getElementById('searchSuggestions');
-    const searchClear = document.getElementById('searchClear');
+    const accordionSearchHint = document.getElementById('accordionSearchHint');
+    const accordionSearchIcon = document.getElementById('accordionSearchIcon');
+    const inlineSearchClose = document.getElementById('inlineSearchClose');
     const analyzeBtn = document.getElementById('analyzeBtn');
     const flowerAnimation = document.querySelector('.flower-animation');
     const leftPanel = document.querySelector('.left-panel');
@@ -3599,7 +3706,8 @@
     function selectSuggestion(brand, model, category, type) {
         searchInput.value = '';
         searchSuggestions.classList.remove('visible');
-        leftPanel.classList.remove('search-active');
+        accordionSearchHint.classList.remove('search-active');
+        accordionSearchHint.classList.remove('has-input');
 
         const validCategories = ['source', 'dac', 'preamp', 'poweramp', 'speakers'];
         if (!validCategories.includes(category)) return;
@@ -3624,14 +3732,60 @@
         droppedModel.textContent = model;
         droppedThumb.innerHTML = '';
 
-        // Mark as filled (from search, no card index)
+        // Mark as filled
         targetZone.classList.add('filled');
-        delete targetZone.dataset.selectedCard;
 
-        // Update checkmark for the accordion
-        const accordionHeader = document.querySelector(`.accordion-header[data-category="${category}"]`);
-        if (accordionHeader) {
-            accordionHeader.classList.add('checked');
+        // Show checkmark for this category
+        const header = document.querySelector(`.accordion-header[data-category="${category}"]`);
+        if (header) {
+            const checkmark = header.querySelector('.checkmark');
+            if (checkmark) checkmark.classList.add('visible');
+        }
+
+        // Find and select matching component card in accordion
+        const accordionItem = document.querySelector(`.accordion-header[data-category="${category}"]`)?.closest('.accordion-item');
+        if (accordionItem) {
+            const cards = accordionItem.querySelectorAll('.component-card');
+            const brandUpper = brand.toUpperCase();
+            const modelUpper = model.toUpperCase();
+            let matchedCard = null;
+            for (const card of cards) {
+                const cardBrand = card.querySelector('.component-brand')?.textContent.trim().toUpperCase();
+                const cardModel = card.querySelector('.component-model')?.textContent.trim().toUpperCase();
+                if (cardBrand === brandUpper && cardModel === modelUpper) {
+                    matchedCard = card;
+                    break;
+                }
+            }
+
+            // Deselect any previously selected card in this category
+            cards.forEach(c => c.classList.remove('selected'));
+
+            if (matchedCard) {
+                matchedCard.classList.add('selected');
+                targetZone.dataset.selectedCard = Array.from(document.querySelectorAll('.component-card')).indexOf(matchedCard);
+            } else {
+                // Create a new card for this component
+                const accordionInner = accordionItem.querySelector('.accordion-inner');
+                if (accordionInner) {
+                    const newCard = document.createElement('div');
+                    newCard.className = 'component-card selected';
+                    newCard.draggable = true;
+                    newCard.dataset.category = category;
+                    newCard.innerHTML = `
+                        <div class="component-thumb"></div>
+                        <div class="component-brand">${brandUpper}</div>
+                        <div class="component-model">${model}</div>
+                    `;
+                    accordionInner.insertBefore(newCard, accordionInner.firstChild);
+
+                    // Re-attach drag events to new card
+                    newCard.addEventListener('dragstart', handleDragStart);
+                    newCard.addEventListener('dragend', handleDragEnd);
+
+                    targetZone.dataset.selectedCard = Array.from(document.querySelectorAll('.component-card')).indexOf(newCard);
+                }
+            }
         }
 
         // Update chain connectors and analysis
@@ -3649,8 +3803,7 @@
     searchInput.addEventListener('blur', () => {
         setTimeout(() => {
             if (!searchSuggestions.matches(':hover') && searchInput.value.trim() === '') {
-                leftPanel.classList.remove('search-active');
-                searchClear.classList.remove('visible');
+                accordionSearchHint.classList.remove('search-active');
             }
         }, 100);
     });
@@ -3658,11 +3811,9 @@
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.trim();
         if (query.length > 0) {
-            leftPanel.classList.add('search-active');
-            searchClear.classList.add('visible');
+            accordionSearchHint.classList.add('has-input');
         } else {
-            leftPanel.classList.remove('search-active');
-            searchClear.classList.remove('visible');
+            accordionSearchHint.classList.remove('has-input');
         }
         if (query.length < 2) {
             searchSuggestions.classList.remove('visible');
@@ -3704,20 +3855,36 @@
         const suggestion = e.target.closest('.search-suggestion');
         if (suggestion) {
             selectSuggestion(suggestion.dataset.brand, suggestion.dataset.model, suggestion.dataset.category);
+            accordionSearchHint.classList.remove('search-active');
         }
     });
 
-    searchClear.addEventListener('click', () => {
+    // Open search when clicking the search icon or label
+    const accordionSearchLabel = document.getElementById('accordionSearchLabel');
+
+    function openSearch() {
+        accordionSearchHint.classList.add('search-active');
+        searchInput.focus();
+    }
+
+    accordionSearchIcon.addEventListener('click', openSearch);
+    accordionSearchLabel.addEventListener('click', openSearch);
+
+    // Close search
+    inlineSearchClose.addEventListener('click', () => {
         searchInput.value = '';
         searchSuggestions.classList.remove('visible');
-        leftPanel.classList.remove('search-active');
-        searchClear.classList.remove('visible');
-        searchInput.focus();
+        accordionSearchHint.classList.remove('search-active');
+        accordionSearchHint.classList.remove('has-input');
     });
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-container')) {
+        if (!e.target.closest('.accordion-search-hint')) {
             searchSuggestions.classList.remove('visible');
+            if (searchInput.value.trim() === '') {
+                accordionSearchHint.classList.remove('search-active');
+                accordionSearchHint.classList.remove('has-input');
+            }
         }
     });
 
@@ -3895,7 +4062,38 @@
     const accordionHeaders = document.querySelectorAll('.accordion-header');
 
     accordionHeaders.forEach(header => {
-        header.addEventListener('click', () => {
+        header.addEventListener('click', (e) => {
+            // If clicking the checkmark, clear the selection instead
+            if (e.target.classList.contains('checkmark')) {
+                e.stopPropagation();
+                const category = header.dataset.category;
+                const zone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
+                if (zone && zone.classList.contains('filled')) {
+                    // Deselect card in accordion
+                    const accordionItem = header.closest('.accordion-item');
+                    if (accordionItem) {
+                        accordionItem.querySelectorAll('.component-card.selected').forEach(card => {
+                            card.classList.remove('selected');
+                        });
+                    }
+                    delete zone.dataset.selectedCard;
+
+                    // Clear drop zone
+                    zone.classList.remove('filled');
+                    zone.querySelector('.dropped-brand').textContent = '';
+                    zone.querySelector('.dropped-model').textContent = '';
+                    zone.querySelector('.dropped-thumb').innerHTML = '';
+
+                    // Hide checkmark
+                    e.target.classList.remove('visible');
+
+                    updateChainConnectors();
+                    updateCheckmarks();
+                    updateComponentAnalysis();
+                }
+                return;
+            }
+
             const item = header.parentElement;
             const isActive = item.classList.contains('active');
 
@@ -3920,17 +4118,36 @@
     let draggedCategory = null;
     let releaseAnimationPlayed = false;
 
+    function clearDropZone(zone) {
+        const category = zone.dataset.accepts;
+        const accordionItem = document.querySelector(`.accordion-header[data-category="${category}"]`)?.closest('.accordion-item');
+        if (accordionItem) {
+            accordionItem.querySelectorAll('.component-card.selected').forEach(card => card.classList.remove('selected'));
+        }
+        delete zone.dataset.selectedCard;
+        zone.classList.remove('filled');
+        zone.querySelector('.dropped-brand').textContent = '';
+        zone.querySelector('.dropped-model').textContent = '';
+        zone.querySelector('.dropped-thumb').innerHTML = '';
+        updateChainConnectors();
+        updateCheckmarks();
+        updateComponentAnalysis();
+    }
+
     function updateCheckmarks() {
         const zones = document.querySelectorAll('.drop-zone');
         zones.forEach(zone => {
             const category = zone.dataset.accepts;
+            const isFilled = zone.classList.contains('filled');
             const header = document.querySelector(`.accordion-header[data-category="${category}"]`);
             if (header) {
                 const checkmark = header.querySelector('.checkmark');
-                if (zone.classList.contains('filled')) {
-                    checkmark.classList.add('visible');
-                } else {
-                    checkmark.classList.remove('visible');
+                if (checkmark) {
+                    if (isFilled) {
+                        checkmark.classList.add('visible');
+                    } else {
+                        checkmark.classList.remove('visible');
+                    }
                 }
             }
         });
@@ -4484,12 +4701,15 @@
         });
 
         removeBtn.addEventListener('click', () => {
-            // Unmark the previously selected card
-            if (zone.dataset.selectedCard !== undefined) {
-                const cardIndex = parseInt(zone.dataset.selectedCard);
-                componentCards[cardIndex].classList.remove('selected');
-                delete zone.dataset.selectedCard;
+            // Unmark the previously selected card (re-query to include dynamic cards)
+            const category = zone.dataset.accepts;
+            const accordionItem = document.querySelector(`.accordion-header[data-category="${category}"]`)?.closest('.accordion-item');
+            if (accordionItem) {
+                accordionItem.querySelectorAll('.component-card.selected').forEach(card => {
+                    card.classList.remove('selected');
+                });
             }
+            delete zone.dataset.selectedCard;
 
             zone.classList.remove('filled');
             droppedBrand.textContent = '';
