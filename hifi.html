@@ -290,6 +290,15 @@
             color: #1c1c1c;
         }
 
+        .step-label.step-two {
+            position: absolute;
+            top: 16px;
+            left: calc(50% - 27px);
+            transform: translateX(-50%);
+            margin-bottom: 0;
+            z-index: 10;
+        }
+
         .step-label.step-three {
             position: relative;
             top: auto;
@@ -876,7 +885,7 @@
         .flow-indicator {
             position: absolute;
             left: -70px;
-            top: 105px;
+            top: 93px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1179,7 +1188,7 @@
             align-items: center;
             gap: 0;
             padding: 40px;
-            padding-top: 44px;
+            padding-top: 76px;
             margin-left: 25px;
             transform-origin: top center;
             transition: transform 0.3s ease;
@@ -1849,8 +1858,8 @@
 
         .room-size-toggle {
             position: absolute;
-            top: -30px;
-            right: -80px;
+            top: 20px;
+            right: 20px;
             width: clamp(64px, 6.4vw, 92px);
             height: clamp(64px, 6.4vw, 92px);
             background: #FFE44D;
@@ -2272,10 +2281,6 @@
             </div>
         </div>
         <div class="right-panel-container">
-        <div class="right-panel-scroll">
-        <div class="step-label step-two">SIGNAL CHAIN</div>
-
-        <div class="right-panel-content">
         <div class="room-size-toggle" id="roomSizeToggle">
             <span class="label">Room size</span>
             <div class="sizes">
@@ -2284,6 +2289,10 @@
                 <span class="size-option" data-size="LG">LG</span>
             </div>
         </div>
+        <div class="right-panel-scroll">
+
+        <div class="right-panel-content">
+        <div class="step-label step-two">SIGNAL CHAIN</div>
         <div class="drop-zones">
             <div class="flow-indicator">
                 <span class="signal-chain-label">MAINS POWER</span>
