@@ -160,7 +160,7 @@
             top: calc(100% + 12px);
             left: 0;
             right: 0;
-            background: #fff;
+            background: transparent;
             border: none;
             border-radius: 16px;
             max-height: 600px;
@@ -179,7 +179,7 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             transition: background 0.15s ease;
         }
 
@@ -189,7 +189,7 @@
 
         .search-suggestion:hover,
         .search-suggestion.highlighted {
-            background: #f0ebe5;
+            background: rgba(0, 0, 0, 0.05);
         }
 
         .search-suggestion:active {
@@ -502,7 +502,7 @@
             right: 0;
             background: #fff;
             border-radius: 16px;
-            max-height: 400px;
+            max-height: calc(100vh - 200px);
             overflow-y: auto;
             z-index: 1000;
             display: none;
@@ -785,7 +785,7 @@
         /* Right Panel - Content */
         .right-panel {
             flex: 1;
-            min-width: 400px;
+            min-width: 0;
             background: #D6D1CB;
             padding: 24px;
             overflow: hidden;
@@ -820,7 +820,7 @@
         /* Third Panel */
         .third-panel {
             flex: 1;
-            min-width: 400px;
+            min-width: 0;
             max-width: 0;
             background: #D6D1CB;
             padding: 24px 0 24px 0;
@@ -828,7 +828,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            margin-right: -424px;
+            margin-right: -24px;
             transition: margin-right 0.8s cubic-bezier(0.32, 0.72, 0, 1), max-width 0.8s cubic-bezier(0.32, 0.72, 0, 1);
         }
 
@@ -874,12 +874,20 @@
 
         /* Flow indicator decorative elements */
         .flow-indicator {
+            position: absolute;
+            left: -70px;
+            top: 105px;
             display: flex;
-            justify-content: center;
-            width: 289px;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
             pointer-events: none;
-            margin-top: -90px;
-            margin-bottom: 8px;
+        }
+
+        .flow-indicator-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .flow-circle {
@@ -931,6 +939,30 @@
             border-radius: 50%;
         }
 
+        .flow-arrows-horizontal {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .flow-arrows-horizontal .flow-arrow {
+            font-size: 18px;
+            color: #FF6F00;
+            line-height: 1;
+        }
+
+        .flow-indicator .signal-chain-label {
+            position: relative;
+            top: -16px;
+            left: -32px;
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #FF6F00;
+            white-space: nowrap;
+        }
+
         .flow-arrows {
             position: absolute;
             top: 96px;
@@ -954,7 +986,7 @@
 
         .drop-zone-arrows.bottom-arrows {
             opacity: 0;
-            animation: fadeInUp 0.4s ease-out 0.5s forwards;
+            animation: fadeInDown 0.4s ease-out 0.5s forwards;
         }
 
         .signal-chain-label {
@@ -972,7 +1004,7 @@
 
         .arc-label {
             position: absolute;
-            right: -224px;
+            right: -260px;
             top: 50%;
             transform: translateY(-50%);
             font-family: 'Inter', sans-serif;
@@ -985,7 +1017,7 @@
 
         .arc-label.arc-label-left {
             right: auto;
-            left: -202px;
+            left: -166px;
         }
 
         .arc-label.arc-label-first {
@@ -998,7 +1030,7 @@
 
         .arc-label.arc-label-fourth {
             right: auto;
-            left: -202px;
+            left: -166px;
         }
 
         .signal-chain-label,
@@ -1103,7 +1135,6 @@
         .analyze-btn {
             width: 100%;
             padding: 14px;
-            margin-top: 8px;
             font-size: 12px;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
@@ -1117,11 +1148,12 @@
         }
 
         .analyze-btn:hover {
-            background: #333;
+            transform: scale(1.1);
         }
 
         .analyze-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.85);
+            transition: transform 0.1s ease;
         }
 
         .analyze-btn:disabled {
@@ -1147,11 +1179,12 @@
             align-items: center;
             gap: 0;
             padding: 40px;
-            padding-top: 96px;
+            padding-top: 44px;
             margin-left: 25px;
             transform-origin: top center;
             transition: transform 0.3s ease;
             position: relative;
+            transform: scale(clamp(0.5, calc(0.4 + 0.0005 * (100vw - 600px)), 1));
         }
 
         /* Staggered entrance animations for analyzer elements */
@@ -1615,7 +1648,8 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .accordion:has(.accordion-item.active) ~ .auth-hint {
+        .accordion:has(.accordion-item.active) ~ .auth-hint,
+        .accordion:has(.accordion-search-hint.has-input) ~ .auth-hint {
             opacity: 0;
             transform: translateY(30px);
             pointer-events: none;
@@ -1635,7 +1669,8 @@
             transition: opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s;
         }
 
-        .accordion:has(.accordion-item.active) ~ .auth-buttons {
+        .accordion:has(.accordion-item.active) ~ .auth-buttons,
+        .accordion:has(.accordion-search-hint.has-input) ~ .auth-buttons {
             opacity: 0;
             transform: translateY(30px);
             pointer-events: none;
@@ -1644,7 +1679,8 @@
             overflow: hidden;
         }
 
-        .accordion:has(.accordion-item.active) ~ .panel-footer {
+        .accordion:has(.accordion-item.active) ~ .panel-footer,
+        .accordion:has(.accordion-search-hint.has-input) ~ .panel-footer {
             opacity: 0;
             transform: translateY(30px);
             pointer-events: none;
@@ -1813,11 +1849,11 @@
 
         .room-size-toggle {
             position: absolute;
-            top: 0px;
-            right: -50px;
+            top: -30px;
+            right: -80px;
             width: clamp(64px, 6.4vw, 92px);
             height: clamp(64px, 6.4vw, 92px);
-            background: #DFFF00;
+            background: #FFE44D;
             opacity: 0;
             animation: fadeInUp 0.5s ease-out 0.35s forwards;
             border-radius: 50%;
@@ -1826,9 +1862,8 @@
             align-items: center;
             justify-content: center;
             gap: 2px;
-            box-shadow: 0 8px 24px rgba(223, 255, 0, 0.6);
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, width 0.3s ease, height 0.3s ease;
+            transition: transform 0.2s ease, width 0.3s ease, height 0.3s ease;
             z-index: 100;
             user-select: none;
         }
@@ -1851,7 +1886,6 @@
 
         .room-size-toggle.animated:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(223, 255, 0, 0.7);
         }
 
         .room-size-toggle.animated:active {
@@ -1863,7 +1897,7 @@
             font-family: 'Inter', sans-serif;
             font-size: clamp(6px, 0.55vw, 8px);
             font-weight: 500;
-            color: #1c1c1c;
+            color: #333;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -1877,9 +1911,9 @@
             font-family: 'Inter', sans-serif;
             font-size: clamp(10px, 1vw, 14px);
             font-weight: 600;
-            color: #1c1c1c;
+            color: #333;
             cursor: pointer;
-            opacity: 0.25;
+            opacity: 0.35;
             transition: opacity 0.2s ease;
         }
 
@@ -1893,10 +1927,12 @@
             justify-content: center;
             width: 289px;
             height: 140px;
-            margin: -42px 0 38px 0;
+            margin: -150px 0 38px 0;
             overflow: hidden;
             opacity: 0;
+            transform: scale(1) translateY(0);
             animation: fadeInDown 0.4s ease-out 0.55s forwards;
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .flower-animation canvas {
@@ -1934,50 +1970,124 @@
         }
 
         .analyze-btn {
+            position: relative;
             width: 289px;
-            height: 82px;
-            background: #1c1c1c;
-            border: none;
+            height: 109px;
+            background: #FFE44D;
+            border: 5px solid #3CB043;
             border-radius: 27px;
             font-family: 'Manrope', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 600;
             letter-spacing: 0.08em;
-            color: #fff;
+            line-height: 1.2;
+            color: #333;
             text-transform: uppercase;
             cursor: pointer;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease, transform 0.15s ease, box-shadow 0.15s ease;
-            margin-top: -130px;
+            transform: translateY(30px);
+            transition: transform 0.2s ease;
+            margin-top: 0px;
             z-index: 10;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .analyze-btn::before {
+            display: none;
+        }
+
+        .analyze-btn::after {
+            display: none;
         }
 
         .analyze-btn.visible {
             opacity: 1;
             pointer-events: auto;
+            transform: translateY(0);
+            animation: analyzeBtnSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
         }
 
-        .analyze-btn.visible:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.2);
+        .analyze-btn.visible.animated {
+            animation: none;
         }
 
-        .analyze-btn.visible:active {
-            transform: translateY(1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+        .analyze-btn.visible.exiting,
+        .analyze-btn.visible.animated.exiting {
+            animation: analyzeBtnSlideOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+            pointer-events: none;
+        }
+
+        @keyframes analyzeBtnSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes analyzeBtnSlideOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+        }
+
+        .analyze-btn.visible.animated:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .analyze-btn.visible.animated:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease-out;
         }
 
         .drop-zones.has-selection .flower-animation {
-            opacity: 0 !important;
+            animation: flowerFadeOut 0.4s ease forwards;
             pointer-events: none;
-            transition: opacity 0.4s ease;
         }
 
+        @keyframes flowerFadeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.6) translateY(20px);
+            }
+        }
+
+        .flower-animation.force-visible,
         .drop-zones.has-selection .flower-animation.force-visible {
             opacity: 1 !important;
             pointer-events: auto;
+            transform: scale(1);
+            animation: flowerBounceIn 0.8s ease-out both;
+        }
+
+        @keyframes flowerBounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            70% {
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @keyframes bounceDown {
@@ -2176,16 +2286,19 @@
         </div>
         <div class="drop-zones">
             <div class="flow-indicator">
-                <div class="flow-circle">
-                    <div class="flow-circle-inner"></div>
+                <span class="signal-chain-label">MAINS POWER</span>
+                <div class="flow-indicator-row">
+                    <div class="flow-circle">
+                        <div class="flow-circle-inner"></div>
+                    </div>
+                    <div class="flow-arrows-horizontal">
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-arrow">→</span>
+                    </div>
                 </div>
             </div>
-            <div class="drop-zone-arrows">
-                <span class="flow-arrow">↓</span>
-                <span class="flow-arrow">↓</span>
-                <span class="flow-arrow">↓</span>
-                <span class="signal-chain-label">MAINS POWER</span>
-            </div>
+            <div class="drop-zone-arrows" style="display: none;"></div>
             <div class="drop-zone-wrapper">
                 <div class="drop-zone" data-accepts="source" data-index="0">
                     <span class="drop-zone-label">Source</span>
@@ -2273,10 +2386,10 @@
                 <span class="flow-arrow">↓</span>
                 <span class="signal-chain-label">AMPLIFIED SIGNAL</span>
             </div>
+            <button class="analyze-btn" id="analyzeBtn">RUN SOUND ANALYSIS</button>
             <div class="flower-animation">
                 <canvas id="flowerCanvas" width="230" height="280"></canvas>
             </div>
-            <button class="analyze-btn" id="analyzeBtn">RUN SOUND ANALYSIS</button>
 
         </div>
         </div>
@@ -2299,10 +2412,219 @@
 <script>
     // Exhaustive HiFi Component Database
     const COMPONENT_DATABASE = [
-        // SOURCES - CD Players (50+)
+        // LUXMAN COMPLETE CATALOG (200+ products spanning 1925-present)
+        // CD/SACD Players
         { brand: 'LUXMAN', model: 'D-03X', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-N100', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-N150', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-100r', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-105u', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-106u', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-107u', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-109u', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-112', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-113', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-115', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-117', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-322', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-350', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-373', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-375', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-377', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-500', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-500X', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-500Xs', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-600s', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-700s', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'DP-07', category: 'source', type: 'CD Transport' },
+        { brand: 'LUXMAN', model: 'DA-07', category: 'dac', type: 'DAC' },
+        // Luxman Turntables (Vintage & Modern)
+        { brand: 'LUXMAN', model: 'PD-121', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-131', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-171A', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-171AL', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-272', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-277', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-282', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-284', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-286', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-288', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-289', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-291', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-300', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-310', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-350', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-370', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-375', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-441', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-444', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-555', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-101', category: 'source', type: 'Turntable' },
+        { brand: 'LUXMAN', model: 'PD-111', category: 'source', type: 'Turntable' },
+        // Luxman Vintage Preamps
+        { brand: 'LUXMAN', model: 'C-02', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-03', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-04', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-05', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-5000A', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-7f', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-10', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-12', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-120A', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-200', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-1000', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-1010', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-1020', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-5000', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-06t', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'CL-350', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-360', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-37', category: 'preamp', type: 'Tube Preamp' },
+        // Luxman Vintage Power Amps
+        { brand: 'LUXMAN', model: 'M-01', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-04', category: 'poweramp', type: 'Class A Amp' },
+        { brand: 'LUXMAN', model: 'M-06', category: 'poweramp', type: 'Class A Amp' },
+        { brand: 'LUXMAN', model: 'M-12', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-105', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-111', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-112', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-114', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-115', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-120A', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-150', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-2000', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-4000', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-5000', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-6000', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-7f', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-383', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'B-10', category: 'poweramp', type: 'Mono Amp' },
+        { brand: 'LUXMAN', model: 'B-12', category: 'poweramp', type: 'Mono Amp' },
+        { brand: 'LUXMAN', model: 'MQ-36', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MQ-50', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MQ-3600', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MB-300', category: 'poweramp', type: 'Tube Mono' },
+        // Luxman Vintage Integrated Amps
+        { brand: 'LUXMAN', model: 'L-30', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-31', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-48A', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-58A', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-80', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-80V', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-81', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-85V', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-100', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-105', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-110', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-111', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-113', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-116A', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-117', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-210', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-215', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-230', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-309', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-400', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-410', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-430', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-450', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-480', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-503s', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-505s', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-505u', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-505f', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-507s', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-507u', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-507f', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-509s', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-509u', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-509f', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-510', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-530', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-540', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-550', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-550A', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-550AX', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-550AXII', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-560', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-570', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-580', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-590A', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-590AX', category: 'poweramp', type: 'Class A Integrated' },
+        // Luxman Tube Integrateds
+        { brand: 'LUXMAN', model: 'SQ-5B', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-38', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-38D', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-38F', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-38FD', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-38u', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-38uD', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-88', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-N10', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-N100', category: 'poweramp', type: 'Tube Integrated' },
+        // Luxman Receivers
+        { brand: 'LUXMAN', model: 'R-113', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-114', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-115', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-117', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-1030', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-1040', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-1050', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-1070', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-1120', category: 'poweramp', type: 'Receiver' },
+        { brand: 'LUXMAN', model: 'R-5030', category: 'poweramp', type: 'Receiver' },
+        // Luxman Tuners
+        { brand: 'LUXMAN', model: 'T-02', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-03', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-100', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-105', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-110', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-111', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-112', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-117', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-240', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-300', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-400', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-450', category: 'source', type: 'Tuner' },
+        { brand: 'LUXMAN', model: 'T-530', category: 'source', type: 'Tuner' },
+        // Luxman Cassette Decks
+        { brand: 'LUXMAN', model: 'K-03', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-05', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-100', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-105', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-109', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-110', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-111', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-112', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-117', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-240', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-350', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-351', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-355', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-360', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'K-371', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'KX-100', category: 'source', type: 'Cassette Deck' },
+        { brand: 'LUXMAN', model: 'KX-101', category: 'source', type: 'Cassette Deck' },
+        // Luxman Headphone Amps & DACs
+        { brand: 'LUXMAN', model: 'P-200', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'LUXMAN', model: 'P-700u', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'LUXMAN', model: 'P-750u', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'LUXMAN', model: 'P-1u', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'LUXMAN', model: 'DA-100', category: 'dac', type: 'DAC' },
+        { brand: 'LUXMAN', model: 'DA-150', category: 'dac', type: 'DAC' },
+        { brand: 'LUXMAN', model: 'DA-200', category: 'dac', type: 'DAC' },
+        { brand: 'LUXMAN', model: 'DA-250', category: 'dac', type: 'DAC' },
+        // Luxman Network Players
+        { brand: 'LUXMAN', model: 'NT-07', category: 'source', type: 'Network Player' },
+        // SOURCES - CD Players (50+)
+        { brand: 'LUXMAN', model: 'D-05u', category: 'source', type: 'CD/SACD Player' },
         { brand: 'LUXMAN', model: 'D-06u', category: 'source', type: 'CD/SACD Player' },
+        { brand: 'LUXMAN', model: 'D-07X', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-08u', category: 'source', type: 'CD/SACD Player' },
         { brand: 'LUXMAN', model: 'D-10X', category: 'source', type: 'CD/SACD Player' },
+        { brand: 'LUXMAN', model: 'D-N150', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'D-380', category: 'source', type: 'CD Player' },
+        { brand: 'LUXMAN', model: 'DU-80', category: 'source', type: 'Universal Player' },
         { brand: 'MARANTZ', model: 'CD6007', category: 'source', type: 'CD Player' },
         { brand: 'MARANTZ', model: 'SACD 30n', category: 'source', type: 'CD/SACD Player' },
         { brand: 'MARANTZ', model: 'SA-10', category: 'source', type: 'CD/SACD Player' },
@@ -2690,9 +3012,23 @@
         // PRE-AMPLIFIERS (120+)
         { brand: 'THORESS', model: 'FFPre', category: 'preamp', type: 'Tube Preamp' },
         { brand: 'LUXMAN', model: 'C-700u', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-800f', category: 'preamp', type: 'Solid State Preamp' },
         { brand: 'LUXMAN', model: 'C-900u', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-1000f', category: 'preamp', type: 'Solid State Preamp' },
         { brand: 'LUXMAN', model: 'CL-1000', category: 'preamp', type: 'Tube Preamp' },
         { brand: 'LUXMAN', model: 'CL-38uC', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-35 III', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-88', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'C-600f', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-70f', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-505f', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-06α', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-08', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'C-09', category: 'preamp', type: 'Solid State Preamp' },
+        { brand: 'LUXMAN', model: 'CL-32', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-34', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-36', category: 'preamp', type: 'Tube Preamp' },
+        { brand: 'LUXMAN', model: 'CL-40', category: 'preamp', type: 'Tube Preamp' },
         { brand: 'DECWARE', model: 'CSP3', category: 'preamp', type: 'Tube Preamp' },
         { brand: 'DECWARE', model: 'ZTPRE', category: 'preamp', type: 'Tube Preamp' },
         { brand: 'SCHIIT', model: 'Saga+', category: 'preamp', type: 'Hybrid Preamp' },
@@ -2810,10 +3146,28 @@
 
         // POWER AMPLIFIERS (150+)
         { brand: 'LUXMAN', model: 'M-700u', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-800A', category: 'poweramp', type: 'Class A Amp' },
         { brand: 'LUXMAN', model: 'M-900u', category: 'poweramp', type: 'Class AB Amp' },
         { brand: 'LUXMAN', model: 'M-10X', category: 'poweramp', type: 'Class AB Amp' },
         { brand: 'LUXMAN', model: 'MQ-88uC', category: 'poweramp', type: 'Tube Amp' },
         { brand: 'LUXMAN', model: 'MQ-300', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'M-600A', category: 'poweramp', type: 'Class A Amp' },
+        { brand: 'LUXMAN', model: 'M-200', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-05', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-06α', category: 'poweramp', type: 'Class A Amp' },
+        { brand: 'LUXMAN', model: 'M-07', category: 'poweramp', type: 'Class A Amp' },
+        { brand: 'LUXMAN', model: 'M-08', category: 'poweramp', type: 'Class A Amp' },
+        { brand: 'LUXMAN', model: 'B-1000f', category: 'poweramp', type: 'Class A Mono' },
+        { brand: 'LUXMAN', model: 'M-02', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-03', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-117', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'M-4000A', category: 'poweramp', type: 'Class AB Amp' },
+        { brand: 'LUXMAN', model: 'MQ-60', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MQ-68C', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MQ-70', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MQ-80', category: 'poweramp', type: 'Tube Amp' },
+        { brand: 'LUXMAN', model: 'MB-3045', category: 'poweramp', type: 'Tube Mono' },
+        { brand: 'LUXMAN', model: 'MB-88', category: 'poweramp', type: 'Tube Mono' },
         { brand: 'DECWARE', model: 'Zen Mystery Amp', category: 'poweramp', type: 'SET Tube Amp' },
         { brand: 'DECWARE', model: 'SE84UFO', category: 'poweramp', type: 'SET Tube Amp' },
         { brand: 'DECWARE', model: 'Zen Torii MK V', category: 'poweramp', type: 'Tube Amp' },
@@ -3650,6 +4004,1115 @@
         { brand: 'KINKI STUDIO', model: 'EX-B7', category: 'poweramp', type: 'Class AB Mono' },
         { brand: 'GOLDNOTE', model: 'PA-10', category: 'poweramp', type: 'Class AB Amp' },
         { brand: 'GOLDNOTE', model: 'PA-1175', category: 'poweramp', type: 'Class AB Amp' },
+
+        // SPEAKERS (300+)
+        { brand: 'KEF', model: 'LS50 Meta', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'KEF', model: 'LS60 Wireless', category: 'speakers', type: 'Active Floorstander' },
+        { brand: 'KEF', model: 'R3 Meta', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'KEF', model: 'R5 Meta', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'R7 Meta', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'R11 Meta', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'Reference 1 Meta', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'KEF', model: 'Reference 3 Meta', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'Reference 5 Meta', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'Blade One', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'Blade Two', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KEF', model: 'Muon', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '606 S3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'B&W', model: '607 S3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'B&W', model: '705 S3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'B&W', model: '702 S3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '703 S3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '801 D4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '802 D4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '803 D4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '804 D4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'B&W', model: '805 D4', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FOCAL', model: 'Aria 906', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FOCAL', model: 'Aria 926', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Aria 936', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Aria 948', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Kanta No.1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FOCAL', model: 'Kanta No.2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Kanta No.3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Sopra No.1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FOCAL', model: 'Sopra No.2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Sopra No.3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Scala Utopia Evo', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Maestro Utopia Evo', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FOCAL', model: 'Grande Utopia EM Evo', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DYNAUDIO', model: 'Evoke 10', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DYNAUDIO', model: 'Evoke 20', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DYNAUDIO', model: 'Evoke 30', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DYNAUDIO', model: 'Evoke 50', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DYNAUDIO', model: 'Contour 20i', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DYNAUDIO', model: 'Contour 30i', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DYNAUDIO', model: 'Contour 60i', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DYNAUDIO', model: 'Confidence 20', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DYNAUDIO', model: 'Confidence 30', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DYNAUDIO', model: 'Confidence 60', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Lumina I', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SONUS FABER', model: 'Lumina III', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Lumina V', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Sonetto I', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SONUS FABER', model: 'Sonetto III', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Sonetto V', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Sonetto VIII', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Olympica Nova I', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SONUS FABER', model: 'Olympica Nova III', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Olympica Nova V', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Amati Tradition', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Stradivari', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SONUS FABER', model: 'Aida II', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'Sasha DAW', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'Alexia V', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'Alexx V', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'XVX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'Chronosonic XVX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'SabrinaX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'Yvette', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WILSON AUDIO', model: 'TuneTot', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MAGICO', model: 'A1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MAGICO', model: 'A3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'A5', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'S1 Mk II', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MAGICO', model: 'S3 Mk II', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'S5 Mk II', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'S7', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'M2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'M3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'M6', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGICO', model: 'M9', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KLIPSCH', model: 'RP-600M II', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'KLIPSCH', model: 'RP-8000F II', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KLIPSCH', model: 'Cornwall IV', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KLIPSCH', model: 'Forte IV', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KLIPSCH', model: 'La Scala AL5', category: 'speakers', type: 'Floorstander' },
+        { brand: 'KLIPSCH', model: 'Heresy IV', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'KLIPSCH', model: 'Klipschorn AK6', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ZU AUDIO', model: 'Dirty Weekend', category: 'speakers', type: 'Full Range' },
+        { brand: 'ZU AUDIO', model: 'Omen', category: 'speakers', type: 'Full Range' },
+        { brand: 'ZU AUDIO', model: 'Omen Def', category: 'speakers', type: 'Full Range' },
+        { brand: 'ZU AUDIO', model: 'Soul Supreme', category: 'speakers', type: 'Full Range' },
+        { brand: 'ZU AUDIO', model: 'Druid', category: 'speakers', type: 'Full Range' },
+        { brand: 'ZU AUDIO', model: 'Definition', category: 'speakers', type: 'Full Range' },
+        { brand: 'DEVORE FIDELITY', model: 'Orangutan O/93', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DEVORE FIDELITY', model: 'Orangutan O/96', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DEVORE FIDELITY', model: 'Gibbon 88', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DEVORE FIDELITY', model: 'Gibbon 3XL', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'HARBETH', model: 'P3ESR', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'HARBETH', model: 'Compact 7ES-3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'HARBETH', model: 'M30.2', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'HARBETH', model: 'Super HL5 Plus', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'HARBETH', model: 'M40.3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SPENDOR', model: 'A1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SPENDOR', model: 'A4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SPENDOR', model: 'A7', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SPENDOR', model: 'D7.2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SPENDOR', model: 'D9.2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SPENDOR', model: 'Classic 3/1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SPENDOR', model: 'Classic 100', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PROAC', model: 'Tablette 10', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PROAC', model: 'Response D2R', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PROAC', model: 'Response D30RS', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PROAC', model: 'Response D48R', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PROAC', model: 'K6', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ATC', model: 'SCM7', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ATC', model: 'SCM11', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ATC', model: 'SCM19', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ATC', model: 'SCM40', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ATC', model: 'SCM50', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ATC', model: 'SCM100', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ATC', model: 'SCM150', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Founder 40B', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PARADIGM', model: 'Founder 80F', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Founder 100F', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Founder 120H', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Persona B', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PARADIGM', model: 'Persona 3F', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Persona 5F', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Persona 7F', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PARADIGM', model: 'Persona 9H', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MONITOR AUDIO', model: 'Silver 100 7G', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MONITOR AUDIO', model: 'Silver 300 7G', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MONITOR AUDIO', model: 'Silver 500 7G', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MONITOR AUDIO', model: 'Gold 100 5G', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MONITOR AUDIO', model: 'Gold 200 5G', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MONITOR AUDIO', model: 'Gold 300 5G', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MONITOR AUDIO', model: 'Platinum 100 3G', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MONITOR AUDIO', model: 'Platinum 200 3G', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MONITOR AUDIO', model: 'Platinum 300 3G', category: 'speakers', type: 'Floorstander' },
+        { brand: 'REVEL', model: 'M16', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'REVEL', model: 'M126Be', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'REVEL', model: 'F206', category: 'speakers', type: 'Floorstander' },
+        { brand: 'REVEL', model: 'F226Be', category: 'speakers', type: 'Floorstander' },
+        { brand: 'REVEL', model: 'F328Be', category: 'speakers', type: 'Floorstander' },
+        { brand: 'REVEL', model: 'Salon2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'REVEL', model: 'Studio2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ELAC', model: 'Debut 2.0 B6.2', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ELAC', model: 'Debut Reference DBR62', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ELAC', model: 'Uni-Fi Reference UBR62', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ELAC', model: 'Vela FS 407', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ELAC', model: 'Vela FS 409', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ELAC', model: 'Concentro S 507', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ELAC', model: 'Concentro M', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SVS', model: 'Prime Bookshelf', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SVS', model: 'Prime Tower', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SVS', model: 'Ultra Bookshelf', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SVS', model: 'Ultra Tower', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SVS', model: 'Ultra Evolution Bookshelf', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SVS', model: 'Ultra Evolution Tower', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PSB', model: 'Alpha P5', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PSB', model: 'Imagine B', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PSB', model: 'Imagine T3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PSB', model: 'Synchrony B600', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PSB', model: 'Synchrony T600', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PSB', model: 'Synchrony T800', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Diamond 12.1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'WHARFEDALE', model: 'Diamond 12.3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Diamond 12.4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Evo 4.2', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'WHARFEDALE', model: 'Evo 4.3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Evo 4.4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Elysian 1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'WHARFEDALE', model: 'Elysian 2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Elysian 4', category: 'speakers', type: 'Floorstander' },
+        { brand: 'WHARFEDALE', model: 'Linton', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'WHARFEDALE', model: 'Denton 85', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DALI', model: 'Oberon 1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DALI', model: 'Oberon 3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DALI', model: 'Oberon 5', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DALI', model: 'Oberon 7', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DALI', model: 'Rubicon 2', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DALI', model: 'Rubicon 6', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DALI', model: 'Rubicon 8', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DALI', model: 'Epicon 2', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'DALI', model: 'Epicon 6', category: 'speakers', type: 'Floorstander' },
+        { brand: 'DALI', model: 'Epicon 8', category: 'speakers', type: 'Floorstander' },
+        { brand: 'Q ACOUSTICS', model: '3010i', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'Q ACOUSTICS', model: '3020i', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'Q ACOUSTICS', model: '3030i', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'Q ACOUSTICS', model: '3050i', category: 'speakers', type: 'Floorstander' },
+        { brand: 'Q ACOUSTICS', model: 'Concept 20', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'Q ACOUSTICS', model: 'Concept 30', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'Q ACOUSTICS', model: 'Concept 300', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'Q ACOUSTICS', model: 'Concept 500', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MAGNEPAN', model: 'LRS+', category: 'speakers', type: 'Planar' },
+        { brand: 'MAGNEPAN', model: '.7', category: 'speakers', type: 'Planar' },
+        { brand: 'MAGNEPAN', model: '1.7i', category: 'speakers', type: 'Planar' },
+        { brand: 'MAGNEPAN', model: '3.7i', category: 'speakers', type: 'Planar' },
+        { brand: 'MAGNEPAN', model: '20.7', category: 'speakers', type: 'Planar' },
+        { brand: 'MAGNEPAN', model: '30.7', category: 'speakers', type: 'Planar' },
+        { brand: 'MARTIN LOGAN', model: 'Motion 15i', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MARTIN LOGAN', model: 'Motion 20i', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTIN LOGAN', model: 'Motion 40i', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTIN LOGAN', model: 'Motion 60XTi', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTIN LOGAN', model: 'ElectroMotion ESL', category: 'speakers', type: 'Electrostatic' },
+        { brand: 'MARTIN LOGAN', model: 'Impression ESL 11A', category: 'speakers', type: 'Hybrid Electrostatic' },
+        { brand: 'MARTIN LOGAN', model: 'Expression ESL 13A', category: 'speakers', type: 'Hybrid Electrostatic' },
+        { brand: 'MARTIN LOGAN', model: 'Renaissance ESL 15A', category: 'speakers', type: 'Hybrid Electrostatic' },
+        { brand: 'MARTIN LOGAN', model: 'Masterpiece Classic ESL 9', category: 'speakers', type: 'Hybrid Electrostatic' },
+        { brand: 'MARTIN LOGAN', model: 'Neolith', category: 'speakers', type: 'Hybrid Electrostatic' },
+        { brand: 'QUAD', model: 'S-1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'QUAD', model: 'S-2', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'QUAD', model: 'S-5', category: 'speakers', type: 'Floorstander' },
+        { brand: 'QUAD', model: 'ESL-2812', category: 'speakers', type: 'Electrostatic' },
+        { brand: 'QUAD', model: 'ESL-2912', category: 'speakers', type: 'Electrostatic' },
+        { brand: 'QUAD', model: 'ESL-57', category: 'speakers', type: 'Electrostatic' },
+        { brand: 'QUAD', model: 'ESL-63', category: 'speakers', type: 'Electrostatic' },
+        { brand: 'OPEN AUDIO', model: 'Trio15 Horn 1', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'OPEN AUDIO', model: 'Trio15 Neo', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'OPEN AUDIO', model: 'Trio15 Coax', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'OPEN AUDIO', model: 'Trio15 TB', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'SPATIAL AUDIO', model: 'M3 Sapphire', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'SPATIAL AUDIO', model: 'M4 Triode Master', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'SPATIAL AUDIO', model: 'X3', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'SPATIAL AUDIO', model: 'X5', category: 'speakers', type: 'Open Baffle' },
+        { brand: 'TEKTON', model: 'Lore', category: 'speakers', type: 'High Efficiency' },
+        { brand: 'TEKTON', model: 'Double Impact', category: 'speakers', type: 'High Efficiency' },
+        { brand: 'TEKTON', model: 'Moab', category: 'speakers', type: 'High Efficiency' },
+        { brand: 'TEKTON', model: 'Electron SE', category: 'speakers', type: 'High Efficiency' },
+        { brand: 'TEKTON', model: 'Perfect SET', category: 'speakers', type: 'High Efficiency' },
+        { brand: 'TEKTON', model: 'Ulfberht', category: 'speakers', type: 'High Efficiency' },
+        { brand: 'JBL', model: 'L82 Classic', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'JBL', model: 'L100 Classic', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'JBL', model: 'HDI-1600', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'JBL', model: 'HDI-3600', category: 'speakers', type: 'Floorstander' },
+        { brand: 'JBL', model: 'HDI-3800', category: 'speakers', type: 'Floorstander' },
+        { brand: 'JBL', model: '4349', category: 'speakers', type: 'Studio Monitor' },
+        { brand: 'JBL', model: '4329P', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'JBL', model: 'S3900', category: 'speakers', type: 'Floorstander' },
+        { brand: 'JBL', model: 'S4700', category: 'speakers', type: 'Floorstander' },
+        { brand: 'JBL', model: 'K2 S9900', category: 'speakers', type: 'Floorstander' },
+        { brand: 'JBL', model: 'Everest DD67000', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TANNOY', model: 'Legacy Arden', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TANNOY', model: 'Legacy Cheviot', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'TANNOY', model: 'Legacy Eaton', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'TANNOY', model: 'Stirling', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'TANNOY', model: 'Turnberry', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TANNOY', model: 'Canterbury', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TANNOY', model: 'Westminster Royal', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FYNE AUDIO', model: 'F301', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FYNE AUDIO', model: 'F501', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FYNE AUDIO', model: 'F701', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FYNE AUDIO', model: 'F1-8', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FYNE AUDIO', model: 'F1-10', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FYNE AUDIO', model: 'F1-12', category: 'speakers', type: 'Floorstander' },
+        { brand: 'GRAHAM AUDIO', model: 'LS3/5', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'GRAHAM AUDIO', model: 'LS5/8', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'GRAHAM AUDIO', model: 'LS5/9', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FALCON ACOUSTICS', model: 'LS3/5a', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FALCON ACOUSTICS', model: 'RAM Studio 20', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'STIRLING BROADCAST', model: 'LS3/5a V3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'STIRLING BROADCAST', model: 'LS3/6', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ROGERS', model: 'LS3/5a', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ROGERS', model: 'LS5/9', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'AVANTGARDE', model: 'Uno XD', category: 'speakers', type: 'Horn' },
+        { brand: 'AVANTGARDE', model: 'Duo XD', category: 'speakers', type: 'Horn' },
+        { brand: 'AVANTGARDE', model: 'Trio XD', category: 'speakers', type: 'Horn' },
+        { brand: 'AVANTGARDE', model: 'Zero 1', category: 'speakers', type: 'Active Horn' },
+        { brand: 'ACAPELLA', model: 'Cellini', category: 'speakers', type: 'Horn' },
+        { brand: 'ACAPELLA', model: 'Campanile', category: 'speakers', type: 'Horn' },
+        { brand: 'ACAPELLA', model: 'Triolon', category: 'speakers', type: 'Horn' },
+        { brand: 'CESSARO', model: 'Chopin', category: 'speakers', type: 'Horn' },
+        { brand: 'CESSARO', model: 'Liszt', category: 'speakers', type: 'Horn' },
+        { brand: 'CESSARO', model: 'Wagner', category: 'speakers', type: 'Horn' },
+        { brand: 'VOLUMIO', model: 'Integro', category: 'speakers', type: 'Active Bookshelf' },
+        { brand: 'VOLUMIO', model: 'Motivo', category: 'speakers', type: 'Active Bookshelf' },
+        { brand: 'GENELEC', model: '8010A', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'GENELEC', model: '8030C', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'GENELEC', model: '8040B', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'GENELEC', model: '8050B', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'GENELEC', model: '8351B', category: 'speakers', type: 'Active Coaxial' },
+        { brand: 'GENELEC', model: '8361A', category: 'speakers', type: 'Active Coaxial' },
+        { brand: 'ADAM AUDIO', model: 'A7V', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'ADAM AUDIO', model: 'A77H', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'ADAM AUDIO', model: 'S2V', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'ADAM AUDIO', model: 'S3H', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'ADAM AUDIO', model: 'S3V', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'NEUMANN', model: 'KH 80', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'NEUMANN', model: 'KH 120 II', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'NEUMANN', model: 'KH 150', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'NEUMANN', model: 'KH 310', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'DUTCH & DUTCH', model: '8c', category: 'speakers', type: 'Active DSP' },
+        { brand: 'KALI AUDIO', model: 'LP-6 V2', category: 'speakers', type: 'Active Monitor' },
+        { brand: 'KALI AUDIO', model: 'IN-8 V2', category: 'speakers', type: 'Active Coaxial' },
+        { brand: 'BUCHARDT', model: 'S400 II', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'BUCHARDT', model: 'A500', category: 'speakers', type: 'Active DSP' },
+        { brand: 'BUCHARDT', model: 'A700', category: 'speakers', type: 'Active DSP' },
+        { brand: 'BUCHARDT', model: 'S300 MKII', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ARENDAL', model: '1723 Bookshelf THX', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ARENDAL', model: '1723 Tower THX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ARENDAL', model: '1961 Bookshelf', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ARENDAL', model: '1961 Tower', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ASCEND ACOUSTICS', model: 'Sierra-1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ASCEND ACOUSTICS', model: 'Sierra-2EX', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'ASCEND ACOUSTICS', model: 'Sierra Tower', category: 'speakers', type: 'Floorstander' },
+        { brand: 'FRITZ', model: 'Carrera 7', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'FRITZ', model: 'Carbon 7 SE', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SALK', model: 'Song3 Encore', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'SALK', model: 'SongTower', category: 'speakers', type: 'Floorstander' },
+        { brand: 'SALK', model: 'SS 9.5', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VANDERSTEEN', model: 'VLR', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'VANDERSTEEN', model: 'Treo CT', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VANDERSTEEN', model: 'Quatro', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VANDERSTEEN', model: 'Model 5A', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VANDERSTEEN', model: 'Model 7', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VIVID AUDIO', model: 'Kaya 25', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'VIVID AUDIO', model: 'Kaya 45', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VIVID AUDIO', model: 'Kaya 90', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VIVID AUDIO', model: 'Giya G3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VIVID AUDIO', model: 'Giya G2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'VIVID AUDIO', model: 'Giya G1 Spirit', category: 'speakers', type: 'Floorstander' },
+        { brand: 'YG ACOUSTICS', model: 'Vantage', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'YG ACOUSTICS', model: 'Carmel 3', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'YG ACOUSTICS', model: 'Hailey 3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'YG ACOUSTICS', model: 'Sonja 3.3', category: 'speakers', type: 'Floorstander' },
+        { brand: 'YG ACOUSTICS', model: 'Peak Nile', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ROCKPORT', model: 'Atria II', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ROCKPORT', model: 'Avior II', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ROCKPORT', model: 'Cygnus', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ROCKPORT', model: 'Lyra', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ROCKPORT', model: 'Orion', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ESTELON', model: 'YB', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ESTELON', model: 'XB', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ESTELON', model: 'X Diamond', category: 'speakers', type: 'Floorstander' },
+        { brand: 'ESTELON', model: 'Extreme', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTEN', model: 'Parker Duo', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MARTEN', model: 'Parker Trio', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTEN', model: 'Oscar Duo', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'MARTEN', model: 'Oscar Trio', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTEN', model: 'Mingus Orchestra', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTEN', model: 'Coltrane Tenor', category: 'speakers', type: 'Floorstander' },
+        { brand: 'MARTEN', model: 'Coltrane Supreme 2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TAD', model: 'ME1', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'TAD', model: 'E1TX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TAD', model: 'CR1TX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'TAD', model: 'R1TX', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PIEGA', model: 'Classic 3.0', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PIEGA', model: 'Classic 5.0', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PIEGA', model: 'Classic 7.0', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PIEGA', model: 'Coax 311', category: 'speakers', type: 'Bookshelf' },
+        { brand: 'PIEGA', model: 'Coax 511', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PIEGA', model: 'Coax 711', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PIEGA', model: 'Master Line Source 2', category: 'speakers', type: 'Floorstander' },
+        { brand: 'PIEGA', model: 'Master Line Source 3', category: 'speakers', type: 'Floorstander' },
+
+        // TURNTABLES & VINYL (200+)
+        { brand: 'REGA', model: 'Planar 1', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'Planar 2', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'Planar 3', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'Planar 6', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'Planar 8', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'Planar 10', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'P1 Plus', category: 'source', type: 'Turntable' },
+        { brand: 'REGA', model: 'Naia', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Debut Carbon EVO', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Debut PRO', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'X1', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'X2', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'X8', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'The Classic EVO', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Xtension 9', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Xtension 10', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Xtension 12', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Signature 10', category: 'source', type: 'Turntable' },
+        { brand: 'PRO-JECT', model: 'Signature 12', category: 'source', type: 'Turntable' },
+        { brand: 'TECHNICS', model: 'SL-1200GR', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'TECHNICS', model: 'SL-1200GR2', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'TECHNICS', model: 'SL-1200G', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'TECHNICS', model: 'SL-1200GAE', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'TECHNICS', model: 'SL-1000R', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'TECHNICS', model: 'SL-1500C', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'VPI', model: 'Cliffwood', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Player', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Scout 21', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Prime 21', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Prime 21+', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Prime Signature', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Avenger', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'Avenger Direct', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'VPI', model: 'Titan', category: 'source', type: 'Turntable' },
+        { brand: 'VPI', model: 'HW-40', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Concept', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Concept Active', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Performance DC', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Innovation Compact', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Innovation', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Ovation', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Master Innovation', category: 'source', type: 'Turntable' },
+        { brand: 'CLEARAUDIO', model: 'Statement V2', category: 'source', type: 'Turntable' },
+        { brand: 'LINN', model: 'Majik LP12', category: 'source', type: 'Turntable' },
+        { brand: 'LINN', model: 'Akurate LP12', category: 'source', type: 'Turntable' },
+        { brand: 'LINN', model: 'Klimax LP12', category: 'source', type: 'Turntable' },
+        { brand: 'SME', model: 'Model 6', category: 'source', type: 'Turntable' },
+        { brand: 'SME', model: 'Model 12A', category: 'source', type: 'Turntable' },
+        { brand: 'SME', model: 'Model 15A', category: 'source', type: 'Turntable' },
+        { brand: 'SME', model: 'Model 20/12A', category: 'source', type: 'Turntable' },
+        { brand: 'SME', model: 'Model 30/12A', category: 'source', type: 'Turntable' },
+        { brand: 'THORENS', model: 'TD 201', category: 'source', type: 'Turntable' },
+        { brand: 'THORENS', model: 'TD 202', category: 'source', type: 'Turntable' },
+        { brand: 'THORENS', model: 'TD 402 DD', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'THORENS', model: 'TD 403 DD', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'THORENS', model: 'TD 1601', category: 'source', type: 'Turntable' },
+        { brand: 'THORENS', model: 'TD 1600', category: 'source', type: 'Turntable' },
+        { brand: 'THORENS', model: 'TD 124 DD', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'Primus', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'WOW XL', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'Double X', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'Triple X', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'Montana', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'Ascona', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SIGNATURE', model: 'Invictus', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Comet', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Moonbeam', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Sapphire', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Star Sapphire', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Nova', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Millennia', category: 'source', type: 'Turntable' },
+        { brand: 'SOTA', model: 'Cosmos', category: 'source', type: 'Turntable' },
+        { brand: 'MICHELL', model: 'TecnoDec', category: 'source', type: 'Turntable' },
+        { brand: 'MICHELL', model: 'Gyro SE', category: 'source', type: 'Turntable' },
+        { brand: 'MICHELL', model: 'Gyro DEC', category: 'source', type: 'Turntable' },
+        { brand: 'MICHELL', model: 'Orbe SE', category: 'source', type: 'Turntable' },
+        { brand: 'MICHELL', model: 'Orbe', category: 'source', type: 'Turntable' },
+        { brand: 'WELL TEMPERED', model: 'Simplex', category: 'source', type: 'Turntable' },
+        { brand: 'WELL TEMPERED', model: 'Amadeus', category: 'source', type: 'Turntable' },
+        { brand: 'WELL TEMPERED', model: 'Versalex', category: 'source', type: 'Turntable' },
+        { brand: 'WELL TEMPERED', model: 'Lab', category: 'source', type: 'Turntable' },
+        { brand: 'ORIGIN LIVE', model: 'Aurora', category: 'source', type: 'Turntable' },
+        { brand: 'ORIGIN LIVE', model: 'Calypso', category: 'source', type: 'Turntable' },
+        { brand: 'ORIGIN LIVE', model: 'Resolution', category: 'source', type: 'Turntable' },
+        { brand: 'ORIGIN LIVE', model: 'Sovereign', category: 'source', type: 'Turntable' },
+        { brand: 'ORACLE', model: 'Origine', category: 'source', type: 'Turntable' },
+        { brand: 'ORACLE', model: 'Paris', category: 'source', type: 'Turntable' },
+        { brand: 'ORACLE', model: 'Delphi', category: 'source', type: 'Turntable' },
+        { brand: 'BRINKMANN', model: 'Bardo', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'BRINKMANN', model: 'Spyder', category: 'source', type: 'Turntable' },
+        { brand: 'BRINKMANN', model: 'Balance', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'BRINKMANN', model: 'Taurus', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'KRONOS', model: 'Sparta 0.5', category: 'source', type: 'Turntable' },
+        { brand: 'KRONOS', model: 'Sparta', category: 'source', type: 'Turntable' },
+        { brand: 'KRONOS', model: 'Pro', category: 'source', type: 'Turntable' },
+        { brand: 'KRONOS', model: 'Pro Limited Edition', category: 'source', type: 'Turntable' },
+        { brand: 'TW-ACUSTIC', model: 'Raven 10.5', category: 'source', type: 'Turntable' },
+        { brand: 'TW-ACUSTIC', model: 'Raven AC', category: 'source', type: 'Turntable' },
+        { brand: 'TW-ACUSTIC', model: 'Raven Black Night', category: 'source', type: 'Turntable' },
+        { brand: 'TW-ACUSTIC', model: 'Raven GT', category: 'source', type: 'Turntable' },
+        { brand: 'DR. FEICKERT', model: 'Volare', category: 'source', type: 'Turntable' },
+        { brand: 'DR. FEICKERT', model: 'Woodpecker', category: 'source', type: 'Turntable' },
+        { brand: 'DR. FEICKERT', model: 'Blackbird', category: 'source', type: 'Turntable' },
+        { brand: 'DR. FEICKERT', model: 'Firebird', category: 'source', type: 'Turntable' },
+        { brand: 'AVID', model: 'Ingenium', category: 'source', type: 'Turntable' },
+        { brand: 'AVID', model: 'Ingenium Plug & Play', category: 'source', type: 'Turntable' },
+        { brand: 'AVID', model: 'Diva II', category: 'source', type: 'Turntable' },
+        { brand: 'AVID', model: 'Volvere', category: 'source', type: 'Turntable' },
+        { brand: 'AVID', model: 'Sequel', category: 'source', type: 'Turntable' },
+        { brand: 'AVID', model: 'Acutus', category: 'source', type: 'Turntable' },
+        { brand: 'ROKSAN', model: 'Attessa', category: 'source', type: 'Turntable' },
+        { brand: 'ROKSAN', model: 'Radius 7', category: 'source', type: 'Turntable' },
+        { brand: 'ROKSAN', model: 'Xerxes 20 Plus', category: 'source', type: 'Turntable' },
+        { brand: 'VERTERE', model: 'DG-1', category: 'source', type: 'Turntable' },
+        { brand: 'VERTERE', model: 'MG-1', category: 'source', type: 'Turntable' },
+        { brand: 'VERTERE', model: 'SG-1', category: 'source', type: 'Turntable' },
+        { brand: 'VERTERE', model: 'RG-1', category: 'source', type: 'Turntable' },
+        { brand: 'MARANTZ', model: 'TT-15S1', category: 'source', type: 'Turntable' },
+        { brand: 'DENON', model: 'DP-400', category: 'source', type: 'Turntable' },
+        { brand: 'DENON', model: 'DP-450USB', category: 'source', type: 'Turntable' },
+        { brand: 'DENON', model: 'DP-3000NE', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'AUDIO-TECHNICA', model: 'AT-LP60X', category: 'source', type: 'Turntable' },
+        { brand: 'AUDIO-TECHNICA', model: 'AT-LP120X', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'AUDIO-TECHNICA', model: 'AT-LP140XP', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'AUDIO-TECHNICA', model: 'AT-LP5X', category: 'source', type: 'Direct Drive Turntable' },
+        { brand: 'AUDIO-TECHNICA', model: 'AT-LP7', category: 'source', type: 'Turntable' },
+        { brand: 'FLUANCE', model: 'RT80', category: 'source', type: 'Turntable' },
+        { brand: 'FLUANCE', model: 'RT81', category: 'source', type: 'Turntable' },
+        { brand: 'FLUANCE', model: 'RT82', category: 'source', type: 'Turntable' },
+        { brand: 'FLUANCE', model: 'RT83', category: 'source', type: 'Turntable' },
+        { brand: 'FLUANCE', model: 'RT84', category: 'source', type: 'Turntable' },
+        { brand: 'FLUANCE', model: 'RT85', category: 'source', type: 'Turntable' },
+        { brand: 'U-TURN', model: 'Orbit Basic', category: 'source', type: 'Turntable' },
+        { brand: 'U-TURN', model: 'Orbit Plus', category: 'source', type: 'Turntable' },
+        { brand: 'U-TURN', model: 'Orbit Special', category: 'source', type: 'Turntable' },
+        { brand: 'MUSIC HALL', model: 'MMF-1.3', category: 'source', type: 'Turntable' },
+        { brand: 'MUSIC HALL', model: 'MMF-2.3', category: 'source', type: 'Turntable' },
+        { brand: 'MUSIC HALL', model: 'MMF-5.3', category: 'source', type: 'Turntable' },
+        { brand: 'MUSIC HALL', model: 'MMF-7.3', category: 'source', type: 'Turntable' },
+        { brand: 'MUSIC HALL', model: 'MMF-9.3', category: 'source', type: 'Turntable' },
+        { brand: 'MUSIC HALL', model: 'MMF-11.3', category: 'source', type: 'Turntable' },
+        { brand: 'EAT', model: 'Prelude', category: 'source', type: 'Turntable' },
+        { brand: 'EAT', model: 'C-Sharp', category: 'source', type: 'Turntable' },
+        { brand: 'EAT', model: 'C-Major', category: 'source', type: 'Turntable' },
+        { brand: 'EAT', model: 'Forte', category: 'source', type: 'Turntable' },
+        { brand: 'EAT', model: 'Forte S', category: 'source', type: 'Turntable' },
+        { brand: 'TRANSROTOR', model: 'Jupiter', category: 'source', type: 'Turntable' },
+        { brand: 'TRANSROTOR', model: 'Fat Bob S', category: 'source', type: 'Turntable' },
+        { brand: 'TRANSROTOR', model: 'Alto', category: 'source', type: 'Turntable' },
+        { brand: 'TRANSROTOR', model: 'Crescendo', category: 'source', type: 'Turntable' },
+        { brand: 'TRANSROTOR', model: 'Apollon', category: 'source', type: 'Turntable' },
+        { brand: 'KUZMA', model: 'Stabi S', category: 'source', type: 'Turntable' },
+        { brand: 'KUZMA', model: 'Stabi R', category: 'source', type: 'Turntable' },
+        { brand: 'KUZMA', model: 'Stabi M', category: 'source', type: 'Turntable' },
+        { brand: 'KUZMA', model: 'Stabi XL', category: 'source', type: 'Turntable' },
+        { brand: 'KUZMA', model: 'Stabi XL DC', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SOLID', model: 'Wood', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SOLID', model: 'Classic Wood', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SOLID', model: '111', category: 'source', type: 'Turntable' },
+        { brand: 'ACOUSTIC SOLID', model: 'Machine', category: 'source', type: 'Turntable' },
+
+        // PHONO STAGES (150+)
+        { brand: 'REGA', model: 'Fono Mini A2D', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'REGA', model: 'Fono MM', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'REGA', model: 'Fono MC', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'REGA', model: 'Aria MK3', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'REGA', model: 'Aura', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Phono Box E', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Phono Box S2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Phono Box S2 Ultra', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Phono Box DS2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Phono Box DS3 B', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Phono Box RS2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Tube Box S2', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'PRO-JECT', model: 'Tube Box DS2', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'SCHIIT', model: 'Mani 2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'SCHIIT', model: 'Skoll', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CAMBRIDGE', model: 'Alva Solo', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CAMBRIDGE', model: 'Alva Duo', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'iFi', model: 'ZEN Phono', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'iFi', model: 'iPhono 3 Black Label', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MUSICAL FIDELITY', model: 'LX2-LPS', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MUSICAL FIDELITY', model: 'MX-VYNL', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MUSICAL FIDELITY', model: 'Nu-Vista Vinyl', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CLEARAUDIO', model: 'Nano', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CLEARAUDIO', model: 'Basic+', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CLEARAUDIO', model: 'Smart Phono V2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CLEARAUDIO', model: 'Balanced+', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'CLEARAUDIO', model: 'Absolute Phono', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LEHMANN', model: 'Black Cube SE II', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LEHMANN', model: 'Black Cube Statement', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LEHMANN', model: 'Decade', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LEHMANN', model: 'Silver Cube', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GRAHAM SLEE', model: 'Gram Amp 2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GRAHAM SLEE', model: 'Gram Amp 3', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GRAHAM SLEE', model: 'Era Gold V', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GRAHAM SLEE', model: 'Reflex M', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GRAHAM SLEE', model: 'Accession MC', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'SUTHERLAND', model: 'KC Vibe', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'SUTHERLAND', model: 'Insight', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'SUTHERLAND', model: '20/20', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'SUTHERLAND', model: 'Duo', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'SUTHERLAND', model: 'Loco', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MANLEY', model: 'Chinook', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'MANLEY', model: 'Chinook SE', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'MANLEY', model: 'Steelhead RC', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ALLNIC', model: 'H-1202', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ALLNIC', model: 'H-3000', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ALLNIC', model: 'H-5500', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ALLNIC', model: 'H-7000', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'HERRON', model: 'VTPH-2A', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AESTHETIX', model: 'Rhea', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AESTHETIX', model: 'Rhea Signature', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AESTHETIX', model: 'Rhea Eclipse', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AESTHETIX', model: 'Io', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AESTHETIX', model: 'Io Eclipse', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'PS AUDIO', model: 'Stellar Phono', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PARASOUND', model: 'JC 3+', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PASS LABS', model: 'XP-17', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PASS LABS', model: 'XP-27', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'BOULDER', model: '508', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'BOULDER', model: '2108', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MOON', model: '110LP v2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MOON', model: '310LP', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MOON', model: '610LP', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'MOON', model: '810LP', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LUXMAN', model: 'E-250', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LUXMAN', model: 'EQ-500', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ACCUPHASE', model: 'C-47', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'ESOTERIC', model: 'E-02', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'EAT', model: 'E-Glo Petit', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'EAT', model: 'E-Glo S', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'EAT', model: 'E-Glo', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'GOLD NOTE', model: 'PH-5', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GOLD NOTE', model: 'PH-10', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'GOLD NOTE', model: 'PH-1000', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'AVID', model: 'Pellar', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'AVID', model: 'Pulsus', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'AVID', model: 'Pulsare II', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'TAVISH', model: 'Adagio', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'TAVISH', model: 'Classic', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'TAVISH', model: 'Vintage', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'TRICHORD', model: 'Dino Mk 3', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'TRICHORD', model: 'Diablo NC', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'NAGRA', model: 'Classic Phono', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'NAGRA', model: 'Reference Anniversary', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'DARTZEEL', model: 'NHB-18NS', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'AUDIO RESEARCH', model: 'PH9', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AUDIO RESEARCH', model: 'Reference Phono 3', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'AUDIO RESEARCH', model: 'Reference Phono 10', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'BAT', model: 'VK-P6', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'BAT', model: 'VK-P12SE', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'CONRAD-JOHNSON', model: 'TEA1 Series 2', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ZESTO', model: 'Andros 1.2', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ZESTO', model: 'Andros Allasso', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ZESTO', model: 'Andros Tessera', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'WHEST', model: 'Two.2', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'WHEST', model: 'Three Signature', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'WHEST', model: 'PS.40RDT', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'WHEST', model: 'Titan Pro', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PARASOUND', model: 'Zphono USB', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'PARASOUND', model: 'Zphono XRM', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'VINCENT', model: 'PHO-701', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ICON AUDIO', model: 'PS1 MKII', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'ICON AUDIO', model: 'PS3 MKII', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'HAGERMAN', model: 'Bugle3', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'HAGERMAN', model: 'Cornet3', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'HAGERMAN', model: 'Trumpet', category: 'preamp', type: 'Tube Phono Stage' },
+        { brand: 'LOUNGE AUDIO', model: 'LCR MKIII', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'LOUNGE AUDIO', model: 'Copla', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'TRIGON', model: 'Vanguard II', category: 'preamp', type: 'Phono Stage' },
+        { brand: 'TRIGON', model: 'Advance', category: 'preamp', type: 'Phono Stage' },
+
+        // INTEGRATED AMPLIFIERS (200+)
+        { brand: 'LUXMAN', model: 'L-505uXII', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-507uXII', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-507Z', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-509X', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-509Z', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LUXMAN', model: 'L-590AXII', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'L-595A SE', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'LUXMAN', model: 'SQ-N150', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LUXMAN', model: 'LX-380', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'ACCUPHASE', model: 'E-280', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ACCUPHASE', model: 'E-380', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ACCUPHASE', model: 'E-480', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ACCUPHASE', model: 'E-650', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'ACCUPHASE', model: 'E-800', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'MCINTOSH', model: 'MA252', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'MCINTOSH', model: 'MA352', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'MCINTOSH', model: 'MA5300', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MCINTOSH', model: 'MA7200', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MCINTOSH', model: 'MA8900', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MCINTOSH', model: 'MA8950', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MCINTOSH', model: 'MA9500', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MCINTOSH', model: 'MA12000', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'HEGEL', model: 'H95', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'HEGEL', model: 'H120', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'HEGEL', model: 'H190', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'HEGEL', model: 'H390', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'HEGEL', model: 'H590', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'HEGEL', model: 'H600', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'NAIM', model: 'Nait 50', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'NAIM', model: 'Nait XS 3', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'NAIM', model: 'Supernait 3', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'REGA', model: 'Brio', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'REGA', model: 'Elex MK4', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'REGA', model: 'Elicit MK5', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'REGA', model: 'Aethos', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CAMBRIDGE', model: 'CXA61', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CAMBRIDGE', model: 'CXA81', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CAMBRIDGE', model: 'Edge A', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MARANTZ', model: 'Model 30', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MARANTZ', model: 'Model 40n', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MARANTZ', model: 'PM-10', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MARANTZ', model: 'PM-12SE', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'DENON', model: 'PMA-600NE', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'DENON', model: 'PMA-900HNE', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'DENON', model: 'PMA-1700NE', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'DENON', model: 'PMA-A110', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S301', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S501', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S701', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S801', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S1200', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S2200', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'YAMAHA', model: 'A-S3200', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'A11 Tribute', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'A12 MKII', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'A14 MKII', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'RA-1572 MKII', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'RA-1592 MKII', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'Michi X3', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'ROTEL', model: 'Michi X5', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MOON', model: '240i', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MOON', model: '340i X', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MOON', model: '600i v2', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MOON', model: '700i v2', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MOON', model: '860A v2', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CREEK', model: 'Voyage i20', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CREEK', model: '4040A', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'EXPOSURE', model: '2510', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'EXPOSURE', model: '3510', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'EXPOSURE', model: '5010', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CYRUS', model: 'ONE', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CYRUS', model: 'i9-XR', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'CYRUS', model: 'Classic AMP', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MUSICAL FIDELITY', model: 'M2si', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MUSICAL FIDELITY', model: 'M3si', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MUSICAL FIDELITY', model: 'M5si', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MUSICAL FIDELITY', model: 'M6si', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MUSICAL FIDELITY', model: 'M8xi', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'MUSICAL FIDELITY', model: 'Nu-Vista 800.2', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'PARASOUND', model: 'Hint 6', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'PARASOUND', model: 'JC 5', category: 'poweramp', type: 'Power Amp' },
+        { brand: 'PRIMARE', model: 'I15 Prisma', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'PRIMARE', model: 'I25 Prisma', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'PRIMARE', model: 'I35 Prisma', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'AYRE', model: 'EX-8 2.0', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'AYRE', model: 'AX-5 Twenty', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'SUGDEN', model: 'A21SE', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'SUGDEN', model: 'ANV-50', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'SUGDEN', model: 'Masterclass IA-4', category: 'poweramp', type: 'Class A Integrated' },
+        { brand: 'UNISON RESEARCH', model: 'Unico Primo', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'UNISON RESEARCH', model: 'Unico 90', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'UNISON RESEARCH', model: 'Unico 150', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'UNISON RESEARCH', model: 'Triode 25', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'UNISON RESEARCH', model: 'Simply Italy', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'UNISON RESEARCH', model: 'Sinfonia', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'AUDIO RESEARCH', model: 'I/50', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'AUDIO RESEARCH', model: 'VSi75', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'AUDIO RESEARCH', model: 'GSi75', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'CARY AUDIO', model: 'SLI-80HS', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'CARY AUDIO', model: 'SLI-100', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'ROGUE AUDIO', model: 'Sphinx V3', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'ROGUE AUDIO', model: 'Pharaoh II', category: 'poweramp', type: 'Hybrid Integrated' },
+        { brand: 'ROGUE AUDIO', model: 'Cronus Magnum III', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'PRIMA LUNA', model: 'EVO 100', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'PRIMA LUNA', model: 'EVO 200', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'PRIMA LUNA', model: 'EVO 300', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'PRIMA LUNA', model: 'EVO 400', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LINE MAGNETIC', model: 'LM-211IA', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LINE MAGNETIC', model: 'LM-216IA', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LINE MAGNETIC', model: 'LM-217IA', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LINE MAGNETIC', model: 'LM-845IA', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LINE MAGNETIC', model: 'LM-805IA', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'CAYIN', model: 'CS-55A', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'CAYIN', model: 'CS-88A', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'CAYIN', model: 'CS-100A', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'CAYIN', model: 'CS-845A', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'WILLSENTON', model: 'R8', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'WILLSENTON', model: 'R800i', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'WILLSENTON', model: 'R35i', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LEBEN', model: 'CS-300XS', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LEBEN', model: 'CS-600X', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'LEBEN', model: 'CS-1000P', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'AUDIO NOTE', model: 'Oto Phono SE', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'AUDIO NOTE', model: 'Cobra', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'AUDIO NOTE', model: 'Soro SE', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'DECWARE', model: 'Zen Triode SE84UFO', category: 'poweramp', type: 'SET Integrated' },
+        { brand: 'DECWARE', model: 'Zen Torii MK V', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'DECWARE', model: 'SE34I.5', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'ELEKIT', model: 'TU-8200', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'ELEKIT', model: 'TU-8600', category: 'poweramp', type: 'SET Integrated' },
+        { brand: 'ELEKIT', model: 'TU-8900', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'SYNTHESIS', model: 'Roma 96DC', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'SYNTHESIS', model: 'Roma 753AC', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'SYNTHESIS', model: 'Titan', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'JADIS', model: 'Orchestra Reference', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'JADIS', model: 'DA88S', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'JADIS', model: 'I-35', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'MASTERSOUND', model: 'Compact 845', category: 'poweramp', type: 'SET Integrated' },
+        { brand: 'MASTERSOUND', model: 'Dueventi', category: 'poweramp', type: 'SET Integrated' },
+        { brand: 'MASTERSOUND', model: 'Evolution 845', category: 'poweramp', type: 'SET Integrated' },
+        { brand: 'FELIKS AUDIO', model: 'Arioso', category: 'poweramp', type: 'Tube Integrated' },
+        { brand: 'NAD', model: 'C 316BEE V2', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'NAD', model: 'C 328', category: 'poweramp', type: 'Hybrid Digital Integrated' },
+        { brand: 'NAD', model: 'C 368', category: 'poweramp', type: 'Hybrid Digital Integrated' },
+        { brand: 'NAD', model: 'C 388', category: 'poweramp', type: 'Hybrid Digital Integrated' },
+        { brand: 'NAD', model: 'M10 V2', category: 'poweramp', type: 'Streaming Integrated' },
+        { brand: 'NAD', model: 'M33', category: 'poweramp', type: 'Streaming Integrated' },
+        { brand: 'NAD', model: 'C 3050', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'LYNGDORF', model: 'TDAI-1120', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'LYNGDORF', model: 'TDAI-3400', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'DEVIALET', model: 'Expert 140 Pro', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'DEVIALET', model: 'Expert 220 Pro', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'DEVIALET', model: 'Expert 250 Pro', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'DEVIALET', model: 'Expert 440 Pro', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'TECHNICS', model: 'SU-G700M2', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'TECHNICS', model: 'SU-R1000', category: 'poweramp', type: 'Digital Integrated' },
+        { brand: 'PS AUDIO', model: 'Sprout100', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'PEACHTREE', model: 'Carina', category: 'poweramp', type: 'Integrated Amp' },
+        { brand: 'PEACHTREE', model: 'GaN 1', category: 'poweramp', type: 'GaN Integrated' },
+        { brand: 'PEACHTREE', model: 'GaN 400', category: 'poweramp', type: 'Power Amp' },
+
+        // HEADPHONE AMPLIFIERS (150+)
+        { brand: 'SCHIIT', model: 'Magni+', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Magni Piety', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Magnius', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Asgard 3', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Valhalla 2', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Lyr 3', category: 'preamp', type: 'Hybrid Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Mjolnir 3', category: 'preamp', type: 'Hybrid Headphone Amp' },
+        { brand: 'SCHIIT', model: 'Folkvangr', category: 'preamp', type: 'OTL Tube Headphone Amp' },
+        { brand: 'TOPPING', model: 'L30 II', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'TOPPING', model: 'L50', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'TOPPING', model: 'L70', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'TOPPING', model: 'A30 Pro', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'TOPPING', model: 'A50 III', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'TOPPING', model: 'A70 Pro', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'TOPPING', model: 'A90', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'SMSL', model: 'SP200', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SMSL', model: 'SH-9', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'SMSL', model: 'HO200', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'FIIO', model: 'K5 Pro ESS', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'FIIO', model: 'K7', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'FIIO', model: 'K9 Pro ESS', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'DROP + THX', model: 'AAA 789', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'JDS LABS', model: 'Atom Amp+', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'JDS LABS', model: 'Element III', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'JDS LABS', model: 'El Amp II+', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'LAKE PEOPLE', model: 'G103-S', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'LAKE PEOPLE', model: 'G103-P', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'LAKE PEOPLE', model: 'G111', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'SPL', model: 'Phonitor One', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SPL', model: 'Phonitor SE', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SPL', model: 'Phonitor XE', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SPL', model: 'Phonitor 2', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SPL', model: 'Phonitor X', category: 'preamp', type: 'Headphone Amp/Preamp' },
+        { brand: 'VIOLECTRIC', model: 'HPA V281', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'VIOLECTRIC', model: 'HPA V550', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'VIOLECTRIC', model: 'HPA V590', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'VIOLECTRIC', model: 'Nirvana', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'BURSON', model: 'Soloist 3X GT', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'BURSON', model: 'Soloist Voyager', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'BURSON', model: 'Conductor 3X GT', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'FERRUM', model: 'OOR', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'BENCHMARK', model: 'HPA4', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'MONOPRICE', model: 'Liquid Platinum', category: 'preamp', type: 'Hybrid Headphone Amp' },
+        { brand: 'MONOPRICE', model: 'THX AAA 887', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'RUPERT NEVE', model: 'RNHP', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'SINGXER', model: 'SA-1', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'FLUX LAB', model: 'FA-10', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'FLUX LAB', model: 'Volot', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'GUSTARD', model: 'H16', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'GUSTARD', model: 'H26', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'FELIKS AUDIO', model: 'Echo MK2', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'FELIKS AUDIO', model: 'Elise MK2', category: 'preamp', type: 'OTL Tube Headphone Amp' },
+        { brand: 'FELIKS AUDIO', model: 'Euforia AE', category: 'preamp', type: 'OTL Tube Headphone Amp' },
+        { brand: 'FELIKS AUDIO', model: 'Envy', category: 'preamp', type: 'OTL Tube Headphone Amp' },
+        { brand: 'BOTTLEHEAD', model: 'Crack', category: 'preamp', type: 'OTL Tube Headphone Amp' },
+        { brand: 'BOTTLEHEAD', model: 'Mainline', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'BOTTLEHEAD', model: 'Sex 3.0', category: 'preamp', type: 'SET Headphone Amp' },
+        { brand: 'DECWARE', model: 'CSP3', category: 'preamp', type: 'Tube Headphone Amp/Pre' },
+        { brand: 'DECWARE', model: 'Taboo MK IV', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'WOOAUDIO', model: 'WA7 Fireflies', category: 'preamp', type: 'Tube DAC/Amp' },
+        { brand: 'WOOAUDIO', model: 'WA8 Eclipse', category: 'preamp', type: 'Tube DAC/Amp' },
+        { brand: 'WOOAUDIO', model: 'WA11 Topaz', category: 'preamp', type: 'Portable Tube Amp' },
+        { brand: 'WOOAUDIO', model: 'WA22', category: 'preamp', type: 'Balanced Tube Amp' },
+        { brand: 'WOOAUDIO', model: 'WA23 Luna', category: 'preamp', type: 'Balanced Tube Amp' },
+        { brand: 'WOOAUDIO', model: 'WA33', category: 'preamp', type: 'Flagship Tube Amp' },
+        { brand: 'CAYIN', model: 'HA-1A MK2', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'CAYIN', model: 'HA-3A', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'CAYIN', model: 'HA-6A', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'CAYIN', model: 'HA-300B', category: 'preamp', type: 'SET Tube Headphone Amp' },
+        { brand: 'QUICKSILVER', model: 'Headphone Amp', category: 'preamp', type: 'Tube Headphone Amp' },
+        { brand: 'CHORD', model: 'Hugo TT2', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'CHORD', model: 'Dave', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'CHORD', model: 'Anni', category: 'preamp', type: 'Integrated Headphone Amp' },
+        { brand: 'SENNHEISER', model: 'HDV 820', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'NAIM', model: 'Headline 2', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'HEADAMP', model: 'Gilmore Lite MK2', category: 'preamp', type: 'Headphone Amp' },
+        { brand: 'HEADAMP', model: 'GS-X Mini', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'HEADAMP', model: 'GS-X MK2', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'HEADAMP', model: 'Blue Hawaii SE', category: 'preamp', type: 'Electrostatic Amp' },
+        { brand: 'MJOLNIR AUDIO', model: 'Pure BiPolar', category: 'preamp', type: 'Balanced Headphone Amp' },
+        { brand: 'MJOLNIR AUDIO', model: 'SRM-T8000', category: 'preamp', type: 'Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-353X', category: 'preamp', type: 'Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-400S', category: 'preamp', type: 'Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-500T', category: 'preamp', type: 'Tube Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-600 Limited', category: 'preamp', type: 'Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-700S', category: 'preamp', type: 'Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-700T', category: 'preamp', type: 'Tube Electrostatic Amp' },
+        { brand: 'STAX', model: 'SRM-T8000', category: 'preamp', type: 'Flagship Electrostatic' },
+        { brand: 'HIFIMAN', model: 'EF400', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'HIFIMAN', model: 'EF600', category: 'preamp', type: 'DAC/Amp' },
+        { brand: 'HIFIMAN', model: 'Jade II', category: 'preamp', type: 'Electrostatic System' },
+        { brand: 'HIFIMAN', model: 'Shangri-La Jr', category: 'preamp', type: 'Electrostatic System' },
+
+        // STREAMERS & NETWORK PLAYERS (100+)
+        { brand: 'CAMBRIDGE', model: 'CXN100', category: 'source', type: 'Network Streamer' },
+        { brand: 'CAMBRIDGE', model: 'EVO 75', category: 'source', type: 'Streaming Amp' },
+        { brand: 'CAMBRIDGE', model: 'EVO 150', category: 'source', type: 'Streaming Amp' },
+        { brand: 'BLUESOUND', model: 'Node', category: 'source', type: 'Network Streamer' },
+        { brand: 'BLUESOUND', model: 'Node X', category: 'source', type: 'Network Streamer' },
+        { brand: 'BLUESOUND', model: 'Vault 2i', category: 'source', type: 'Streaming Server' },
+        { brand: 'BLUESOUND', model: 'Powernode', category: 'source', type: 'Streaming Amp' },
+        { brand: 'BLUESOUND', model: 'Powernode Edge', category: 'source', type: 'Streaming Amp' },
+        { brand: 'WIIM', model: 'Mini', category: 'source', type: 'Network Streamer' },
+        { brand: 'WIIM', model: 'Pro', category: 'source', type: 'Network Streamer' },
+        { brand: 'WIIM', model: 'Pro Plus', category: 'source', type: 'Network Streamer' },
+        { brand: 'WIIM', model: 'Amp', category: 'source', type: 'Streaming Amp' },
+        { brand: 'WIIM', model: 'Ultra', category: 'source', type: 'Network Streamer' },
+        { brand: 'ALLO', model: 'DigiOne', category: 'source', type: 'Digital Transport' },
+        { brand: 'ALLO', model: 'USBridge', category: 'source', type: 'Network Bridge' },
+        { brand: 'ALLO', model: 'Revolution', category: 'source', type: 'DAC/Streamer' },
+        { brand: 'VOLUMIO', model: 'Motivo', category: 'source', type: 'Network Streamer' },
+        { brand: 'VOLUMIO', model: 'Rivo', category: 'source', type: 'Network Streamer' },
+        { brand: 'INNUOS', model: 'Pulse Mini', category: 'source', type: 'Network Streamer' },
+        { brand: 'INNUOS', model: 'Pulse', category: 'source', type: 'Network Streamer' },
+        { brand: 'INNUOS', model: 'Pulsar', category: 'source', type: 'Network Streamer' },
+        { brand: 'INNUOS', model: 'Zen Mini MK3', category: 'source', type: 'Music Server' },
+        { brand: 'INNUOS', model: 'Zen MK3', category: 'source', type: 'Music Server' },
+        { brand: 'INNUOS', model: 'Zenith MK3', category: 'source', type: 'Music Server' },
+        { brand: 'INNUOS', model: 'Statement', category: 'source', type: 'Music Server' },
+        { brand: 'AURENDER', model: 'N200', category: 'source', type: 'Music Server' },
+        { brand: 'AURENDER', model: 'N150', category: 'source', type: 'Music Server' },
+        { brand: 'AURENDER', model: 'A100', category: 'source', type: 'Server/DAC' },
+        { brand: 'AURENDER', model: 'A200', category: 'source', type: 'Server/DAC' },
+        { brand: 'AURENDER', model: 'N20', category: 'source', type: 'Music Server' },
+        { brand: 'AURENDER', model: 'N30SA', category: 'source', type: 'Music Server' },
+        { brand: 'AURENDER', model: 'W20SE', category: 'source', type: 'Music Server' },
+        { brand: 'AURALIC', model: 'Aries G1.1', category: 'source', type: 'Network Streamer' },
+        { brand: 'AURALIC', model: 'Aries G2.2', category: 'source', type: 'Network Streamer' },
+        { brand: 'AURALIC', model: 'Altair G1.1', category: 'source', type: 'Streaming DAC' },
+        { brand: 'AURALIC', model: 'Altair G2.2', category: 'source', type: 'Streaming DAC' },
+        { brand: 'AURALIC', model: 'Vega G2.2', category: 'source', type: 'Streaming DAC' },
+        { brand: 'AURALIC', model: 'Aries S1', category: 'source', type: 'Network Streamer' },
+        { brand: 'SONORE', model: 'microRendu', category: 'source', type: 'Network Renderer' },
+        { brand: 'SONORE', model: 'ultraRendu', category: 'source', type: 'Network Renderer' },
+        { brand: 'SONORE', model: 'opticalRendu', category: 'source', type: 'Network Renderer' },
+        { brand: 'SONORE', model: 'Signature Rendu SE', category: 'source', type: 'Network Renderer' },
+        { brand: 'NAIM', model: 'ND5 XS 2', category: 'source', type: 'Network Streamer' },
+        { brand: 'NAIM', model: 'NDX 2', category: 'source', type: 'Network Streamer' },
+        { brand: 'NAIM', model: 'ND555', category: 'source', type: 'Network Streamer' },
+        { brand: 'NAIM', model: 'NSC 222', category: 'source', type: 'Streaming Preamp' },
+        { brand: 'LINN', model: 'Selekt DSM', category: 'source', type: 'Streaming DAC' },
+        { brand: 'LINN', model: 'Klimax DSM', category: 'source', type: 'Streaming DAC' },
+        { brand: 'LINN', model: 'Akurate DSM', category: 'source', type: 'Streaming DAC' },
+        { brand: 'LUMIN', model: 'D3', category: 'source', type: 'Network Streamer' },
+        { brand: 'LUMIN', model: 'T3', category: 'source', type: 'Network Streamer' },
+        { brand: 'LUMIN', model: 'P1 Mini', category: 'source', type: 'Network Streamer' },
+        { brand: 'LUMIN', model: 'P1', category: 'source', type: 'Network Streamer' },
+        { brand: 'LUMIN', model: 'X1', category: 'source', type: 'Flagship Streamer' },
+        { brand: 'LUMIN', model: 'U2 Mini', category: 'source', type: 'Digital Transport' },
+        { brand: 'LUMIN', model: 'U2', category: 'source', type: 'Digital Transport' },
+        { brand: 'SOTM', model: 'sMS-200', category: 'source', type: 'Network Renderer' },
+        { brand: 'SOTM', model: 'sMS-200 Ultra', category: 'source', type: 'Network Renderer' },
+        { brand: 'SOTM', model: 'sMS-200 Ultra Neo', category: 'source', type: 'Network Renderer' },
+        { brand: 'HI-FI ROSE', model: 'RS130', category: 'source', type: 'Network Streamer' },
+        { brand: 'HI-FI ROSE', model: 'RS150', category: 'source', type: 'Streaming DAC' },
+        { brand: 'HI-FI ROSE', model: 'RS150B', category: 'source', type: 'Streaming DAC' },
+        { brand: 'HI-FI ROSE', model: 'RS201E', category: 'source', type: 'Streaming Amp' },
+        { brand: 'EVERSOLO', model: 'DMP-A6', category: 'source', type: 'Streaming DAC' },
+        { brand: 'EVERSOLO', model: 'DMP-A6 Master', category: 'source', type: 'Streaming DAC' },
+        { brand: 'EVERSOLO', model: 'DMP-A8', category: 'source', type: 'Streaming DAC' },
+        { brand: 'MATRIX', model: 'Element X', category: 'source', type: 'Streaming DAC' },
+        { brand: 'MATRIX', model: 'Element X2', category: 'source', type: 'Streaming DAC' },
+        { brand: 'MATRIX', model: 'Element M', category: 'source', type: 'Music Server' },
+        { brand: 'PRIMARE', model: 'NP5 Prisma', category: 'source', type: 'Network Streamer' },
+        { brand: 'PRIMARE', model: 'SC15 Prisma', category: 'source', type: 'Streaming DAC' },
+        { brand: 'MOON', model: 'Mind 2', category: 'source', type: 'Network Streamer' },
+        { brand: 'MOON', model: '280D', category: 'source', type: 'Streaming DAC' },
+        { brand: 'MOON', model: '390', category: 'source', type: 'Streaming Preamp' },
+        { brand: 'MOON', model: '791', category: 'source', type: 'Streaming Preamp' },
+        { brand: 'ROSE', model: 'RS520', category: 'source', type: 'Streaming Amp' },
+
+        // MORE DACS (150+)
+        { brand: 'TOPPING', model: 'D10s', category: 'dac', type: 'USB DAC' },
+        { brand: 'TOPPING', model: 'E30 II', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'TOPPING', model: 'E50', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'TOPPING', model: 'E70', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'TOPPING', model: 'D50III', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'TOPPING', model: 'D70 Pro', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'TOPPING', model: 'D90SE', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'TOPPING', model: 'D90III', category: 'dac', type: 'Reference DAC' },
+        { brand: 'SMSL', model: 'D-6', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SMSL', model: 'D300', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SMSL', model: 'DO200', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SMSL', model: 'DO300', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SMSL', model: 'DO400', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SMSL', model: 'SU-9', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'GUSTARD', model: 'X16', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'GUSTARD', model: 'X18', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'GUSTARD', model: 'X26 Pro', category: 'dac', type: 'Reference DAC' },
+        { brand: 'GUSTARD', model: 'R26', category: 'dac', type: 'R2R DAC' },
+        { brand: 'GUSTARD', model: 'A26', category: 'dac', type: 'Reference DAC' },
+        { brand: 'MUSICIAN', model: 'Pegasus', category: 'dac', type: 'R2R DAC' },
+        { brand: 'MUSICIAN', model: 'Draco', category: 'dac', type: 'R2R DAC' },
+        { brand: 'MUSICIAN', model: 'Aquarius', category: 'dac', type: 'R2R DAC' },
+        { brand: 'HOLO AUDIO', model: 'Spring 3', category: 'dac', type: 'R2R DAC' },
+        { brand: 'HOLO AUDIO', model: 'May', category: 'dac', type: 'R2R DAC' },
+        { brand: 'HOLO AUDIO', model: 'Bliss', category: 'dac', type: 'R2R DAC' },
+        { brand: 'DENAFRIPS', model: 'Ares II', category: 'dac', type: 'R2R DAC' },
+        { brand: 'DENAFRIPS', model: 'Pontus II', category: 'dac', type: 'R2R DAC' },
+        { brand: 'DENAFRIPS', model: 'Venus II', category: 'dac', type: 'R2R DAC' },
+        { brand: 'DENAFRIPS', model: 'Terminator II', category: 'dac', type: 'R2R DAC' },
+        { brand: 'DENAFRIPS', model: 'Terminator Plus', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AUDIO-GD', model: 'R-1', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AUDIO-GD', model: 'R-7', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AUDIO-GD', model: 'R-8', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AUDIO-GD', model: 'R2R 11', category: 'dac', type: 'R2R DAC/Amp' },
+        { brand: 'SOEKRIS', model: 'dac2541', category: 'dac', type: 'R2R DAC' },
+        { brand: 'SOEKRIS', model: 'dac1541', category: 'dac', type: 'R2R DAC' },
+        { brand: 'BENCHMARK', model: 'DAC3 B', category: 'dac', type: 'Reference DAC' },
+        { brand: 'BENCHMARK', model: 'DAC3 HGC', category: 'dac', type: 'Reference DAC' },
+        { brand: 'BENCHMARK', model: 'DAC3 L', category: 'dac', type: 'Reference DAC' },
+        { brand: 'CHORD', model: 'Qutest', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'CHORD', model: 'Hugo TT2', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'CHORD', model: 'Dave', category: 'dac', type: 'Reference DAC' },
+        { brand: 'CHORD', model: 'Mojo 2', category: 'dac', type: 'Portable DAC' },
+        { brand: 'CHORD', model: 'Hugo 2', category: 'dac', type: 'Portable DAC' },
+        { brand: 'CHORD', model: 'Anni', category: 'dac', type: 'Desktop DAC/Amp' },
+        { brand: 'RME', model: 'ADI-2 DAC FS', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'RME', model: 'ADI-2 Pro FS R', category: 'dac', type: 'Pro DAC' },
+        { brand: 'MYTEK', model: 'Brooklyn DAC+', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'MYTEK', model: 'Liberty II', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'MYTEK', model: 'Manhattan DAC II', category: 'dac', type: 'Reference DAC' },
+        { brand: 'MYTEK', model: 'Empire', category: 'dac', type: 'Reference DAC' },
+        { brand: 'MERGING', model: 'NADAC', category: 'dac', type: 'Reference DAC' },
+        { brand: 'MERGING', model: 'NADAC ST-2', category: 'dac', type: 'Reference DAC' },
+        { brand: 'MEITNER', model: 'MA3', category: 'dac', type: 'Streaming DAC' },
+        { brand: 'EMM LABS', model: 'DA2', category: 'dac', type: 'Reference DAC' },
+        { brand: 'EMM LABS', model: 'DV2', category: 'dac', type: 'Reference DAC' },
+        { brand: 'PLAYBACK DESIGNS', model: 'MPD-6', category: 'dac', type: 'Reference DAC' },
+        { brand: 'PLAYBACK DESIGNS', model: 'MPD-8', category: 'dac', type: 'Reference DAC' },
+        { brand: 'PLAYBACK DESIGNS', model: 'Dream DAC', category: 'dac', type: 'Flagship DAC' },
+        { brand: 'T+A', model: 'DAC 8 DSD', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'T+A', model: 'DAC 200', category: 'dac', type: 'Reference DAC' },
+        { brand: 'T+A', model: 'SD 3100 HV', category: 'dac', type: 'Flagship DAC' },
+        { brand: 'WEISS', model: 'DAC501', category: 'dac', type: 'Reference DAC' },
+        { brand: 'WEISS', model: 'DAC502', category: 'dac', type: 'Reference DAC' },
+        { brand: 'WEISS', model: 'Medea+', category: 'dac', type: 'Reference DAC' },
+        { brand: 'NAGRA', model: 'HD DAC X', category: 'dac', type: 'Reference DAC' },
+        { brand: 'NAGRA', model: 'Classic DAC II', category: 'dac', type: 'Reference DAC' },
+        { brand: 'NAGRA', model: 'Tube DAC', category: 'dac', type: 'Tube DAC' },
+        { brand: 'MSB', model: 'Discrete', category: 'dac', type: 'R2R DAC' },
+        { brand: 'MSB', model: 'Premier', category: 'dac', type: 'R2R DAC' },
+        { brand: 'MSB', model: 'Reference', category: 'dac', type: 'R2R DAC' },
+        { brand: 'MSB', model: 'Select', category: 'dac', type: 'R2R DAC' },
+        { brand: 'DCS', model: 'Lina', category: 'dac', type: 'Ring DAC' },
+        { brand: 'DCS', model: 'Bartók', category: 'dac', type: 'Ring DAC' },
+        { brand: 'DCS', model: 'Rossini', category: 'dac', type: 'Ring DAC' },
+        { brand: 'DCS', model: 'Vivaldi', category: 'dac', type: 'Ring DAC' },
+        { brand: 'TOTALDAC', model: 'd1-core', category: 'dac', type: 'R2R DAC' },
+        { brand: 'TOTALDAC', model: 'd1-single', category: 'dac', type: 'R2R DAC' },
+        { brand: 'TOTALDAC', model: 'd1-tube-mk3', category: 'dac', type: 'R2R Tube DAC' },
+        { brand: 'TOTALDAC', model: 'd1-twelve-mk3', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AQUA', model: 'La Voce S3', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AQUA', model: 'La Scala MkII', category: 'dac', type: 'R2R DAC' },
+        { brand: 'AQUA', model: 'Formula xHD', category: 'dac', type: 'R2R DAC' },
+        { brand: 'LAMPIZATOR', model: 'Amber 4', category: 'dac', type: 'Tube DAC' },
+        { brand: 'LAMPIZATOR', model: 'Atlantic 3', category: 'dac', type: 'Tube DAC' },
+        { brand: 'LAMPIZATOR', model: 'Baltic 4', category: 'dac', type: 'Tube DAC' },
+        { brand: 'LAMPIZATOR', model: 'Pacific 2', category: 'dac', type: 'Tube DAC' },
+        { brand: 'LAMPIZATOR', model: 'Horizon', category: 'dac', type: 'Flagship Tube DAC' },
+        { brand: 'BRICASTI', model: 'M3', category: 'dac', type: 'Reference DAC' },
+        { brand: 'BRICASTI', model: 'M1SE', category: 'dac', type: 'Reference DAC' },
+        { brand: 'BRICASTI', model: 'M21', category: 'dac', type: 'Flagship DAC' },
+        { brand: 'BERKELEY AUDIO', model: 'Alpha DAC 3', category: 'dac', type: 'Reference DAC' },
+        { brand: 'BERKELEY AUDIO', model: 'Alpha Reference 3', category: 'dac', type: 'Reference DAC' },
+        { brand: 'PS AUDIO', model: 'DirectStream DAC MK2', category: 'dac', type: 'DSD DAC' },
+        { brand: 'WYRED 4 SOUND', model: 'DAC-2v2', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'WYRED 4 SOUND', model: 'DAC-2v2SE', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SOULNOTE', model: 'D-2', category: 'dac', type: 'Reference DAC' },
+        { brand: 'SOULNOTE', model: 'D-3', category: 'dac', type: 'Reference DAC' },
+        { brand: 'PRISM SOUND', model: 'Callia', category: 'dac', type: 'Reference DAC' },
+        { brand: 'ANTELOPE', model: 'Zodiac Gold', category: 'dac', type: 'Reference DAC' },
+        { brand: 'ANTELOPE', model: 'Zodiac Platinum', category: 'dac', type: 'Reference DAC' },
+        { brand: 'ACCUPHASE', model: 'DC-901', category: 'dac', type: 'Reference DAC' },
+        { brand: 'ACCUPHASE', model: 'DC-1000', category: 'dac', type: 'Flagship DAC' },
+        { brand: 'LUXMAN', model: 'DA-06', category: 'dac', type: 'Reference DAC' },
+        { brand: 'LUXMAN', model: 'DA-07X', category: 'dac', type: 'Reference DAC' },
+        { brand: 'LUXMAN', model: 'D-10X', category: 'dac', type: 'SACD/DAC' },
+        { brand: 'ESOTERIC', model: 'D-05X', category: 'dac', type: 'Reference DAC' },
+        { brand: 'ESOTERIC', model: 'D-02X', category: 'dac', type: 'Reference DAC' },
+        { brand: 'ESOTERIC', model: 'N-01XD', category: 'dac', type: 'Network DAC' },
+        { brand: 'ESOTERIC', model: 'N-05XD', category: 'dac', type: 'Network DAC' },
+        { brand: 'MCINTOSH', model: 'DA2', category: 'dac', type: 'DAC Module' },
+        { brand: 'MCINTOSH', model: 'D150', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'MCINTOSH', model: 'D1100', category: 'dac', type: 'Reference DAC' },
+        { brand: 'AUDIO RESEARCH', model: 'DAC9', category: 'dac', type: 'Tube DAC' },
+        { brand: 'AUDIO RESEARCH', model: 'Reference DAC', category: 'dac', type: 'Reference Tube DAC' },
+        { brand: 'AYRE', model: 'Codex', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'AYRE', model: 'QX-5 Twenty', category: 'dac', type: 'Reference DAC' },
+        { brand: 'AYRE', model: 'QX-8', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SIMAUDIO', model: '230HAD', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SIMAUDIO', model: '280D', category: 'dac', type: 'Streaming DAC' },
+        { brand: 'SIMAUDIO', model: '380D', category: 'dac', type: 'Reference DAC' },
+        { brand: 'SIMAUDIO', model: '680D', category: 'dac', type: 'Reference DAC' },
+        { brand: 'SIMAUDIO', model: '780D v2', category: 'dac', type: 'Reference DAC' },
+        { brand: 'HEGEL', model: 'HD30', category: 'dac', type: 'Reference DAC' },
+        { brand: 'CAMBRIDGE', model: 'DacMagic 100', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'CAMBRIDGE', model: 'DacMagic 200M', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SCHIIT', model: 'Modi+', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SCHIIT', model: 'Modi Multibit', category: 'dac', type: 'Multibit DAC' },
+        { brand: 'SCHIIT', model: 'Modius', category: 'dac', type: 'Balanced DAC' },
+        { brand: 'SCHIIT', model: 'Bifrost 2', category: 'dac', type: 'Multibit DAC' },
+        { brand: 'SCHIIT', model: 'Gungnir Multibit', category: 'dac', type: 'Multibit DAC' },
+        { brand: 'SCHIIT', model: 'Yggdrasil', category: 'dac', type: 'Multibit DAC' },
+        { brand: 'SCHIIT', model: 'Yggdrasil+', category: 'dac', type: 'Multibit DAC' },
+        { brand: 'iFi', model: 'ZEN DAC', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'iFi', model: 'ZEN DAC Signature', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'iFi', model: 'Neo iDSD', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'iFi', model: 'Pro iDSD Signature', category: 'dac', type: 'Reference DAC' },
+        { brand: 'FIIO', model: 'K3', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'FIIO', model: 'K7', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'FIIO', model: 'K9 Pro', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'FIIO', model: 'K9 AKM', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'FIIO', model: 'R7', category: 'dac', type: 'Desktop Streamer' },
+        { brand: 'SHANLING', model: 'EM5', category: 'dac', type: 'Desktop DAC' },
+        { brand: 'SHANLING', model: 'EM7', category: 'dac', type: 'Desktop Streamer' },
+        { brand: 'SHANLING', model: 'ET3', category: 'dac', type: 'CD Transport' },
+        { brand: 'SHANLING', model: 'EC3', category: 'dac', type: 'CD Player' },
     ];
 
     const CATEGORY_DISPLAY = {
@@ -3671,6 +5134,13 @@
     const leftPanel = document.querySelector('.left-panel');
     let highlightedIndex = -1;
 
+    function resetFlowerAnimation(animationValue = '') {
+        flowerAnimation.classList.remove('force-visible');
+        flowerAnimation.style.animation = 'none';
+        flowerAnimation.offsetHeight;
+        flowerAnimation.style.animation = animationValue;
+    }
+
     function searchComponents(query) {
         if (!query || query.length < 1) return [];
         const lowerQuery = query.toLowerCase();
@@ -3678,7 +5148,7 @@
             comp.brand.toLowerCase().includes(lowerQuery) ||
             comp.model.toLowerCase().includes(lowerQuery) ||
             comp.type.toLowerCase().includes(lowerQuery)
-        ).slice(0, 10);
+        ).slice(0, 50);
     }
 
     function renderSuggestions(results, query) {
@@ -3900,6 +5370,11 @@
     // Add animated class after entrance animation completes
     roomSizeToggle.addEventListener('animationend', () => {
         roomSizeToggle.classList.add('animated');
+    });
+
+    // Add animated class to analyze button after entrance animation completes
+    analyzeBtn.addEventListener('animationend', () => {
+        analyzeBtn.classList.add('animated');
     });
 
     function toggleComponentDetails(id) {
@@ -4176,11 +5651,21 @@
             thirdPanel.classList.remove('visible');
             dropZonesContainer.classList.remove('has-selection');
             analyzeBtn.classList.remove('visible');
+            analyzeBtn.classList.remove('animated');
+            resetFlowerAnimation('fadeInDown 0.4s ease-out forwards');
             return;
         }
 
-        dropZonesContainer.classList.add('has-selection');
-        analyzeBtn.classList.add('visible');
+        // Show button if it's the first selection OR if button was hidden (e.g., after analysis)
+        const isFirstSelection = !dropZonesContainer.classList.contains('has-selection');
+        const buttonNeedsToShow = !analyzeBtn.classList.contains('visible');
+
+        if (isFirstSelection || buttonNeedsToShow) {
+            resetFlowerAnimation();
+
+            dropZonesContainer.classList.add('has-selection');
+            analyzeBtn.classList.add('visible');
+        }
 
         analysisCard.classList.add('visible');
 
@@ -4853,9 +6338,12 @@
 
     // Analyze button click handler
     analyzeBtn.addEventListener('click', () => {
-        thirdPanel.classList.add('visible');
-        analyzeBtn.classList.remove('visible');
-        flowerAnimation.classList.add('force-visible');
+        analyzeBtn.classList.add('exiting');
+        setTimeout(() => {
+            analyzeBtn.classList.remove('visible', 'animated', 'exiting');
+            thirdPanel.classList.add('visible');
+            flowerAnimation.classList.add('force-visible');
+        }, 300);
     });
 
     // Firebase Configuration
