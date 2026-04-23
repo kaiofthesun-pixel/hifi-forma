@@ -3723,13 +3723,10 @@
         const targetZone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
         if (!targetZone) return;
 
-        // Clear any previously selected card for this zone
-        if (targetZone.classList.contains('filled') && targetZone.dataset.selectedCard !== undefined) {
-            const prevCardIndex = parseInt(targetZone.dataset.selectedCard);
-            const componentCards = document.querySelectorAll('.component-card');
-            if (componentCards[prevCardIndex]) {
-                componentCards[prevCardIndex].classList.remove('selected');
-            }
+        // Clear any previously selected card for this category
+        const accordionItem = document.querySelector(`.accordion-header[data-category="${category}"]`)?.closest('.accordion-item');
+        if (accordionItem) {
+            accordionItem.querySelectorAll('.component-card.selected').forEach(c => c.classList.remove('selected'));
         }
 
         const droppedThumb = targetZone.querySelector('.dropped-thumb');
@@ -3751,7 +3748,6 @@
         }
 
         // Find and select matching component card in accordion
-        const accordionItem = document.querySelector(`.accordion-header[data-category="${category}"]`)?.closest('.accordion-item');
         if (accordionItem) {
             const cards = accordionItem.querySelectorAll('.component-card');
             const brandUpper = brand.toUpperCase();
@@ -3787,9 +3783,8 @@
                     `;
                     accordionInner.insertBefore(newCard, accordionInner.firstChild);
 
-                    // Re-attach drag events to new card
-                    newCard.addEventListener('dragstart', handleDragStart);
-                    newCard.addEventListener('dragend', handleDragEnd);
+                    // Attach all event listeners to new card
+                    attachCardListeners(newCard);
 
                     targetZone.dataset.selectedCard = Array.from(document.querySelectorAll('.component-card')).indexOf(newCard);
                 }
@@ -4516,95 +4511,102 @@
 
     let dragDelayTimeout = null;
 
-    componentCards.forEach(card => {
-        card.addEventListener('mousedown', () => {
-            draggedCategory = card.dataset.category;
-            dragDelayTimeout = setTimeout(() => {
-                rightPanel.classList.add('dragging');
-                setEligibleZones(draggedCategory);
-            }, 150);
-        });
+    function handleCardMousedown(card) {
+        draggedCategory = card.dataset.category;
+        dragDelayTimeout = setTimeout(() => {
+            rightPanel.classList.add('dragging');
+            setEligibleZones(draggedCategory);
+        }, 150);
+    }
 
-        card.addEventListener('click', (e) => {
-            const category = card.dataset.category;
-            const targetZone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
-            if (!targetZone) return;
+    function handleCardClick(card) {
+        const category = card.dataset.category;
+        const targetZone = document.querySelector(`.drop-zone[data-accepts="${category}"]`);
+        if (!targetZone) return;
 
-            // If this card is already selected, deselect it
-            if (card.classList.contains('selected')) {
-                card.classList.remove('selected');
-                targetZone.classList.remove('filled');
-                delete targetZone.dataset.selectedCard;
-
-                const droppedThumb = targetZone.querySelector('.dropped-thumb');
-                const droppedBrand = targetZone.querySelector('.dropped-brand');
-                const droppedModel = targetZone.querySelector('.dropped-model');
-                droppedBrand.textContent = '';
-                droppedModel.textContent = '';
-                droppedThumb.innerHTML = '';
-
-                updateChainConnectors();
-                updateCheckmarks();
-                updateComponentAnalysis();
-                return;
-            }
-
-            // If zone is already filled, unmark the previous card
-            if (targetZone.classList.contains('filled') && targetZone.dataset.selectedCard !== undefined) {
-                const prevCardIndex = parseInt(targetZone.dataset.selectedCard);
-                componentCards[prevCardIndex].classList.remove('selected');
-            }
+        // If this card is already selected, deselect it
+        if (card.classList.contains('selected')) {
+            card.classList.remove('selected');
+            targetZone.classList.remove('filled');
+            delete targetZone.dataset.selectedCard;
 
             const droppedThumb = targetZone.querySelector('.dropped-thumb');
             const droppedBrand = targetZone.querySelector('.dropped-brand');
             const droppedModel = targetZone.querySelector('.dropped-model');
-
-            const brand = card.querySelector('.component-brand').textContent;
-            const model = card.querySelector('.component-model').textContent;
-            const thumbImg = card.querySelector('.component-thumb img');
-
-            droppedBrand.textContent = brand;
-            droppedModel.textContent = model;
-
-            if (thumbImg) {
-                droppedThumb.innerHTML = '';
-                const img = document.createElement('img');
-                img.src = thumbImg.src;
-                img.alt = thumbImg.alt;
-                droppedThumb.appendChild(img);
-            }
-
-            card.classList.add('selected');
-            targetZone.dataset.selectedCard = Array.from(componentCards).indexOf(card);
-            targetZone.classList.add('filled');
+            droppedBrand.textContent = '';
+            droppedModel.textContent = '';
+            droppedThumb.innerHTML = '';
 
             updateChainConnectors();
             updateCheckmarks();
             updateComponentAnalysis();
-        });
+            return;
+        }
 
-        card.addEventListener('dragstart', (e) => {
-            draggedItem = card;
-            draggedCategory = card.dataset.category;
-            card.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
+        // If zone is already filled, unmark the previous card
+        const accordionItem = card.closest('.accordion-item');
+        if (accordionItem) {
+            accordionItem.querySelectorAll('.component-card.selected').forEach(c => c.classList.remove('selected'));
+        }
 
-        card.addEventListener('dragend', () => {
-            if (dragDelayTimeout) {
-                clearTimeout(dragDelayTimeout);
-                dragDelayTimeout = null;
-            }
-            if (draggedItem) {
-                draggedItem.classList.remove('dragging');
-            }
-            draggedItem = null;
-            draggedCategory = null;
-            releaseAnimationPlayed = false;
-            rightPanel.classList.remove('dragging');
-            clearEligibleZones();
-        });
-    });
+        const droppedThumb = targetZone.querySelector('.dropped-thumb');
+        const droppedBrand = targetZone.querySelector('.dropped-brand');
+        const droppedModel = targetZone.querySelector('.dropped-model');
+
+        const brand = card.querySelector('.component-brand').textContent;
+        const model = card.querySelector('.component-model').textContent;
+        const thumbImg = card.querySelector('.component-thumb img');
+
+        droppedBrand.textContent = brand;
+        droppedModel.textContent = model;
+
+        if (thumbImg) {
+            droppedThumb.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = thumbImg.src;
+            img.alt = thumbImg.alt;
+            droppedThumb.appendChild(img);
+        }
+
+        card.classList.add('selected');
+        targetZone.classList.add('filled');
+
+        updateChainConnectors();
+        updateCheckmarks();
+        updateComponentAnalysis();
+    }
+
+    function handleDragStart(e) {
+        const card = e.currentTarget;
+        draggedItem = card;
+        draggedCategory = card.dataset.category;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd() {
+        if (dragDelayTimeout) {
+            clearTimeout(dragDelayTimeout);
+            dragDelayTimeout = null;
+        }
+        if (draggedItem) {
+            draggedItem.classList.remove('dragging');
+        }
+        draggedItem = null;
+        draggedCategory = null;
+        releaseAnimationPlayed = false;
+        rightPanel.classList.remove('dragging');
+        clearEligibleZones();
+    }
+
+    function attachCardListeners(card) {
+        card.addEventListener('mousedown', () => handleCardMousedown(card));
+        card.addEventListener('click', () => handleCardClick(card));
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+    }
+
+    componentCards.forEach(card => attachCardListeners(card));
 
     document.addEventListener('mouseup', () => {
         if (dragDelayTimeout) {
