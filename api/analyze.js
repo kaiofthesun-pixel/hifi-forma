@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -11,7 +11,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'No components provided' });
     }
 
-    const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const roomDescriptions = {
         SM: 'small (~100-200 sq ft)',
@@ -45,12 +46,11 @@ ${roomDescriptions[roomSize] || 'medium'} room
 Write in an engaging, knowledgeable tone. Be specific about the sonic characteristics you'd expect. Keep the response focused and under 400 words. Use plain text, no markdown formatting.`;
 
     try {
-        const result = await client.models.generateContent({
-            model: "gemini-2.0-flash",
-            contents: prompt,
-        });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
 
-        res.status(200).json({ analysis: result.text });
+        res.status(200).json({ analysis: text });
     } catch (error) {
         console.error('Gemini API error:', error);
         res.status(500).json({ error: 'Failed to generate analysis' });
