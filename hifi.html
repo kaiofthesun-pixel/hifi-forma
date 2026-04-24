@@ -884,8 +884,8 @@
         /* Flow indicator decorative elements */
         .flow-indicator {
             position: absolute;
-            left: -70px;
-            top: 93px;
+            left: -40px;
+            top: 137px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -932,7 +932,7 @@
 
         @keyframes radiate {
             0% {
-                transform: scale(1);
+                transform: scale(0);
                 opacity: 0.6;
             }
             100% {
@@ -952,6 +952,7 @@
             display: flex;
             align-items: center;
             gap: 2px;
+            margin-left: 14px;
         }
 
         .flow-arrows-horizontal .flow-arrow {
@@ -963,7 +964,7 @@
         .flow-indicator .signal-chain-label {
             position: relative;
             top: -16px;
-            left: -32px;
+            left: -20px;
             font-family: 'Inter', sans-serif;
             font-size: 9px;
             font-weight: 500;
@@ -988,7 +989,7 @@
             flex-direction: column;
             align-items: center;
             gap: 2px;
-            margin: 8px 0;
+            margin: 14px 0;
             width: 289px;
             position: relative;
         }
@@ -996,6 +997,13 @@
         .drop-zone-arrows.bottom-arrows {
             opacity: 0;
             animation: fadeInDown 0.4s ease-out 0.5s forwards;
+        }
+
+        .bottom-arrows-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
         }
 
         .signal-chain-label {
@@ -1135,36 +1143,6 @@
             color: #1c1c1c;
         }
 
-        /* Analyze Button */
-        .analyze-btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 12px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            background: #1c1c1c;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
-        }
-
-        .analyze-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .analyze-btn:active {
-            transform: scale(0.85);
-            transition: transform 0.1s ease;
-        }
-
-        .analyze-btn:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
-
         /* Empty state */
         .empty-state {
             display: flex;
@@ -1183,7 +1161,7 @@
             align-items: center;
             gap: 0;
             padding: 40px;
-            padding-top: 76px;
+            padding-top: 108px;
             margin-left: 25px;
             transform-origin: top center;
             transition: transform 0.3s ease;
@@ -1337,7 +1315,7 @@
 
         .chain-connector {
             width: 289px;
-            height: 27px;
+            height: 37px;
             background: transparent;
             position: relative;
             display: flex;
@@ -1914,16 +1892,17 @@
         .room-size-toggle .size-option {
             font-family: 'Inter', sans-serif;
             font-size: clamp(10px, 1vw, 14px);
-            font-weight: 600;
+            font-weight: 400;
             color: #333;
             cursor: pointer;
             opacity: 0.35;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, font-weight 0.2s ease;
         }
 
         .room-size-toggle .size-option:hover,
         .room-size-toggle .size-option.active {
             opacity: 1;
+            font-weight: 600;
         }
 
         .flower-animation {
@@ -1931,7 +1910,7 @@
             justify-content: center;
             width: 289px;
             height: 140px;
-            margin: -150px 0 38px 0;
+            margin: -40px 0 38px 0;
             overflow: hidden;
             opacity: 0;
             transform: scale(1) translateY(0);
@@ -1971,91 +1950,6 @@
 
         .drop-zone-arrows.flower-arrows.visible .flow-arrow:nth-child(3) {
             animation-delay: 0.3s;
-        }
-
-        .analyze-btn {
-            position: relative;
-            width: 289px;
-            height: 109px;
-            background: #FFE44D;
-            border: 5px solid #3CB043;
-            border-radius: 27px;
-            font-family: 'Manrope', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            line-height: 1.2;
-            color: #333;
-            text-transform: uppercase;
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(30px);
-            transition: transform 0.2s ease;
-            margin-top: 0px;
-            z-index: 10;
-        }
-
-        .analyze-btn::before {
-            display: none;
-        }
-
-        .analyze-btn::after {
-            display: none;
-        }
-
-        .analyze-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-            animation: analyzeBtnSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
-        }
-
-        .analyze-btn.visible.animated {
-            animation: none;
-        }
-
-        .analyze-btn.visible.exiting,
-        .analyze-btn.visible.animated.exiting {
-            animation: analyzeBtnSlideOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
-            pointer-events: none;
-        }
-
-        @keyframes analyzeBtnSlideIn {
-            0% {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes analyzeBtnSlideOut {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.85);
-            }
-        }
-
-        .analyze-btn.visible.animated:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .analyze-btn.visible.animated:active {
-            transform: scale(0.95);
-            transition: transform 0.1s ease-out;
-        }
-
-        .drop-zones.has-selection .flower-animation {
-            animation: flowerFadeOut 0.4s ease forwards;
-            pointer-events: none;
         }
 
         @keyframes flowerFadeOut {
@@ -2297,8 +2191,6 @@
                     </div>
                     <div class="flow-arrows-horizontal">
                         <span class="flow-arrow">→</span>
-                        <span class="flow-arrow">→</span>
-                        <span class="flow-arrow">→</span>
                     </div>
                 </div>
             </div>
@@ -2385,12 +2277,13 @@
                 </div>
             </div>
             <div class="drop-zone-arrows bottom-arrows">
-                <span class="flow-arrow">↓</span>
-                <span class="flow-arrow">↓</span>
-                <span class="flow-arrow">↓</span>
+                <div class="bottom-arrows-row">
+                    <span class="flow-arrow">↓</span>
+                    <span class="flow-arrow">↓</span>
+                    <span class="flow-arrow">↓</span>
+                </div>
                 <span class="signal-chain-label">AMPLIFIED SIGNAL</span>
             </div>
-            <button class="analyze-btn" id="analyzeBtn">RUN SOUND ANALYSIS</button>
             <div class="flower-animation">
                 <canvas id="flowerCanvas" width="230" height="280"></canvas>
             </div>
@@ -5133,7 +5026,6 @@
     const accordionSearchHint = document.getElementById('accordionSearchHint');
     const accordionSearchIcon = document.getElementById('accordionSearchIcon');
     const inlineSearchClose = document.getElementById('inlineSearchClose');
-    const analyzeBtn = document.getElementById('analyzeBtn');
     const flowerAnimation = document.querySelector('.flower-animation');
     const leftPanel = document.querySelector('.left-panel');
     let highlightedIndex = -1;
@@ -5374,11 +5266,6 @@
     // Add animated class after entrance animation completes
     roomSizeToggle.addEventListener('animationend', () => {
         roomSizeToggle.classList.add('animated');
-    });
-
-    // Add animated class to analyze button after entrance animation completes
-    analyzeBtn.addEventListener('animationend', () => {
-        analyzeBtn.classList.add('animated');
     });
 
     function toggleComponentDetails(id) {
@@ -5638,7 +5525,6 @@
         const analysisContent = document.getElementById('analysisContent');
         const analysisCard = document.getElementById('analysisCard');
         const thirdPanel = document.getElementById('thirdPanel');
-        const analyzeBtn = document.getElementById('analyzeBtn');
         const components = [];
 
         zones.forEach(zone => {
@@ -5654,21 +5540,18 @@
             analysisCard.classList.remove('visible');
             thirdPanel.classList.remove('visible');
             dropZonesContainer.classList.remove('has-selection');
-            analyzeBtn.classList.remove('visible');
-            analyzeBtn.classList.remove('animated');
             resetFlowerAnimation('fadeInDown 0.4s ease-out forwards');
             return;
         }
 
-        // Show button if it's the first selection OR if button was hidden (e.g., after analysis)
+        // Show panel on first selection
         const isFirstSelection = !dropZonesContainer.classList.contains('has-selection');
-        const buttonNeedsToShow = !analyzeBtn.classList.contains('visible');
 
-        if (isFirstSelection || buttonNeedsToShow) {
+        if (isFirstSelection) {
             resetFlowerAnimation();
 
             dropZonesContainer.classList.add('has-selection');
-            analyzeBtn.classList.add('visible');
+            thirdPanel.classList.add('visible');
         }
 
         analysisCard.classList.add('visible');
@@ -6339,16 +6222,6 @@
     }
 
     animateFlower();
-
-    // Analyze button click handler
-    analyzeBtn.addEventListener('click', () => {
-        analyzeBtn.classList.add('exiting');
-        setTimeout(() => {
-            analyzeBtn.classList.remove('visible', 'animated', 'exiting');
-            thirdPanel.classList.add('visible');
-            flowerAnimation.classList.add('force-visible');
-        }, 300);
-    });
 
     // Firebase Configuration
     const firebaseConfig = {
