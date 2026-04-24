@@ -1143,6 +1143,21 @@
             color: #1c1c1c;
         }
 
+        /* AI Loading Spinner */
+        .ai-loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: ai-spin 0.8s linear infinite;
+        }
+
+        @keyframes ai-spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Empty state */
         .empty-state {
             display: flex;
@@ -5619,136 +5634,53 @@
             html += `</div>`;
         });
 
-        // System Synergy section (when 2+ components)
+        // AI-powered System Synergy section (when 2+ components)
         if (filledCount >= 2) {
-            const source = components.find(c => c.category === 'source');
-            const preamp = components.find(c => c.category === 'preamp');
-            const poweramp = components.find(c => c.category === 'poweramp');
-            const speakers = components.find(c => c.category === 'speakers');
-
-            const sourceSpecs = source ? getComponentSpecs(source.brand, source.model) : null;
-            const preampSpecs = preamp ? getComponentSpecs(preamp.brand, preamp.model) : null;
-            const powerampSpecs = poweramp ? getComponentSpecs(poweramp.brand, poweramp.model) : null;
-            const speakerSpecs = speakers ? getComponentSpecs(speakers.brand, speakers.model) : null;
-
-            html += `<div style="background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%); padding: 20px; border-radius: 14px; margin-bottom: 20px; color: #fff;">`;
-            html += `<div style="font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px;">System Synergy</div>`;
-            html += `<div style="font-size: 13px; color: #e0e0e0; line-height: 1.7;">`;
-
-            // Build a cohesive narrative based on what's selected
-            let narrative = '';
-
-            // Determine system character
-            const hasTubes = (preamp && (preamp.brand.includes('THORESS') || preamp.brand.includes('DECWARE'))) ||
-                            (poweramp && (poweramp.brand.includes('DECWARE')));
-            const isAllLuxman = components.every(c => c.brand === 'LUXMAN');
-            const hasHighEffSpeakers = speakerSpecs && speakerSpecs.sensitivity && parseInt(speakerSpecs.sensitivity) >= 94;
-            const hasLowEffSpeakers = speakerSpecs && speakerSpecs.sensitivity && parseInt(speakerSpecs.sensitivity) < 90;
-            const isLowPowerAmp = poweramp && (poweramp.model.toLowerCase().includes('mystery') || poweramp.model.toLowerCase().includes('zen'));
-            const isHighPowerAmp = powerampSpecs && powerampSpecs.power && parseInt(powerampSpecs.power) >= 100;
-            const isOpenBaffle = speakerSpecs && speakerSpecs.type && speakerSpecs.type.includes('Open Baffle');
-            const isPlanar = speakerSpecs && speakerSpecs.type && speakerSpecs.type.includes('Planar');
-            const isActiveSpeaker = speakerSpecs && speakerSpecs.type && speakerSpecs.type.includes('Active');
-            const isZuSpeaker = speakers && speakers.brand.includes('ZU');
-            const isTrio15 = speakers && speakers.model.includes('Trio15');
-
-            // Opening based on component combination
-            if (isAllLuxman && filledCount >= 3) {
-                narrative += `This all-Luxman system delivers a signature sound: refined, unhurried, and effortlessly transparent. Luxman's ODNF topology provides vanishingly low distortion while preserving the natural texture and bloom of acoustic instruments. Expect a wide, deep soundstage with precise image placement, excellent tonal neutrality with a subtle warmth in the midrange, and bass that's articulate rather than overblown. The presentation leans toward elegance over excitement—music unfolds with poise and dimensional realism. `;
-            } else if (hasTubes && poweramp && poweramp.brand.includes('LUXMAN')) {
-                narrative += `This hybrid topology marries the best of both worlds: tube magic up front, solid-state muscle at the output. The triode preamplifier contributes that ineffable sense of bloom and air—vocals float free of the speakers with palpable presence, and harmonic overtones shimmer with natural decay. Meanwhile, the Luxman power amp delivers iron-fisted bass control, deep extension into the sub-bass, and the current reserves to handle dynamic swings without compression. The result is a sound that's simultaneously romantic and authoritative—holographic imaging with visceral impact. `;
-            } else if (hasTubes && isLowPowerAmp) {
-                narrative += `This is a system for the devoted listener—one who values intimacy over sheer scale. Low-power SET amplification, when properly matched, delivers an immediacy and presence that high-powered designs rarely approach. Expect a luminous, liquid midrange where vocals and solo instruments exist in three-dimensional space. Micro-dynamics are exquisite: the gentle decay of a piano note, the breath before a phrase, the texture of bow on string—all rendered with startling clarity. The soundstage may not be the widest, but within its boundaries, imaging is holographic and utterly convincing. `;
-            }
-
-            // Source to preamp relationship
-            if (source && preamp) {
-                if (source.brand.includes('GOOGLE')) {
-                    narrative += `The Chromecast serves purely as a digital transport in this context—sonic character will be determined entirely by the downstream DAC and analog stages. For serious listening, ensure bit-perfect output to an external converter. The convenience of wireless streaming need not compromise fidelity when properly implemented. `;
-                } else if (sourceSpecs && sourceSpecs.thd && parseFloat(sourceSpecs.thd) < 0.005) {
-                    narrative += `The source establishes an exceptionally black background—with THD at ${sourceSpecs.thd}, noise and distortion artifacts are well below audibility. This transparency allows the music's natural dynamics and spatial cues to emerge uncolored. What you hear is the recording, not the player. `;
-                }
-
-                if (preampSpecs && preampSpecs.topology && preampSpecs.topology.includes('zero-feedback')) {
-                    narrative += `The zero-feedback preamplifier acts as a purist's window into the recording: it won't flatter poor sources, but exceptional material rewards with breathtaking realism. Transients emerge with startling speed and decay naturally into the acoustic space. The presentation is immediate and unvarnished—a direct connection to the musical event. `;
-                }
-            }
-
-            // Preamp to power amp relationship
-            if (preamp && poweramp) {
-                const isTubeToSS = (preamp.brand.includes('THORESS') || preamp.brand.includes('DECWARE')) && poweramp.brand.includes('LUXMAN');
-                const isTubeToTube = (preamp.brand.includes('THORESS') || preamp.brand.includes('DECWARE')) && poweramp.brand.includes('DECWARE');
-
-                if (isTubeToSS) {
-                    narrative += `The tube preamp imparts its signature dimensionality—instruments occupy specific locations in a deep, layered soundstage, with air between performers and a sense of the recording venue's acoustic envelope. The solid-state power section preserves this spatial information while adding weight and slam in the bottom octaves. Bass lines have definition and pitch accuracy; kick drums have genuine chest-thump impact. The tonal balance trends slightly warm without sacrificing detail retrieval or high-frequency sparkle. `;
-                } else if (isTubeToTube) {
-                    narrative += `With tubes throughout the signal path, expect a presentation rich in harmonic complexity. The midrange glows with inner light—voices possess an almost tactile presence, and the decay of notes trails off naturally into a dimensional acoustic space. This topology excels at conveying the emotional content of music: the yearning in a jazz vocal, the tension before a crescendo, the subtle rubato of a master pianist. Detail is present but never clinical; resolution serves musicality rather than analysis. `;
-                } else if (preamp.brand.includes('LUXMAN') && poweramp.brand.includes('LUXMAN')) {
-                    narrative += `The matched Luxman pairing delivers seamless coherence from input to output. Expect crystalline highs that extend without grain or fatigue, a midrange of exceptional purity with natural timbral accuracy, and bass that's both powerful and precisely controlled. The soundstage is wide and deep, with stable imaging that remains rock-solid even during complex orchestral passages. The overall character is refined and uncolored—a faithful window rather than an editorial lens. `;
-                }
-            }
-
-            // Power amp to speaker relationship
-            if (poweramp && speakers) {
-                if (isActiveSpeaker) {
-                    narrative += `<span style="color: #f39c12;">Note:</span> The ${speakers.brand} ${speakers.model} contains its own amplification—the power amp stage is bypassed entirely. Connect the preamplifier directly to the speakers for optimal signal path. The active design ensures perfect amp-driver matching and often includes DSP for room correction—a modern approach that trades traditional audiophile aesthetics for measured performance. `;
-                } else if (isLowPowerAmp && hasHighEffSpeakers) {
-                    if (isZuSpeaker) {
-                        narrative += `The Zu's full-range driver paired with SET amplification is a classic audiophile combination—expect immediacy, presence, and dynamic contrast that multi-way speakers struggle to match. The lack of crossover in the crucial midrange frequencies yields stunning coherence: vocals snap into focus with startling directness, and the leading edge of transients arrives with realistic speed. The presentation is forward and engaging—music leaps from the speakers rather than sitting politely behind them. Bass won't plumb the deepest depths, but what's there has texture and pace. `;
-                    } else if (isTrio15) {
-                        narrative += `The open baffle design eliminates box colorations entirely—expect a sense of openness and freedom in the presentation that enclosed speakers cannot replicate. With proper room placement, the soundstage extends well beyond the speaker boundaries, creating a panoramic canvas for the music. The combination with low-power tubes is synergistic: the amplifier's natural warmth complements the speaker's transparent midrange, while the high sensitivity ensures dynamic headroom to spare. Expect holographic imaging, natural timbres, and the kind of "disappearing act" that audiophiles chase. `;
-                    } else {
-                        narrative += `This pairing unlocks the magic of the first watt. With ${speakerSpecs.sensitivity} sensitivity, the amplifier operates in its most linear region, where single-ended triode topology shines brightest. Expect a midrange of remarkable liquidity and presence—voices and acoustic instruments rendered with dimensional realism that seems to transcend the speakers entirely. Dynamic shadings from whisper to forte unfold naturally, without the compression that plagues power-limited systems. The soundstage is intimate but holographic, with precise image placement and palpable air between performers. `;
-                    }
-                } else if (isLowPowerAmp && hasLowEffSpeakers) {
-                    narrative += `<span style="color: #e74c3c;">Critical mismatch:</span> This pairing fundamentally undermines both components. The ${speakerSpecs.sensitivity} sensitivity speakers will starve for current, causing the amplifier to clip on transients and compress dynamics. You'll hear a thin, strained presentation lacking in bass weight and dynamic impact—a pale shadow of what either component can achieve with appropriate partners. The amplifier needs speakers of 94dB+ sensitivity to breathe; the speakers need amplifiers delivering 50W+ to truly come alive. Reconsider this pairing before proceeding. `;
-                } else if (isHighPowerAmp && hasLowEffSpeakers) {
-                    narrative += `The amplifier's generous power reserves ensure these speakers operate in their comfort zone. Expect authoritative bass with genuine weight and impact—the low frequencies have substance and visceral presence. The high damping factor keeps the woofer under tight control, preventing bass bloat and maintaining pitch definition even at elevated volumes. Dynamic peaks arrive with effortless headroom; the system never sounds strained or compressed. `;
-                } else if (isHighPowerAmp && isPlanar) {
-                    narrative += `Planar speakers reward high-current amplification with their signature virtues: electrostatic-like transparency, coherent point-source imaging, and transient speed that cone speakers struggle to match. This amplifier should drive the ${speakerSpecs.impedance} load without stress, allowing the panels to reveal their full resolution. Expect a fast, detailed presentation with outstanding clarity through the midrange and treble—cymbals shimmer with natural decay, and vocal sibilants are smooth rather than spitty. Bass extension depends on room placement, but what's there has impressive articulation. `;
-                } else if (poweramp && speakers) {
-                    narrative += `The amplifier-speaker pairing appears viable, though not optimized for a specific sonic goal. The components should function together without obvious issues—audition to assess whether their combined character suits your preferences. `;
-                }
-
-                if (isOpenBaffle && currentRoomSize === 'SM') {
-                    narrative += `<span style="color: #e67e22;">Placement concern:</span> Open baffle speakers radiate equally front and rear, requiring substantial distance from the back wall (3+ feet minimum) to develop their signature spacious presentation. A small room may not accommodate this geometry—you risk cancellation effects and a confused soundstage. Consider whether your space can provide the breathing room these speakers demand. `;
-                }
-            }
-
-            // Room size integration with sonic implications
-            if (currentRoomSize === 'SM') {
-                if (isLowPowerAmp && hasHighEffSpeakers) {
-                    narrative += `The small room amplifies this system's strengths: nearfield listening distances minimize room interactions, allowing the direct sound to dominate. You'll experience the full measure of the system's micro-dynamic abilities and holographic imaging without needing to push volume levels. The intimate scale suits acoustic music, jazz, and vocal recordings beautifully. `;
-                } else if (hasLowEffSpeakers) {
-                    narrative += `Room gain from nearby boundaries will reinforce the bass, partially compensating for the speakers' lower sensitivity. Position yourself in the nearfield (6-8 feet) to maximize direct sound and minimize room reflections. `;
-                }
-            } else if (currentRoomSize === 'LG') {
-                if (isLowPowerAmp) {
-                    narrative += `Large room acoustics present a challenge for low-power amplification—whether you'll achieve satisfying volume levels depends on listening distance and musical preferences. If you favor intimate acoustic material at moderate levels, this can work beautifully. For orchestral climaxes or rock at concert levels, consider whether the system has sufficient headroom. The magic happens in the first watt; make sure you don't need the watts that aren't there. `;
-                }
-                if (isOpenBaffle) {
-                    narrative += `The generous room dimensions favor open baffle speakers—their figure-8 radiation pattern can develop fully, creating an expansive soundstage that extends well beyond the physical speaker positions. With proper placement (5+ feet from the rear wall), expect a sense of scale and dimensionality that smaller rooms cannot support. The presentation becomes genuinely holographic: performers exist in three-dimensional space with realistic proportions and natural acoustic cues. `;
-                }
-            }
-
-            // Closing sonic assessment
-            if (filledCount === 4) {
-                if (isLowPowerAmp && !hasHighEffSpeakers) {
-                    narrative += `<br><br><strong>Sonic outlook:</strong> This system cannot realize its potential due to the amplifier-speaker mismatch. Resolve this fundamental incompatibility before evaluating the chain's sonic character.`;
-                } else if (hasTubes && hasHighEffSpeakers) {
-                    narrative += `<br><br><strong>Sonic outlook:</strong> This system is optimized for midrange magic, spatial holography, and emotional engagement. Expect a presentation that draws you into the music rather than impressing with technical fireworks. Acoustic recordings, jazz, classical, and vocals will shine; dense electronic or heavily compressed material may expose the system's dynamic limitations. For listeners who value presence, texture, and musical flow over bass slam and ultimate SPL, this is an audiophile destination system.`;
-                } else if (isAllLuxman) {
-                    narrative += `<br><br><strong>Sonic outlook:</strong> This system prioritizes refinement, neutrality, and effortless transparency. Expect a sophisticated presentation that reveals recordings honestly—great material sounds sublime, while poor recordings have nowhere to hide. The tonal balance is natural, the soundstage is wide and deep, and dynamics unfold with ease. A versatile system that handles all genres with composure and grace.`;
-                } else {
-                    narrative += `<br><br><strong>Sonic outlook:</strong> The selected components form a functional system. Individual voices are competent, but the combined character depends on specific synergies that can only be confirmed through audition. Listen before committing—paper specifications reveal compatibility, but only your ears can assess musical chemistry.`;
-                }
-            }
-
-            html += narrative || 'Select additional components to see how they interact sonically.';
+            html += `<div id="aiAnalysisContainer" style="background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%); padding: 20px; border-radius: 14px; margin-bottom: 20px; color: #fff;">`;
+            html += `<div style="font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px;">System Analysis</div>`;
+            html += `<div id="aiAnalysisContent" style="font-size: 13px; color: #e0e0e0; line-height: 1.7;">`;
+            html += `<div style="display: flex; align-items: center; gap: 8px;"><span class="ai-loading-spinner"></span> Analyzing system synergy...</div>`;
             html += `</div></div>`;
+
+            // Collect component specs to send to API
+            const componentSpecs = {};
+            components.forEach(comp => {
+                const specs = getComponentSpecs(comp.brand, comp.model);
+                if (specs) {
+                    componentSpecs[`${comp.brand} ${comp.model}`] = specs;
+                }
+            });
+
+            // Call the AI analysis API
+            fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    components: components,
+                    roomSize: currentRoomSize,
+                    componentSpecs: componentSpecs
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const aiContent = document.getElementById('aiAnalysisContent');
+                if (aiContent) {
+                    if (data.error) {
+                        aiContent.innerHTML = `<span style="color: #e74c3c;">Unable to generate analysis. Please try again.</span>`;
+                    } else {
+                        aiContent.innerHTML = data.analysis;
+                    }
+                }
+            })
+            .catch(error => {
+                const aiContent = document.getElementById('aiAnalysisContent');
+                if (aiContent) {
+                    aiContent.innerHTML = `<span style="color: #e74c3c;">Unable to connect to analysis service.</span>`;
+                }
+            });
         }
 
-        // Room-specific recommendations (reuse variables from above or find fresh)
+        // Room-specific recommendations
         const roomSpeakers = components.find(c => c.category === 'speakers');
         const roomPoweramp = components.find(c => c.category === 'poweramp');
         const roomSpeakerSpecs = roomSpeakers ? getComponentSpecs(roomSpeakers.brand, roomSpeakers.model) : null;
